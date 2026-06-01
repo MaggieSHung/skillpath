@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillPath API Tester</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#F5F2EC;--bg2:#EDEAE2;--bg3:#E4E1D8;
+    --ink:#1A1814;--ink2:#5A5750;--ink3:#9A9590;
+    --accent:#1D6B4E;--accent-l:#E1F5EE;
+    --red:#A32D2D;--red-l:#FCEBEB;
+    --gold:#854F0B;--gold-l:#FAEEDA;
+    --blue:#185FA5;--blue-l:#E6F1FB;
+    --border:rgba(26,24,20,.1);--border2:rgba(26,24,20,.2);
+    --radius:10px;--mono:'DM Mono',monospace;
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+
+  /* ── Layout ── */
+  .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+  .sidebar{background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .main{display:flex;flex-direction:column;gap:0}
+
+  /* ── Sidebar ── */
+  .sb-logo{padding:20px 18px 14px;border-bottom:1px solid var(--border)}
+  .sb-logo h1{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+  .sb-logo p{font-size:11px;color:var(--ink3);margin-top:2px}
+  .sb-section{padding:10px 12px 4px;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+  .sb-item{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;border-radius:6px;margin:1px 6px;transition:background .15s}
+  .sb-item:hover{background:var(--bg)}
+  .sb-item.active{background:var(--accent-l)}
+  .sb-item.active .sb-label{color:var(--accent)}
+  .sb-method{font-family:var(--mono);font-size:10px;font-weight:400;padding:2px 6px;border-radius:4px;min-width:40px;text-align:center}
+  .m-get{background:var(--blue-l);color:var(--blue)}
+  .m-post{background:var(--accent-l);color:var(--accent)}
+  .m-put{background:var(--gold-l);color:var(--gold)}
+  .m-delete{background:var(--red-l);color:var(--red)}
+  .sb-label{font-size:12px;color:var(--ink2);font-weight:400}
+
+  /* ── Token bar ── */
+  .token-bar{background:#fff;border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:10px}
+  .token-bar label{font-size:11px;font-weight:500;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+  .token-bar input{flex:1;font-family:var(--mono);font-size:11px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;padding:6px 10px;color:var(--ink);outline:none}
+  .token-bar input:focus{border-color:var(--accent)}
+  .token-bar .clr{font-size:11px;cursor:pointer;color:var(--red);padding:4px 8px;border-radius:5px;border:1px solid var(--border2);background:none}
+
+  /* ── Request panel ── */
+  .req-panel{padding:28px 32px 0;flex:1}
+  .req-title{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .req-title h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.02em}
+  .req-desc{font-size:13px;color:var(--ink2);margin-bottom:20px;line-height:1.6}
+
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .field-row.single{grid-template-columns:1fr}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:11px;font-weight:500;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em}
+  .field input,.field select,.field textarea{
+    font-family:'DM Sans',sans-serif;font-size:13px;
+    background:var(--bg);border:1px solid var(--border2);
+    border-radius:var(--radius);padding:9px 12px;
+    color:var(--ink);outline:none;transition:border-color .15s;resize:vertical
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);background:#fff}
+  .field .hint{font-size:11px;color:var(--ink3)}
+  .send-btn{
+    margin-top:16px;display:inline-flex;align-items:center;gap:8px;
+    font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+    background:var(--ink);color:#fff;border:none;border-radius:999px;
+    padding:11px 28px;cursor:pointer;transition:background .2s,transform .1s
+  }
+  .send-btn:hover{background:var(--accent)}
+  .send-btn:active{transform:scale(.98)}
+  .send-btn.loading{opacity:.6;cursor:not-allowed}
+
+  /* ── Response panel ── */
+  .res-panel{margin:24px 32px 32px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border2)}
+  .res-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--border)}
+  .res-header-left{display:flex;align-items:center;gap:10px}
+  .res-status{font-family:var(--mono);font-size:12px;padding:3px 10px;border-radius:5px;font-weight:400}
+  .s-2xx{background:var(--accent-l);color:var(--accent)}
+  .s-4xx{background:var(--red-l);color:var(--red)}
+  .s-5xx{background:var(--red-l);color:var(--red)}
+  .res-time{font-size:11px;color:var(--ink3)}
+  .res-copy{font-size:11px;cursor:pointer;color:var(--ink3);padding:3px 8px;border-radius:5px;border:1px solid var(--border2);background:none;transition:all .15s}
+  .res-copy:hover{color:var(--ink);border-color:var(--border)}
+  .res-body{padding:16px;background:#fff;font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--ink2);max-height:380px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+  .res-empty{padding:32px;text-align:center;font-size:13px;color:var(--ink3);background:var(--bg)}
+
+  /* ── Quick-copy tokens ── */
+  .auth-hint{margin:0 32px;background:var(--blue-l);border:1px solid rgba(24,95,165,.2);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:var(--blue);display:none;align-items:center;gap:8px}
+  .auth-hint.show{display:flex}
+  .auth-hint strong{font-weight:500}
+  .copy-token-btn{font-size:11px;background:var(--blue);color:#fff;border:none;border-radius:5px;padding:3px 10px;cursor:pointer;white-space:nowrap}
+
+  /* ── Sidebar base URL ── */
+  .base-url-row{padding:10px 12px;border-top:1px solid var(--border);margin-top:auto}
+  .base-url-row label{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
+  .base-url-row input{width:100%;margin-top:4px;font-family:var(--mono);font-size:11px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;padding:5px 8px;color:var(--ink);outline:none}
+
+  @media(max-width:700px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <h1>SkillPath API</h1>
+    <p>Phase 3 — endpoint tester</p>
+  </div>
+
+  <div class="sb-section">Auth</div>
+  <div class="sb-item" onclick="load('register')"><span class="sb-method m-post">POST</span><span class="sb-label">/auth/register</span></div>
+  <div class="sb-item" onclick="load('login')"><span class="sb-method m-post">POST</span><span class="sb-label">/auth/login</span></div>
+  <div class="sb-item" onclick="load('me')"><span class="sb-method m-get">GET</span><span class="sb-label">/auth/me</span></div>
+  <div class="sb-item" onclick="load('profile')"><span class="sb-method m-put">PUT</span><span class="sb-label">/auth/profile</span></div>
+  <div class="sb-item" onclick="load('password')"><span class="sb-method m-put">PUT</span><span class="sb-label">/auth/password</span></div>
+
+  <div class="sb-section">Courses</div>
+  <div class="sb-item" onclick="load('courses')"><span class="sb-method m-get">GET</span><span class="sb-label">/courses</span></div>
+  <div class="sb-item" onclick="load('course-slug')"><span class="sb-method m-get">GET</span><span class="sb-label">/courses/:slug</span></div>
+
+  <div class="sb-section">Enrollments</div>
+  <div class="sb-item" onclick="load('enrollments')"><span class="sb-method m-get">GET</span><span class="sb-label">/enrollments</span></div>
+  <div class="sb-item" onclick="load('enrollment-check')"><span class="sb-method m-get">GET</span><span class="sb-label">/enrollments/:id</span></div>
+
+  <div class="sb-section">Progress</div>
+  <div class="sb-item" onclick="load('progress-mark')"><span class="sb-method m-post">POST</span><span class="sb-label">/progress</span></div>
+  <div class="sb-item" onclick="load('progress-get')"><span class="sb-method m-get">GET</span><span class="sb-label">/progress/:courseId</span></div>
+  <div class="sb-item" onclick="load('progress-del')"><span class="sb-method m-delete">DEL</span><span class="sb-label">/progress</span></div>
+
+  <div class="base-url-row">
+    <label>Base URL</label>
+    <input type="text" id="base-url" value="http://localhost:3000"/>
+  </div>
+</aside>
+
+<!-- ── Main ── -->
+<div class="main">
+  <!-- Token bar -->
+  <div class="token-bar">
+    <label>JWT Token</label>
+    <input type="text" id="jwt-token" placeholder="Paste your token here, or register/login to auto-fill"/>
+    <button class="clr" onclick="document.getElementById('jwt-token').value=''">Clear</button>
+  </div>
+
+  <!-- Auth hint -->
+  <div class="auth-hint" id="auth-hint">
+    <strong>Token saved.</strong> It will be sent automatically with protected requests.
+    <button class="copy-token-btn" onclick="copyToken()">Copy</button>
+  </div>
+
+  <!-- Request panel -->
+  <div class="req-panel" id="req-panel">
+    <div style="padding:60px 0;text-align:center;color:var(--ink3)">
+      <div style="font-size:28px;margin-bottom:12px">←</div>
+      <div style="font-size:14px">Select an endpoint from the sidebar</div>
+    </div>
+  </div>
+
+  <!-- Response panel -->
+  <div class="res-panel" id="res-panel" style="display:none">
+    <div class="res-header">
+      <div class="res-header-left">
+        <span class="res-status" id="res-status">200 OK</span>
+        <span class="res-time" id="res-time"></span>
+      </div>
+      <button class="res-copy" onclick="copyResponse()">Copy response</button>
+    </div>
+    <pre class="res-body" id="res-body"></pre>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+// ── Endpoint definitions ──────────────────────────────
+const ENDPOINTS = {
+  register: {
+    method:'POST', path:'/api/auth/register', auth:false,
+    title:'Register a new student',
+    desc:'Creates a new user account. Returns a JWT token automatically — it will be saved to the token bar.',
+    fields:[
+      {id:'reg-name',  label:'Name',     placeholder:'e.g. Budi Santoso', key:'name'},
+      {id:'reg-email', label:'Email',    placeholder:'budi@example.com',  key:'email'},
+      {id:'reg-pass',  label:'Password', placeholder:'min. 6 characters', key:'password', type:'password'},
+    ]
+  },
+  login: {
+    method:'POST', path:'/api/auth/login', auth:false,
+    title:'Login',
+    desc:'Authenticate with email and password. Returns a JWT token which will be auto-saved.',
+    fields:[
+      {id:'log-email', label:'Email',    placeholder:'budi@example.com',  key:'email'},
+      {id:'log-pass',  label:'Password', placeholder:'your password',      key:'password', type:'password'},
+    ]
+  },
+  me: {
+    method:'GET', path:'/api/auth/me', auth:true,
+    title:'Get current user (me)',
+    desc:'Returns the authenticated user\'s profile. Requires a valid JWT in the token bar.',
+    fields:[]
+  },
+  profile: {
+    method:'PUT', path:'/api/auth/profile', auth:true,
+    title:'Update profile',
+    desc:'Update name and/or email. Both fields are optional — only send what you want to change.',
+    fields:[
+      {id:'upd-name',  label:'New name (optional)',  placeholder:'leave blank to keep current', key:'name'},
+      {id:'upd-email', label:'New email (optional)', placeholder:'leave blank to keep current', key:'email'},
+    ]
+  },
+  password: {
+    method:'PUT', path:'/api/auth/password', auth:true,
+    title:'Change password',
+    desc:'Change password — requires the current password for verification.',
+    fields:[
+      {id:'pw-current', label:'Current password', placeholder:'your current password',  key:'current_password', type:'password'},
+      {id:'pw-new',     label:'New password',     placeholder:'min. 6 characters',      key:'new_password',     type:'password'},
+    ]
+  },
+  courses: {
+    method:'GET', path:'/api/courses', auth:false,
+    title:'List all courses',
+    desc:'Public endpoint. Returns all active courses. If you\'re logged in (token set), also shows which courses you\'re enrolled in. Optional query param: ?track=data-analytics',
+    fields:[
+      {id:'crs-track', label:'Filter by track (optional)', placeholder:'e.g. data-analytics', key:'_query_track'},
+    ]
+  },
+  'course-slug': {
+    method:'GET', path:'/api/courses/', auth:false,
+    title:'Get course by slug',
+    desc:'Returns full details for a single course.',
+    fields:[
+      {id:'crs-slug', label:'Course slug', placeholder:'e.g. sql-for-data-analysis', key:'_path_suffix'},
+    ]
+  },
+  enrollments: {
+    method:'GET', path:'/api/enrollments', auth:true,
+    title:'My enrolled courses',
+    desc:'Returns all courses the logged-in student is enrolled in, including progress percentage for each.',
+    fields:[]
+  },
+  'enrollment-check': {
+    method:'GET', path:'/api/enrollments/', auth:true,
+    title:'Check enrollment for a course',
+    desc:'Check whether the logged-in student is enrolled in a specific course.',
+    fields:[
+      {id:'enr-id', label:'Course ID', placeholder:'e.g. 1', key:'_path_suffix'},
+    ]
+  },
+  'progress-mark': {
+    method:'POST', path:'/api/progress', auth:true,
+    title:'Mark lesson complete',
+    desc:'Mark a lesson as complete. Safe to call multiple times (idempotent). Student must be enrolled first.',
+    fields:[
+      {id:'prg-course',  label:'Course ID',     placeholder:'e.g. 1', key:'course_id'},
+      {id:'prg-lesson',  label:'Lesson index',  placeholder:'e.g. 0 (0-based)', key:'lesson_index'},
+    ]
+  },
+  'progress-get': {
+    method:'GET', path:'/api/progress/', auth:true,
+    title:'Get progress for a course',
+    desc:'Returns all completed lesson indices and overall progress percentage.',
+    fields:[
+      {id:'prg-get-id', label:'Course ID', placeholder:'e.g. 1', key:'_path_suffix'},
+    ]
+  },
+  'progress-del': {
+    method:'DELETE', path:'/api/progress', auth:true,
+    title:'Unmark a lesson',
+    desc:'Remove a completed lesson record (useful for resetting accidentally completed lessons).',
+    fields:[
+      {id:'del-course', label:'Course ID',    placeholder:'e.g. 1', key:'course_id'},
+      {id:'del-lesson', label:'Lesson index', placeholder:'e.g. 0', key:'lesson_index'},
+    ]
+  },
+};
+
+const METHOD_COLORS = { GET:'m-get', POST:'m-post', PUT:'m-put', DELETE:'m-delete' };
+let currentKey = null;
+
+function load(key) {
+  currentKey = key;
+  const ep = ENDPOINTS[key];
+
+  // Sidebar highlight
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  // Build form
+  const pairs = [];
+  for (let i = 0; i < ep.fields.length; i += 2) {
+    pairs.push(ep.fields.slice(i, i + 2));
+  }
+
+  const fieldsHtml = pairs.map(pair => `
+    <div class="field-row ${pair.length === 1 ? 'single' : ''}">
+      ${pair.map(f => `
+        <div class="field">
+          <label>${f.label}</label>
+          <input type="${f.type || 'text'}" id="${f.id}" placeholder="${f.placeholder}" autocomplete="off"/>
+          ${f.hint ? `<span class="hint">${f.hint}</span>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  document.getElementById('req-panel').innerHTML = `
+    <div class="req-title">
+      <span class="sb-method ${METHOD_COLORS[ep.method]}">${ep.method}</span>
+      <h2>${ep.title}</h2>
+    </div>
+    <p class="req-desc">${ep.desc}</p>
+    ${ep.auth ? `<p style="font-size:12px;color:var(--ink3);margin-bottom:16px">🔒 Requires JWT token in the token bar</p>` : ''}
+    ${fieldsHtml}
+    <button class="send-btn" id="send-btn" onclick="send('${key}')">
+      Send request →
+    </button>
+  `;
+
+  // Hide old response
+  document.getElementById('res-panel').style.display = 'none';
+}
+
+async function send(key) {
+  const ep    = ENDPOINTS[key];
+  const base  = document.getElementById('base-url').value.replace(/\/$/, '');
+  const token = document.getElementById('jwt-token').value.trim();
+  const btn   = document.getElementById('send-btn');
+
+  btn.classList.add('loading');
+  btn.textContent = 'Sending…';
+
+  // Collect field values
+  const body = {};
+  let pathSuffix = '';
+  let queryParam = '';
+
+  ep.fields.forEach(f => {
+    const val = document.getElementById(f.id)?.value?.trim();
+    if (!val) return;
+    if (f.key === '_path_suffix') pathSuffix = val;
+    else if (f.key === '_query_track') queryParam = `?track=${encodeURIComponent(val)}`;
+    else body[f.key] = f.id.includes('lesson') || f.id.includes('course') || f.id.includes('id')
+      ? (isNaN(val) ? val : Number(val))
+      : val;
+  });
+
+  const url = `${base}${ep.path}${pathSuffix}${queryParam}`;
+  const headers = { 'Content-Type': 'application/json' };
+  if (ep.auth && token) headers['Authorization'] = `Bearer ${token}`;
+
+  const opts = { method: ep.method, headers };
+  if (!['GET'].includes(ep.method) && Object.keys(body).length > 0) {
+    opts.body = JSON.stringify(body);
+  }
+
+  const t0 = Date.now();
+  try {
+    const res  = await fetch(url, opts);
+    const ms   = Date.now() - t0;
+    const data = await res.json().catch(() => ({}));
+
+    // Auto-save token on register/login
+    if ((key === 'register' || key === 'login') && data.token) {
+      document.getElementById('jwt-token').value = data.token;
+      const hint = document.getElementById('auth-hint');
+      hint.classList.add('show');
+      setTimeout(() => hint.classList.remove('show'), 5000);
+    }
+
+    // Show response
+    const panel = document.getElementById('res-panel');
+    panel.style.display = 'block';
+
+    const statusEl = document.getElementById('res-status');
+    statusEl.textContent = `${res.status} ${res.statusText}`;
+    statusEl.className = 'res-status ' + (res.ok ? 's-2xx' : res.status >= 500 ? 's-5xx' : 's-4xx');
+
+    document.getElementById('res-time').textContent = `${ms}ms`;
+    document.getElementById('res-body').textContent = JSON.stringify(data, null, 2);
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  } catch (err) {
+    document.getElementById('res-panel').style.display = 'block';
+    document.getElementById('res-status').textContent = 'Network error';
+    document.getElementById('res-status').className = 'res-status s-4xx';
+    document.getElementById('res-time').textContent = '';
+    document.getElementById('res-body').textContent =
+      `Could not reach ${url}\n\nMake sure your server is running:\n  npm run dev\n\nError: ${err.message}`;
+  }
+
+  btn.classList.remove('loading');
+  btn.textContent = 'Send request →';
+}
+
+function copyResponse() {
+  const text = document.getElementById('res-body').textContent;
+  navigator.clipboard.writeText(text);
+  const btn = event.currentTarget;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy response', 1500);
+}
+
+function copyToken() {
+  navigator.clipboard.writeText(document.getElementById('jwt-token').value);
+}
+</script>
+</body>
+</html>

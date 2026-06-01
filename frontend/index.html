@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="SkillPath — Professional technology and data skills courses for remote-ready careers. Learn SQL, Python, Excel, and data visualization from industry experts."/>
+  <title>SkillPath — Data & Tech Skills for Remote Careers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Reset & base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:     #0D1B2A;
+      --navy2:    #162232;
+      --navy3:    #1E2F42;
+      --ink:      #1A1A1A;
+      --ink2:     #4A4A4A;
+      --ink3:     #8A8A8A;
+      --ink4:     #BFBFBF;
+      --bg:       #FAFAF8;
+      --bg2:      #F3F3F0;
+      --bg3:      #EAEAE6;
+      --white:    #FFFFFF;
+      --accent:   #1A6B4A;
+      --accent2:  #0F4F35;
+      --accent-l: #E3F2EC;
+      --accent-l2:#C5E8D5;
+      --gold:     #C9960C;
+      --gold-l:   #FEF6E0;
+      --red:      #B93C3C;
+      --red-l:    #FDEAEA;
+      --blue:     #1B5FAD;
+      --blue-l:   #E5EEF9;
+      --border:   rgba(26,26,26,.09);
+      --border2:  rgba(26,26,26,.15);
+      --border3:  rgba(26,26,26,.22);
+      --serif:    'Instrument Serif', Georgia, serif;
+      --sans:     'DM Sans', sans-serif;
+      --mono:     'DM Mono', monospace;
+      --radius:   6px;
+      --radius-lg:12px;
+      --transition: .2s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    button { font-family: var(--sans); cursor: pointer; border: none; }
+
+    /* ── Utility ───────────────────────────────────────────── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    /* ── Topbar (thin announcement) ────────────────────────── */
+    .topbar {
+      background: var(--navy);
+      color: rgba(255,255,255,.7);
+      font-size: 12px;
+      text-align: center;
+      padding: 9px 16px;
+      letter-spacing: .01em;
+    }
+    .topbar strong { color: #fff; font-weight: 500; }
+    .topbar a { color: var(--accent-l2); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ── Navigation ────────────────────────────────────────── */
+    .nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      gap: 32px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .nav-logo-mark {
+      width: 32px; height: 32px;
+      background: var(--navy);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-mark svg { width: 18px; height: 18px; }
+    .nav-logo-name {
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: -.02em;
+      color: var(--navy);
+    }
+    .nav-logo-name span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink2);
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links .nav-active { color: var(--ink); font-weight: 500; }
+    .nav-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .btn-ghost {
+      font-size: 14px; font-weight: 400;
+      color: var(--ink2);
+      padding: 7px 16px;
+      border-radius: var(--radius);
+      transition: background var(--transition), color var(--transition);
+      background: none;
+      border: 1px solid transparent;
+    }
+    .btn-ghost:hover { background: var(--bg2); color: var(--ink); }
+    .btn-primary {
+      font-size: 14px; font-weight: 500;
+      background: var(--navy);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: var(--radius);
+      transition: background var(--transition), transform .1s;
+      border: none;
+    }
+    .btn-primary:hover { background: var(--navy3); }
+    .btn-primary:active { transform: scale(.98); }
+    .btn-accent {
+      font-size: 15px; font-weight: 500;
+      background: var(--accent);
+      color: #fff;
+      padding: 13px 32px;
+      border-radius: var(--radius);
+      transition: background var(--transition), transform .1s;
+      border: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-accent:hover { background: var(--accent2); }
+    .btn-accent:active { transform: scale(.98); }
+    .btn-outline-white {
+      font-size: 15px; font-weight: 400;
+      background: transparent;
+      color: rgba(255,255,255,.85);
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.25);
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline-white:hover {
+      border-color: rgba(255,255,255,.5);
+      color: #fff;
+      background: rgba(255,255,255,.06);
+    }
+
+    /* ── Hero ──────────────────────────────────────────────── */
+    .hero {
+      background: var(--navy);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-grid-overlay {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none;
+    }
+    .hero-glow {
+      position: absolute;
+      top: -120px; right: -80px;
+      width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(26,107,74,.28) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      padding: 96px 0 80px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(26,107,74,.2);
+      border: 1px solid rgba(26,107,74,.35);
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent-l2);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent-l2);
+      border-radius: 50%;
+    }
+    .hero-heading {
+      font-family: var(--serif);
+      font-size: clamp(42px, 5.5vw, 66px);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+    .hero-heading em {
+      font-style: italic;
+      color: var(--accent-l2);
+    }
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 300;
+      color: rgba(255,255,255,.6);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+    .hero-ctas { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .hero-trust {
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-trust-avatars {
+      display: flex;
+    }
+    .hero-trust-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--navy3);
+      border: 2px solid var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500; color: rgba(255,255,255,.7);
+      margin-left: -8px;
+    }
+    .hero-trust-avatar:first-child { margin-left: 0; }
+    .hero-trust-text { font-size: 13px; color: rgba(255,255,255,.5); }
+    .hero-trust-text strong { color: rgba(255,255,255,.8); font-weight: 500; }
+
+    /* ── Hero card (right column) ───────────────────────────── */
+    .hero-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      backdrop-filter: blur(8px);
+    }
+    .hero-card-label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 16px;
+    }
+    .hero-card-path {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hero-path-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      transition: border-color var(--transition), background var(--transition);
+      cursor: default;
+    }
+    .hero-path-step:hover {
+      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.12);
+    }
+    .hero-path-step.active {
+      background: rgba(26,107,74,.18);
+      border-color: rgba(26,107,74,.4);
+    }
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 500; color: rgba(255,255,255,.5);
+      flex-shrink: 0;
+    }
+    .hero-path-step.active .step-num {
+      background: var(--accent);
+      color: #fff;
+    }
+    .step-info { flex: 1; }
+    .step-title { font-size: 13px; font-weight: 500; color: rgba(255,255,255,.85); }
+    .step-meta { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 1px; }
+    .step-badge {
+      font-size: 10px; font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 999px;
+      letter-spacing: .04em;
+    }
+    .badge-done { background: rgba(26,107,74,.25); color: var(--accent-l2); }
+    .badge-now  { background: rgba(26,107,74,.5);  color: #fff; }
+    .badge-next { background: rgba(255,255,255,.07); color: rgba(255,255,255,.4); }
+    .hero-card-footer {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hero-card-footer-label { font-size: 12px; color: rgba(255,255,255,.35); }
+    .hero-card-footer-val { font-size: 22px; font-weight: 500; color: var(--accent-l2); font-family: var(--mono); }
+
+    /* ── Stats bar ─────────────────────────────────────────── */
+    .stats-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-bar-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      divide-x: 1px solid var(--border);
+    }
+    .stat-item {
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 400;
+      letter-spacing: -.02em;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .stat-num sup { font-size: 22px; vertical-align: super; }
+    .stat-label { font-size: 13px; color: var(--ink3); font-weight: 400; }
+    .stat-sublabel { font-size: 11px; color: var(--ink4); margin-top: 2px; }
+
+    /* ── Section chrome ────────────────────────────────────── */
+    .section { padding: 88px 0; }
+    .section-alt { background: var(--bg2); }
+    .section-dark { background: var(--navy); }
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 20px; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .section-heading {
+      font-family: var(--serif);
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      color: var(--navy);
+    }
+    .section-heading em { font-style: italic; color: var(--accent); }
+    .section-sub {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--ink3);
+      line-height: 1.7;
+      max-width: 560px;
+      margin-top: 14px;
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Course cards ──────────────────────────────────────── */
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .course-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+    }
+    .course-card:hover {
+      border-color: var(--border2);
+      box-shadow: 0 6px 32px rgba(13,27,42,.08);
+      transform: translateY(-2px);
+    }
+    .course-card-accent {
+      height: 4px;
+    }
+    .accent-teal   { background: var(--accent); }
+    .accent-gold   { background: var(--gold); }
+    .accent-navy   { background: var(--navy); }
+    .accent-blue   { background: var(--blue); }
+    .course-card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; gap: 0; }
+    .course-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .course-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .icon-bg-teal  { background: var(--accent-l); }
+    .icon-bg-gold  { background: var(--gold-l); }
+    .icon-bg-navy  { background: #E8EDF2; }
+    .icon-bg-blue  { background: var(--blue-l); }
+    .course-badge {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .04em;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .badge-essential { background: var(--accent-l); color: var(--accent); }
+    .badge-popular   { background: var(--gold-l);   color: var(--gold);   }
+    .badge-demand    { background: #E8EDF2;          color: var(--navy);   }
+    .badge-ready     { background: var(--blue-l);    color: var(--blue);   }
+    .course-step {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .06em; text-transform: uppercase;
+      color: var(--ink3); margin-bottom: 5px;
+    }
+    .course-title {
+      font-family: var(--sans);
+      font-size: 17px; font-weight: 500;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .course-desc {
+      font-size: 13px; font-weight: 300;
+      color: var(--ink2); line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .course-modules {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 5px;
+      margin-bottom: 20px;
+    }
+    .course-modules li {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 12.5px; color: var(--ink2); line-height: 1.45;
+    }
+    .course-modules li::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .course-meta {
+      display: flex; gap: 18px;
+      padding: 14px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+    .course-meta-item { display: flex; flex-direction: column; gap: 2px; }
+    .course-meta-val  { font-size: 14px; font-weight: 500; color: var(--navy); }
+    .course-meta-lbl  { font-size: 11px; color: var(--ink3); }
+    .course-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+    }
+    .course-price-block { display: flex; flex-direction: column; gap: 1px; }
+    .course-price-main {
+      font-family: var(--mono);
+      font-size: 22px; font-weight: 400;
+      color: var(--navy);
+    }
+    .course-price-alt { font-size: 12px; color: var(--ink3); }
+    .btn-enroll {
+      font-size: 13px; font-weight: 500;
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: var(--radius);
+      border: none;
+      transition: background var(--transition), transform .1s;
+      white-space: nowrap;
+    }
+    .btn-enroll:hover { background: var(--accent); }
+    .btn-enroll:active { transform: scale(.97); }
+    .btn-preview {
+      font-size: 13px; font-weight: 400;
+      background: none;
+      color: var(--ink2);
+      padding: 10px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border2);
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+      white-space: nowrap;
+    }
+    .btn-preview:hover { border-color: var(--border3); color: var(--ink); background: var(--bg); }
+
+    /* ── Currency toggle ────────────────────────────────────── */
+    .currency-toggle {
+      display: flex;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      align-self: flex-start;
+    }
+    .currency-toggle button {
+      font-family: var(--sans);
+      font-size: 12px; font-weight: 500;
+      background: none; border: none;
+      color: var(--ink3);
+      padding: 7px 16px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .currency-toggle button.active {
+      background: var(--navy);
+      color: #fff;
+      border-radius: calc(var(--radius) - 1px);
+    }
+
+    /* ── Bundle CTA ─────────────────────────────────────────── */
+    .bundle-section { padding: 0 0 88px; }
+    .bundle-card {
+      background: var(--navy);
+      border-radius: var(--radius-lg);
+      padding: 52px 56px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .bundle-bg-decor {
+      position: absolute;
+      right: -40px; bottom: -60px;
+      width: 320px; height: 320px;
+      border: 60px solid rgba(255,255,255,.03);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .bundle-bg-decor2 {
+      position: absolute;
+      right: 80px; bottom: -100px;
+      width: 220px; height: 220px;
+      border: 40px solid rgba(255,255,255,.02);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .bundle-eyebrow {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 14px;
+    }
+    .bundle-title {
+      font-family: var(--serif);
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 400;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .bundle-title span { color: var(--accent-l2); font-style: italic; }
+    .bundle-desc {
+      font-size: 15px; font-weight: 300;
+      color: rgba(255,255,255,.55);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+    .bundle-includes {
+      display: flex; gap: 24px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .bundle-include-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: rgba(255,255,255,.55);
+    }
+    .bundle-include-item::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent-l2);
+      flex-shrink: 0;
+    }
+    .bundle-right {
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: 16px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .bundle-price-original {
+      font-size: 13px; color: rgba(255,255,255,.3);
+      text-decoration: line-through;
+    }
+    .bundle-price {
+      font-family: var(--mono);
+      font-size: 48px; font-weight: 400;
+      color: var(--accent-l2);
+      line-height: 1;
+    }
+    .bundle-price-sub {
+      font-size: 12px; color: rgba(255,255,255,.3); margin-top: 4px;
+    }
+    .bundle-save {
+      background: rgba(26,107,74,.35);
+      color: var(--accent-l2);
+      border: 1px solid rgba(26,107,74,.4);
+      border-radius: 999px;
+      font-size: 12px; font-weight: 500;
+      padding: 4px 14px;
+    }
+    .btn-bundle {
+      font-size: 15px; font-weight: 500;
+      background: var(--accent-l2);
+      color: var(--navy);
+      padding: 14px 36px;
+      border-radius: var(--radius);
+      border: none;
+      transition: background var(--transition), transform .1s;
+      white-space: nowrap;
+    }
+    .btn-bundle:hover { background: #fff; }
+    .btn-bundle:active { transform: scale(.98); }
+
+    /* ── Value props ────────────────────────────────────────── */
+    .props-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .prop-item {
+      padding: 40px 36px;
+      border-right: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+    .prop-item:last-child { border-right: none; }
+    .prop-item:hover { background: var(--white); }
+    .prop-icon {
+      width: 48px; height: 48px;
+      background: var(--navy);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .prop-icon svg { width: 22px; height: 22px; }
+    .prop-title {
+      font-size: 17px; font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+    .prop-desc {
+      font-size: 14px; font-weight: 300;
+      color: var(--ink2); line-height: 1.7;
+    }
+    .prop-stat {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-family: var(--serif);
+      font-size: 28px; font-weight: 400;
+      color: var(--accent);
+    }
+    .prop-stat-label { font-family: var(--sans); font-size: 12px; color: var(--ink3); margin-top: 2px; }
+
+    /* ── How it works ───────────────────────────────────────── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 24px; left: 10%;
+      width: 80%; height: 1px;
+      background: var(--border2);
+      z-index: 0;
+    }
+    .step-item {
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-dot {
+      width: 48px; height: 48px;
+      background: var(--white);
+      border: 1px solid var(--border2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono);
+      font-size: 15px; font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 24px;
+    }
+    .step-title { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 8px; }
+    .step-desc { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.6; }
+
+    /* ── Testimonials ───────────────────────────────────────── */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .testimonial-stars {
+      display: flex; gap: 3px; margin-bottom: 16px;
+    }
+    .star { color: var(--gold); font-size: 14px; }
+    .testimonial-quote {
+      font-family: var(--serif);
+      font-size: 16px; font-weight: 400;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .author-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 500;
+      flex-shrink: 0;
+    }
+    .av1 { background: var(--accent-l); color: var(--accent); }
+    .av2 { background: var(--blue-l);   color: var(--blue);   }
+    .av3 { background: var(--gold-l);   color: var(--gold);   }
+    .author-name { font-size: 13px; font-weight: 500; color: var(--navy); }
+    .author-role { font-size: 12px; color: var(--ink3); }
+
+    /* ── Companies ──────────────────────────────────────────── */
+    .companies-bar {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 0;
+    }
+    .companies-inner {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .companies-label {
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink4);
+      white-space: nowrap;
+    }
+    .company-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink4);
+      letter-spacing: -.01em;
+      transition: color var(--transition);
+    }
+    .company-name:hover { color: var(--ink2); }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    .footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.5);
+    }
+    .footer-top {
+      padding: 64px 0 48px;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 64px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .footer-brand-name {
+      font-size: 18px; font-weight: 500;
+      color: #fff;
+      letter-spacing: -.02em;
+      margin-bottom: 12px;
+    }
+    .footer-brand-desc {
+      font-size: 13px; font-weight: 300;
+      line-height: 1.7; color: rgba(255,255,255,.4);
+      margin-bottom: 24px;
+    }
+    .footer-socials { display: flex; gap: 10px; }
+    .footer-social-btn {
+      width: 34px; height: 34px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      transition: background var(--transition), border-color var(--transition);
+      cursor: pointer;
+    }
+    .footer-social-btn:hover {
+      background: rgba(255,255,255,.1);
+      border-color: rgba(255,255,255,.2);
+    }
+    .footer-links-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .footer-col-title {
+      font-size: 12px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 16px;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      font-size: 13px; color: rgba(255,255,255,.45);
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: rgba(255,255,255,.8); }
+    .footer-bottom {
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-bottom-text { font-size: 12px; color: rgba(255,255,255,.25); }
+    .footer-bottom-links { display: flex; gap: 20px; }
+    .footer-bottom-links a { font-size: 12px; color: rgba(255,255,255,.25); transition: color var(--transition); }
+    .footer-bottom-links a:hover { color: rgba(255,255,255,.5); }
+
+    /* ── Animations ─────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { opacity: 0; animation: fadeUp .6s ease forwards; }
+    .delay-1 { animation-delay: .1s; }
+    .delay-2 { animation-delay: .2s; }
+    .delay-3 { animation-delay: .3s; }
+    .delay-4 { animation-delay: .4s; }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .courses-grid { grid-template-columns: 1fr; }
+      .props-grid { grid-template-columns: 1fr; }
+      .prop-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .prop-item:last-child { border-bottom: none; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .steps-grid::before { display: none; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .stats-bar-inner { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+    }
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero-inner { padding: 64px 0 56px; }
+      .bundle-card { grid-template-columns: 1fr; padding: 36px 28px; }
+      .bundle-right { align-items: flex-start; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-links-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-bar-inner { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 480px) {
+      .stats-bar-inner { grid-template-columns: 1fr 1fr; }
+      .stat-item { padding: 20px; }
+      .stat-num { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Topbar ────────────────────────────────────────────────── -->
+<div class="topbar">
+  <strong>New:</strong> Python for Data course now includes 3 real-world capstone projects.
+  <a href="catalog.html">View catalog →</a>
+</div>
+
+<!-- ── Navigation ────────────────────────────────────────────── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="SkillPath home">
+        <div class="nav-logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 14L7 8L10 11L13 6L15 9" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="15" cy="9" r="1.5" fill="#5DCAA5"/>
+          </svg>
+        </div>
+        <span class="nav-logo-name">Skill<span>Path</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-active">Home</a></li>
+        <li><a href="catalog.html">Courses</a></li>
+        <li><a href="assessments.html">Assessments</a></li>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-ghost" onclick="window.location.href='dashboard.html'">Log in</button>
+        <button class="btn-primary" onclick="window.location.href='catalog.html'">Get started</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ──────────────────────────────────────────────────── -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-grid-overlay" aria-hidden="true"></div>
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow fade-up">Remote-ready tech skills</div>
+        <h1 class="hero-heading fade-up delay-1" id="hero-heading">
+          Build the skills that<br/>
+          <em>companies actually hire for</em>
+        </h1>
+        <p class="hero-sub fade-up delay-2">
+          Structured courses in data, analytics, and technology designed for professionals
+          pursuing remote careers. Project-based. Certificate-backed. Self-paced.
+        </p>
+        <div class="hero-ctas fade-up delay-3">
+          <button class="btn-accent" onclick="window.location.href='catalog.html'">
+            Browse courses
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="btn-outline-white" onclick="window.location.href='#how-it-works'">
+            How it works
+          </button>
+        </div>
+        <div class="hero-trust fade-up delay-4" aria-label="Social proof">
+          <div class="hero-trust-avatars" aria-hidden="true">
+            <div class="hero-trust-avatar">BR</div>
+            <div class="hero-trust-avatar">SA</div>
+            <div class="hero-trust-avatar">DW</div>
+            <div class="hero-trust-avatar">+</div>
+          </div>
+          <p class="hero-trust-text">
+            Joined by <strong>2,400+ students</strong> from across Southeast Asia
+          </p>
+        </div>
+      </div>
+
+      <!-- Right column: learning path card -->
+      <div class="hero-card fade-up delay-2" aria-hidden="true">
+        <div class="hero-card-label">Data &amp; Analytics Track</div>
+        <div class="hero-card-path">
+          <div class="hero-path-step">
+            <div class="step-num">1</div>
+            <div class="step-info">
+              <div class="step-title">Excel &amp; Google Sheets</div>
+              <div class="step-meta">6 weeks · 24 lessons</div>
+            </div>
+            <span class="step-badge badge-done">Done</span>
+          </div>
+          <div class="hero-path-step active">
+            <div class="step-num">2</div>
+            <div class="step-info">
+              <div class="step-title">SQL for Data Analysis</div>
+              <div class="step-meta">8 weeks · 32 lessons</div>
+            </div>
+            <span class="step-badge badge-now">In progress</span>
+          </div>
+          <div class="hero-path-step">
+            <div class="step-num">3</div>
+            <div class="step-info">
+              <div class="step-title">Python for Data</div>
+              <div class="step-meta">10 weeks · 38 lessons</div>
+            </div>
+            <span class="step-badge badge-next">Up next</span>
+          </div>
+          <div class="hero-path-step">
+            <div class="step-num">4</div>
+            <div class="step-info">
+              <div class="step-title">Data Visualization</div>
+              <div class="step-meta">8 weeks · 30 lessons</div>
+            </div>
+            <span class="step-badge badge-next">Locked</span>
+          </div>
+        </div>
+        <div class="hero-card-footer">
+          <div>
+            <div class="hero-card-footer-label">Track progress</div>
+            <div style="width:160px;height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:6px;overflow:hidden;">
+              <div style="width:38%;height:100%;background:var(--accent-l2);border-radius:2px;"></div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="hero-card-footer-label">Completion</div>
+            <div class="hero-card-footer-val">38%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats bar ──────────────────────────────────────────────── -->
+<div class="stats-bar" role="region" aria-label="Platform statistics">
+  <div class="container">
+    <div class="stats-bar-inner">
+      <div class="stat-item">
+        <div class="stat-num">2,400<sup>+</sup></div>
+        <div class="stat-label">Students enrolled</div>
+        <div class="stat-sublabel">Across Southeast Asia</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Structured courses</div>
+        <div class="stat-sublabel">Data &amp; Analytics track</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">94<sup>%</sup></div>
+        <div class="stat-label">Completion rate</div>
+        <div class="stat-sublabel">Industry avg. is 15%</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">340<sup>+</sup></div>
+        <div class="stat-label">Companies hiring</div>
+        <div class="stat-sublabel">Our graduate network</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Companies ─────────────────────────────────────────────── -->
+<div class="companies-bar" role="region" aria-label="Companies that hire our graduates">
+  <div class="container">
+    <div class="companies-inner">
+      <span class="companies-label">Graduates work at</span>
+      <span class="company-name">Tokopedia</span>
+      <span class="company-name">Gojek</span>
+      <span class="company-name">Traveloka</span>
+      <span class="company-name">Bukalapak</span>
+      <span class="company-name">Shopee</span>
+      <span class="company-name">OVO</span>
+      <span class="company-name">Telkom</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Course cards ───────────────────────────────────────────── -->
+<section class="section" id="pricing" aria-labelledby="courses-heading">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Data &amp; Analytics Track</div>
+        <h2 class="section-heading" id="courses-heading">
+          Four courses.<br/><em>One clear path.</em>
+        </h2>
+        <p class="section-sub">Each course is self-paced, project-based, and designed to take you from zero to job-ready.</p>
+      </div>
+      <div class="currency-toggle" role="group" aria-label="Currency selection">
+        <button class="active" id="btn-usd" onclick="setCurrency('usd')" aria-pressed="true">USD</button>
+        <button id="btn-idr" onclick="setCurrency('idr')" aria-pressed="false">IDR</button>
+      </div>
+    </div>
+
+    <div class="courses-grid">
+
+      <!-- Course 1 -->
+      <article class="course-card">
+        <div class="course-card-accent accent-teal"></div>
+        <div class="course-card-body">
+          <div class="course-card-top">
+            <div class="course-icon icon-bg-teal" aria-hidden="true">📊</div>
+            <span class="course-badge badge-essential">Essential</span>
+          </div>
+          <div class="course-step">Course 01 · Beginner</div>
+          <h3 class="course-title">Excel &amp; Google Sheets Mastery</h3>
+          <p class="course-desc">The universal tool every analyst uses daily. Learn to build dashboards, automate reports, and analyse data with confidence.</p>
+          <ul class="course-modules" aria-label="Key topics">
+            <li>Formulas &amp; functions — VLOOKUP, INDEX/MATCH, IF</li>
+            <li>PivotTables and dynamic dashboards</li>
+            <li>Data cleaning and conditional formatting</li>
+            <li>Google Sheets automation &amp; collaboration</li>
+          </ul>
+          <div class="course-meta" role="list" aria-label="Course details">
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">6 wks</span>
+              <span class="course-meta-lbl">Duration</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">24</span>
+              <span class="course-meta-lbl">Lessons</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">5</span>
+              <span class="course-meta-lbl">Projects</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">Certificate</span>
+              <span class="course-meta-lbl">On completion</span>
+            </div>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-block">
+              <div class="course-price-main" data-usd="$49" data-idr="Rp 790K">$49</div>
+              <div class="course-price-alt" data-alt-usd="≈ Rp 790,000" data-alt-idr="≈ $49 USD">≈ Rp 790,000</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-preview" onclick="window.location.href='catalog.html'">Preview</button>
+              <button class="btn-enroll" onclick="window.location.href='catalog.html'">Enroll →</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Course 2 -->
+      <article class="course-card">
+        <div class="course-card-accent accent-gold"></div>
+        <div class="course-card-body">
+          <div class="course-card-top">
+            <div class="course-icon icon-bg-gold" aria-hidden="true">🗄️</div>
+            <span class="course-badge badge-popular">Most popular</span>
+          </div>
+          <div class="course-step">Course 02 · Beginner–Intermediate</div>
+          <h3 class="course-title">SQL for Data Analysis</h3>
+          <p class="course-desc">Query real databases and extract business insights. The single most-requested skill in data job postings globally.</p>
+          <ul class="course-modules" aria-label="Key topics">
+            <li>SELECT, GROUP BY, JOINs — all the fundamentals</li>
+            <li>Subqueries, CTEs &amp; window functions</li>
+            <li>Real projects with PostgreSQL &amp; BigQuery</li>
+            <li>Data transformation and reporting patterns</li>
+          </ul>
+          <div class="course-meta" role="list" aria-label="Course details">
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">8 wks</span>
+              <span class="course-meta-lbl">Duration</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">32</span>
+              <span class="course-meta-lbl">Lessons</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">6</span>
+              <span class="course-meta-lbl">Projects</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">Certificate</span>
+              <span class="course-meta-lbl">On completion</span>
+            </div>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-block">
+              <div class="course-price-main" data-usd="$69" data-idr="Rp 1.099K">$69</div>
+              <div class="course-price-alt" data-alt-usd="≈ Rp 1,099,000" data-alt-idr="≈ $69 USD">≈ Rp 1,099,000</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-preview" onclick="window.location.href='catalog.html'">Preview</button>
+              <button class="btn-enroll" onclick="window.location.href='catalog.html'">Enroll →</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Course 3 -->
+      <article class="course-card">
+        <div class="course-card-accent accent-navy"></div>
+        <div class="course-card-body">
+          <div class="course-card-top">
+            <div class="course-icon icon-bg-navy" aria-hidden="true">🐍</div>
+            <span class="course-badge badge-demand">In-demand</span>
+          </div>
+          <div class="course-step">Course 03 · Intermediate</div>
+          <h3 class="course-title">Python for Data (pandas)</h3>
+          <p class="course-desc">Automate analysis that would take hours in Excel. Work with real datasets, clean messy data, and build reproducible workflows.</p>
+          <ul class="course-modules" aria-label="Key topics">
+            <li>Python fundamentals for data professionals</li>
+            <li>pandas DataFrames, groupby &amp; merging</li>
+            <li>Exploratory data analysis (EDA) workflow</li>
+            <li>Jupyter Notebooks &amp; sharing your work</li>
+          </ul>
+          <div class="course-meta" role="list" aria-label="Course details">
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">10 wks</span>
+              <span class="course-meta-lbl">Duration</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">38</span>
+              <span class="course-meta-lbl">Lessons</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">7</span>
+              <span class="course-meta-lbl">Projects</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">Certificate</span>
+              <span class="course-meta-lbl">On completion</span>
+            </div>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-block">
+              <div class="course-price-main" data-usd="$89" data-idr="Rp 1.399K">$89</div>
+              <div class="course-price-alt" data-alt-usd="≈ Rp 1,399,000" data-alt-idr="≈ $89 USD">≈ Rp 1,399,000</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-preview" onclick="window.location.href='catalog.html'">Preview</button>
+              <button class="btn-enroll" onclick="window.location.href='catalog.html'">Enroll →</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Course 4 -->
+      <article class="course-card">
+        <div class="course-card-accent accent-blue"></div>
+        <div class="course-card-body">
+          <div class="course-card-top">
+            <div class="course-icon icon-bg-blue" aria-hidden="true">📈</div>
+            <span class="course-badge badge-ready">Job-ready</span>
+          </div>
+          <div class="course-step">Course 04 · Intermediate</div>
+          <h3 class="course-title">Data Visualization &amp; Dashboards</h3>
+          <p class="course-desc">Turn numbers into decisions. Build Power BI and Tableau dashboards that non-technical teams can understand and act on.</p>
+          <ul class="course-modules" aria-label="Key topics">
+            <li>Visualization principles — which chart, when &amp; why</li>
+            <li>Power BI: reports, measures &amp; DAX basics</li>
+            <li>Tableau Public: drag-and-drop analytics</li>
+            <li>Storytelling with data for business audiences</li>
+          </ul>
+          <div class="course-meta" role="list" aria-label="Course details">
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">8 wks</span>
+              <span class="course-meta-lbl">Duration</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">30</span>
+              <span class="course-meta-lbl">Lessons</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">6</span>
+              <span class="course-meta-lbl">Projects</span>
+            </div>
+            <div class="course-meta-item" role="listitem">
+              <span class="course-meta-val">Certificate</span>
+              <span class="course-meta-lbl">On completion</span>
+            </div>
+          </div>
+          <div class="course-footer">
+            <div class="course-price-block">
+              <div class="course-price-main" data-usd="$79" data-idr="Rp 1.249K">$79</div>
+              <div class="course-price-alt" data-alt-usd="≈ Rp 1,249,000" data-alt-idr="≈ $79 USD">≈ Rp 1,249,000</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-preview" onclick="window.location.href='catalog.html'">Preview</button>
+              <button class="btn-enroll" onclick="window.location.href='catalog.html'">Enroll →</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Bundle ─────────────────────────────────────────────────── -->
+<div class="bundle-section">
+  <div class="container">
+    <div class="bundle-card" role="region" aria-labelledby="bundle-heading">
+      <div class="bundle-bg-decor" aria-hidden="true"></div>
+      <div class="bundle-bg-decor2" aria-hidden="true"></div>
+      <div>
+        <div class="bundle-eyebrow">Best value · Complete track</div>
+        <h2 class="bundle-title" id="bundle-heading">
+          All four courses.<br/><span>One certificate.</span>
+        </h2>
+        <p class="bundle-desc">
+          The complete Data &amp; Analytics bundle — 124 lessons, 24 hands-on projects, and a
+          certificate of completion that you can share on LinkedIn and your portfolio.
+        </p>
+        <div class="bundle-includes" role="list" aria-label="Bundle includes">
+          <div class="bundle-include-item" role="listitem">124 lessons</div>
+          <div class="bundle-include-item" role="listitem">24 projects</div>
+          <div class="bundle-include-item" role="listitem">Lifetime access</div>
+          <div class="bundle-include-item" role="listitem">1 certificate</div>
+          <div class="bundle-include-item" role="listitem">Portfolio page</div>
+        </div>
+      </div>
+      <div class="bundle-right">
+        <div>
+          <div class="bundle-price-original" id="bundle-original">Individual total: $286</div>
+          <div class="bundle-price" id="bundle-price" data-usd="$199" data-idr="Rp 3.199K">$199</div>
+          <div class="bundle-price-sub" id="bundle-sub"
+               data-alt-usd="≈ Rp 3,199,000 · one-time"
+               data-alt-idr="≈ $199 USD · one-time">≈ Rp 3,199,000 · one-time</div>
+        </div>
+        <span class="bundle-save"
+              id="bundle-save"
+              data-usd="Save $87 — 30% off"
+              data-idr="Hemat Rp 1.337.000 (30%)">Save $87 — 30% off</span>
+        <button class="btn-bundle" onclick="window.location.href='catalog.html'">
+          Get the full bundle →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── How it works ───────────────────────────────────────────── -->
+<section class="section section-alt" id="how-it-works" aria-labelledby="hiw-heading">
+  <div class="container">
+    <div class="section-header" style="margin-bottom:56px">
+      <div>
+        <div class="section-eyebrow">Process</div>
+        <h2 class="section-heading" id="hiw-heading">How SkillPath works</h2>
+      </div>
+    </div>
+    <div class="steps-grid" role="list">
+      <div class="step-item" role="listitem">
+        <div class="step-dot" aria-hidden="true">01</div>
+        <div class="step-title">Choose your track</div>
+        <p class="step-desc">Browse the catalog, read course outlines, and pick the track that fits your current level and career goals.</p>
+      </div>
+      <div class="step-item" role="listitem">
+        <div class="step-dot" aria-hidden="true">02</div>
+        <div class="step-title">Learn at your pace</div>
+        <p class="step-desc">Video lessons, readings, and hands-on exercises. No deadlines — complete each course in your own time.</p>
+      </div>
+      <div class="step-item" role="listitem">
+        <div class="step-dot" aria-hidden="true">03</div>
+        <div class="step-title">Build real projects</div>
+        <p class="step-desc">Each course ends with a capstone project using real datasets. Your work is reviewed against an industry rubric.</p>
+      </div>
+      <div class="step-item" role="listitem">
+        <div class="step-dot" aria-hidden="true">04</div>
+        <div class="step-title">Share your portfolio</div>
+        <p class="step-desc">Publish your projects to a shareable portfolio page. Earn certificates. Get hired by companies in our network.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Value props ────────────────────────────────────────────── -->
+<section class="section" aria-labelledby="props-heading">
+  <div class="container">
+    <div class="section-header" style="margin-bottom:48px">
+      <div>
+        <div class="section-eyebrow">Why SkillPath</div>
+        <h2 class="section-heading" id="props-heading">
+          Built for remote-ready<br/><em>careers</em>
+        </h2>
+      </div>
+    </div>
+    <div class="props-grid">
+      <div class="prop-item">
+        <div class="prop-icon" aria-hidden="true">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 2L13.5 8H20L14.5 12L16.5 18.5L11 15L5.5 18.5L7.5 12L2 8H8.5L11 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="prop-title">Industry-aligned curriculum</h3>
+        <p class="prop-desc">Every course is mapped to real job descriptions. We track hiring trends quarterly and update content when the industry moves.</p>
+        <div class="prop-stat">87%</div>
+        <div class="prop-stat-label">of graduates report landing a relevant role within 6 months</div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-icon" aria-hidden="true">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="16" height="16" rx="3" stroke="white" stroke-width="1.5"/>
+            <path d="M7 11l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="prop-title">Portfolio-first assessment</h3>
+        <p class="prop-desc">Every course culminates in a real project — not a multiple-choice quiz. Your portfolio becomes the evidence of what you can do.</p>
+        <div class="prop-stat">24</div>
+        <div class="prop-stat-label">hands-on projects across the full Data &amp; Analytics track</div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-icon" aria-hidden="true">
+          <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="8" stroke="white" stroke-width="1.5"/>
+            <path d="M11 7v4l3 2" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="prop-title">Self-paced, no deadlines</h3>
+        <p class="prop-desc">Designed for professionals with jobs, families, and real lives. One payment, lifetime access — learn when it works for you.</p>
+        <div class="prop-stat">∞</div>
+        <div class="prop-stat-label">lifetime access with all future content updates included</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ───────────────────────────────────────────── -->
+<section class="section section-alt" aria-labelledby="testimonials-heading">
+  <div class="container">
+    <div class="section-header" style="margin-bottom:48px">
+      <div>
+        <div class="section-eyebrow">Student stories</div>
+        <h2 class="section-heading" id="testimonials-heading">From the people<br/><em>who've been here</em></h2>
+      </div>
+    </div>
+    <div class="testimonials-grid">
+      <article class="testimonial-card">
+        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+          <span class="star" aria-hidden="true">★</span><span class="star" aria-hidden="true">★</span>
+          <span class="star" aria-hidden="true">★</span><span class="star" aria-hidden="true">★</span>
+          <span class="star" aria-hidden="true">★</span>
+        </div>
+        <blockquote class="testimonial-quote">
+          "The SQL course alone got me a remote analyst role at a Singapore fintech. The projects were real work — not toy exercises. My portfolio spoke for itself."
+        </blockquote>
+        <div class="testimonial-author">
+          <div class="author-avatar av1" aria-hidden="true">BR</div>
+          <div>
+            <div class="author-name">Budi Raharjo</div>
+            <div class="author-role">Data Analyst · Singapore</div>
+          </div>
+        </div>
+      </article>
+      <article class="testimonial-card">
+        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+          <span class="star" aria-hidden="true">★</span><span class="star" aria-hidden="true">★</span>
+          <span class="star" aria-hidden="true">★</span><span class="star" aria-hidden="true">★</span>
+          <span class="star" aria-hidden="true">★</span>
+        </div>
+        <blockquote class="testimonial-quote">
+          "I had zero Python experience. The pandas course is structured so well that within 10 weeks I was cleaning and analysing data faster than colleagues with years of Excel experience."
+        </blockquote>
+        <div class="testimonial-author">
+          <div class="author-avatar av2" aria-hidden="true">SA</div>
+          <div>
+            <div class="author-name">Sari Andini</div>
+            <div class="author-role">Business Analyst · Jakarta (remote)</div>
+          </div>
+        </div>
+      </article>
+      <article class="testimonial-card">
+        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+          <span class="star" aria-hidden="true">★</span><span class="star" aria-hidden="true">★</span>
+          <span class="star" aria-hidden="true">★</span><span class="star" aria-hidden="true">★</span>
+          <span class="star" aria-hidden="true">★</span>
+        </div>
+        <blockquote class="testimonial-quote">
+          "The bundle is genuinely the best investment I made in my career. The certificate and portfolio page made me stand out in every application. Hired within 3 months."
+        </blockquote>
+        <div class="testimonial-author">
+          <div class="author-avatar av3" aria-hidden="true">DW</div>
+          <div>
+            <div class="author-name">Dwi Wahyuni</div>
+            <div class="author-role">BI Developer · Kuala Lumpur</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">SkillPath</div>
+        <p class="footer-brand-desc">
+          Professional technology and data skills for the next generation of remote-ready careers.
+          Built in Indonesia, used across Southeast Asia.
+        </p>
+        <div class="footer-socials" role="list" aria-label="Social media links">
+          <div class="footer-social-btn" role="listitem" aria-label="LinkedIn" tabindex="0">in</div>
+          <div class="footer-social-btn" role="listitem" aria-label="Twitter" tabindex="0">𝕏</div>
+          <div class="footer-social-btn" role="listitem" aria-label="Instagram" tabindex="0">ig</div>
+        </div>
+      </div>
+      <div class="footer-links-grid">
+        <div>
+          <div class="footer-col-title">Platform</div>
+          <ul class="footer-links">
+            <li><a href="catalog.html">Course catalog</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="assessments.html">Assessments</a></li>
+            <li><a href="#">Certificates</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Company</div>
+          <ul class="footer-links">
+            <li><a href="#">About SkillPath</a></li>
+            <li><a href="#">For enterprise</a></li>
+            <li><a href="#">Become an instructor</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Support</div>
+          <ul class="footer-links">
+            <li><a href="#">Help centre</a></li>
+            <li><a href="#">Contact us</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">System status</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-bottom-text">© 2025 SkillPath. All rights reserved. Jakarta, Indonesia.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms of service</a>
+        <a href="#">Cookie settings</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── JavaScript ─────────────────────────────────────────────── -->
+<script>
+  /* ── Currency toggle ─────────────────────── */
+  let currency = 'usd';
+  function setCurrency(cur) {
+    currency = cur;
+    document.getElementById('btn-usd').classList.toggle('active', cur === 'usd');
+    document.getElementById('btn-usd').setAttribute('aria-pressed', cur === 'usd');
+    document.getElementById('btn-idr').classList.toggle('active', cur === 'idr');
+    document.getElementById('btn-idr').setAttribute('aria-pressed', cur === 'idr');
+
+    document.querySelectorAll('.course-price-main').forEach(el => {
+      el.textContent = el.dataset[cur];
+    });
+    document.querySelectorAll('.course-price-alt').forEach(el => {
+      el.textContent = cur === 'usd' ? el.dataset.altUsd : el.dataset.altIdr;
+    });
+
+    const bp = document.getElementById('bundle-price');
+    bp.textContent = bp.dataset[cur];
+    const bs = document.getElementById('bundle-sub');
+    bs.textContent = cur === 'usd' ? bs.dataset.altUsd : bs.dataset.altIdr;
+    document.getElementById('bundle-original').textContent =
+      cur === 'usd' ? 'Individual total: $286' : 'Individual total: Rp 4.537.000';
+    const bsave = document.getElementById('bundle-save');
+    bsave.textContent = bsave.dataset[cur];
+  }
+
+  /* ── Scroll-triggered fade-in ──────────────── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.course-card, .prop-item, .step-item, .testimonial-card, .stat-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    observer.observe(el);
+  });
+
+  /* ── Sticky nav shadow on scroll ──────────── */
+  const nav = document.querySelector('.nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 10
+      ? '0 1px 20px rgba(0,0,0,.07)'
+      : 'none';
+  }, { passive: true });
+</script>
+<script src="config.js"></script>
+</body>
+</html>
