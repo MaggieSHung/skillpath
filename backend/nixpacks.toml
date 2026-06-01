@@ -1,0 +1,12 @@
+# nixpacks.toml
+# Railway uses Nixpacks to build the container.
+# This tells it to install Python + build tools needed by better-sqlite3.
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "python3", "gcc", "gnumake"]
+
+[phases.install]
+cmds = ["npm install"]
+
+[start]
+cmd = "node server.js"
