@@ -58,7 +58,8 @@ app.use((err, req, res, next) => {
 });
 
 // ── Start ────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n🎓 SkillPath backend running on http://localhost:${PORT}`);
+// Bind to 0.0.0.0 so Railway's proxy can reach the server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🎓 SkillPath backend running on port ${PORT}`);
   console.log(`   ENV: ${process.env.NODE_ENV || 'development'}\n`);
 });
