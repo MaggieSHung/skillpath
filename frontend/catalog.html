@@ -768,7 +768,7 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="catalog.html" class="active">Courses</a></li>
-      <li><a href="assessments.html">Assessments</a></li>
+      <li><a href='#' onclick="if(localStorage.getItem('sp_token')){window.location.href='assessments.html';}else{showAuthModal('login');}return false;">Assessments</a></li>
       <li><a href="dashboard.html">Dashboard</a></li>
     </ul>
     <div class="nav-right">
