@@ -134,3 +134,123 @@ function logout() {
   clearToken();
   window.location.href = 'index.html';
 }
+
+
+/* Payment additions */
+var API = 'https://skillpath-production-4f85.up.railway.app';
+
+/* ── Payment & Auth additions ── */
+document.addEventListener('DOMContentLoaded', function() {
+  // Fix nav buttons
+  var navActions = document.querySelector('.nav-actions');
+  if (navActions) {
+    var user = getUser();
+    if (!user) {
+      navActions.innerHTML = '<button class="btn-ghost" onclick="showAuthModal(\'login\')">Log in</button><button class="btn-primary" onclick="showAuthModal(\'register\')">Get started</button>';
+    }
+  }
+
+  // Fix enroll buttons
+  var enrollBtns = document.querySelectorAll('.btn-enroll');
+  var courseIds = [1, 2, 3, 4];
+  var courseTitles = ['Excel & Google Sheets Mastery','SQL for Data Analysis','Python for Data (pandas)','Data Visualization & Dashboards'];
+  var coursePrices = [790000, 1099000, 1399000, 1249000];
+  enrollBtns.forEach(function(btn, i) {
+    btn.id = 'enroll-btn-' + courseIds[i];
+    btn.onclick = function() { skillpathBuy(courseIds[i], courseTitles[i], coursePrices[i]); };
+  });
+
+  // Load enrollments if logged in
+  var tok = localStorage.getItem('sp_token');
+  if (tok) loadEnrollments(tok);
+});
+
+function loadEnrollments(tok) {
+  fetch(API + '/api/enrollments', {headers:{Authorization:'Bearer '+tok}})
+    .then(function(r){return r.json();})
+    .then(function(d){(d.courses||[]).forEach(function(c){markEnrolled(c.id);});})
+    .catch(function(){});
+}
+
+function markEnrolled(id) {
+  var btn = document.getElementById('enroll-btn-'+id);
+  if (btn) btn.outerHTML = '<span style="color:#16a34a;font-weight:600;font-size:13px">✓ Enrolled</span>';
+}
+
+function skillpathBuy(id, title, price) {
+  var tok = localStorage.getItem('sp_token');
+  if (!tok) { showAuthModal('login'); return; }
+  fetch(API + '/api/payments/create', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
+    body: JSON.stringify({course_id: id})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    window.snap.pay(d.snap_token, {
+      onSuccess: function(){ markEnrolled(id); alert('Enrolled in ' + title + '!'); },
+      onPending: function(){ alert('Payment pending.'); },
+      onError: function(){ alert('Payment failed.'); },
+      onClose: function(){}
+    });
+  })
+  .catch(function(){ alert('Network error.'); });
+}
+
+function showAuthModal(type) {
+  var existing = document.getElementById('sp-auth-modal');
+  if (existing) existing.remove();
+  var html = '<div id="sp-auth-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:99999;display:flex;align-items:center;justify-content:center" onclick="if(event.target.id===\'sp-auth-modal\')this.remove()">';
+  html += '<div style="background:#fff;border-radius:16px;padding:36px;width:90%;max-width:400px">';
+  if (type === 'login') {
+    html += '<h2 style="font-size:22px;margin-bottom:4px">Welcome back</h2>';
+    html += '<p style="color:#666;font-size:13px;margin-bottom:20px">Log in to continue.</p>';
+    html += '<div style="margin-bottom:12px"><label style="font-size:12px;color:#444;display:block;margin-bottom:4px">Email</label><input id="sp-email" type="email" placeholder="you@example.com" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;box-sizing:border-box"></div>';
+    html += '<div style="margin-bottom:16px"><label style="font-size:12px;color:#444;display:block;margin-bottom:4px">Password</label><input id="sp-pw" type="password" placeholder="••••••" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;box-sizing:border-box"></div>';
+    html += '<div id="sp-err" style="color:#dc2626;font-size:12px;margin-bottom:8px;display:none"></div>';
+    html += '<button onclick="spLogin()" style="width:100%;padding:11px;background:#0d1b2a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">Log in</button>';
+    html += '<p style="font-size:13px;color:#666;margin-top:16px">No account? <a onclick="showAuthModal(\'register\')" style="color:#2563eb;cursor:pointer">Create one</a></p>';
+  } else {
+    html += '<h2 style="font-size:22px;margin-bottom:4px">Get started</h2>';
+    html += '<p style="color:#666;font-size:13px;margin-bottom:20px">Create your free account.</p>';
+    html += '<div style="margin-bottom:12px"><label style="font-size:12px;color:#444;display:block;margin-bottom:4px">Full name</label><input id="sp-name" type="text" placeholder="Budi Santoso" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;box-sizing:border-box"></div>';
+    html += '<div style="margin-bottom:12px"><label style="font-size:12px;color:#444;display:block;margin-bottom:4px">Email</label><input id="sp-email" type="email" placeholder="you@example.com" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;box-sizing:border-box"></div>';
+    html += '<div style="margin-bottom:16px"><label style="font-size:12px;color:#444;display:block;margin-bottom:4px">Password</label><input id="sp-pw" type="password" placeholder="Min. 6 characters" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;box-sizing:border-box"></div>';
+    html += '<div id="sp-err" style="color:#dc2626;font-size:12px;margin-bottom:8px;display:none"></div>';
+    html += '<button onclick="spRegister()" style="width:100%;padding:11px;background:#0d1b2a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">Create account</button>';
+    html += '<p style="font-size:13px;color:#666;margin-top:16px">Have an account? <a onclick="showAuthModal(\'login\')" style="color:#2563eb;cursor:pointer">Log in</a></p>';
+  }
+  html += '</div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function spLogin() {
+  var email = document.getElementById('sp-email').value.trim();
+  var pw = document.getElementById('sp-pw').value;
+  var err = document.getElementById('sp-err');
+  fetch(API + '/api/auth/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pw})})
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
+  .then(function(res){
+    if (!res.ok) { err.textContent=res.d.error||'Login failed'; err.style.display='block'; return; }
+    localStorage.setItem('sp_token', res.d.token);
+    localStorage.setItem('sp_user', JSON.stringify(res.d.user));
+    document.getElementById('sp-auth-modal').remove();
+    location.reload();
+  }).catch(function(){ err.textContent='Network error.'; err.style.display='block'; });
+}
+
+function spRegister() {
+  var name = document.getElementById('sp-name').value.trim();
+  var email = document.getElementById('sp-email').value.trim();
+  var pw = document.getElementById('sp-pw').value;
+  var err = document.getElementById('sp-err');
+  fetch(API + '/api/auth/register', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,email:email,password:pw})})
+  .then(function(r){return r.json().then(function(d){return{ok:r.ok,d:d};});})
+  .then(function(res){
+    if (!res.ok) { err.textContent=(res.d.errors?res.d.errors[0].msg:res.d.error)||'Failed'; err.style.display='block'; return; }
+    localStorage.setItem('sp_token', res.d.token);
+    localStorage.setItem('sp_user', JSON.stringify(res.d.user));
+    document.getElementById('sp-auth-modal').remove();
+    location.reload();
+  }).catch(function(){ err.textContent='Network error.'; err.style.display='block'; });
+}

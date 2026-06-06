@@ -943,6 +943,7 @@
       .stat-num { font-size: 32px; }
     }
   </style>
+  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-AxwIChIG6RoK0zfZ"></script>
 </head>
 <body>
 
@@ -1638,5 +1639,66 @@
   }, { passive: true });
 </script>
 <script src="config.js"></script>
+
+</body>
+</html>
+</footer>
+
+<!-- ── JavaScript ─────────────────────────────────────────────── -->
+<script>
+  /* ── Currency toggle ─────────────────────── */
+  let currency = 'usd';
+  function setCurrency(cur) {
+    currency = cur;
+    document.getElementById('btn-usd').classList.toggle('active', cur === 'usd');
+    document.getElementById('btn-usd').setAttribute('aria-pressed', cur === 'usd');
+    document.getElementById('btn-idr').classList.toggle('active', cur === 'idr');
+    document.getElementById('btn-idr').setAttribute('aria-pressed', cur === 'idr');
+
+    document.querySelectorAll('.course-price-main').forEach(el => {
+      el.textContent = el.dataset[cur];
+    });
+    document.querySelectorAll('.course-price-alt').forEach(el => {
+      el.textContent = cur === 'usd' ? el.dataset.altUsd : el.dataset.altIdr;
+    });
+
+    const bp = document.getElementById('bundle-price');
+    bp.textContent = bp.dataset[cur];
+    const bs = document.getElementById('bundle-sub');
+    bs.textContent = cur === 'usd' ? bs.dataset.altUsd : bs.dataset.altIdr;
+    document.getElementById('bundle-original').textContent =
+      cur === 'usd' ? 'Individual total: $286' : 'Individual total: Rp 4.537.000';
+    const bsave = document.getElementById('bundle-save');
+    bsave.textContent = bsave.dataset[cur];
+  }
+
+  /* ── Scroll-triggered fade-in ──────────────── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.course-card, .prop-item, .step-item, .testimonial-card, .stat-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity .5s ease, transform .5s ease';
+    observer.observe(el);
+  });
+
+  /* ── Sticky nav shadow on scroll ──────────── */
+  const nav = document.querySelector('.nav');
+  window.addEventListener('scroll', () => {
+    nav.style.boxShadow = window.scrollY > 10
+      ? '0 1px 20px rgba(0,0,0,.07)'
+      : 'none';
+  }, { passive: true });
+</script>
+<script src="config.js"></script>
+
 </body>
 </html>
