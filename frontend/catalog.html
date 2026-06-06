@@ -1201,7 +1201,7 @@ function renderGrid(courses) {
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Continue
                </button>`
-            : `<button class="btn-enroll" onclick="event.stopPropagation();openModal(${c.id})">Enroll →</button>`
+            : `<button class="btn-enroll" onclick="event.stopPropagation();skillpathBuy(${c.id}, '${c.title}', ${c.price_idr})">Enroll →</button>`
           }
         </div>
       </div>
@@ -1311,7 +1311,7 @@ function openModal(id) {
       <button class="btn-modal-preview">Preview free lesson</button>
       ${c.enrolled
         ? `<button class="btn-modal-continue">Continue course →</button>`
-        : `<button class="btn-modal-enroll">Enroll now →</button>`
+        : `<button class="btn-modal-enroll" onclick="skillpathBuy(c.id, c.title, c.price_idr)">Enroll now →</button>`
       }
     </div>
   `;
