@@ -769,11 +769,13 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="catalog.html" class="active">Courses</a></li>
       <li><a href='#' onclick="if(localStorage.getItem('sp_token')){window.location.href='assessments.html';}else{showAuthModal('login');}return false;">Assessments</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
+      <li id="nav-dashboard-link" style="display:none"><a href="dashboard.html">Dashboard</a></li>
     </ul>
     <div class="nav-right">
-      <button class="nav-btn-ghost" onclick="window.location.href='dashboard.html'">Dashboard</button>
-      <button class="nav-btn-primary" onclick="window.location.href='dashboard.html'">My account</button>
+      <div id="nav-auth-buttons">
+        <button class="nav-btn-ghost" onclick="showAuthModal('login')">Log in</button>
+        <button class="nav-btn-primary" onclick="showAuthModal('register')">Get started</button>
+      </div>
     </div>
   </div>
 </nav>
@@ -1438,5 +1440,27 @@ function setCurrency(cur) {
 syncFilters();
 applyFilters();
 </script>
+
+<script>
+(function() {
+  var token = localStorage.getItem('sp_token');
+  var user = JSON.parse(localStorage.getItem('sp_user') || 'null');
+  var dashLink = document.getElementById('nav-dashboard-link');
+  var authBtns = document.getElementById('nav-auth-buttons');
+
+  if (token && user) {
+    // Logged in - show dashboard link and user pill
+    if (dashLink) dashLink.style.display = '';
+    if (authBtns) {
+      var ini = user.name.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+      authBtns.innerHTML = '<div style="display:flex;align-items:center;gap:8px;background:#f5f5f5;border:1px solid #ddd;border-radius:999px;padding:4px 14px 4px 6px;font-size:13px"><div style="width:26px;height:26px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">'+ini+'</div><span>'+user.name.split(' ')[0]+'</span></div><button onclick="localStorage.removeItem('sp_token');localStorage.removeItem('sp_user');location.reload();" style="font-size:13px;background:none;border:1px solid #ddd;border-radius:8px;padding:6px 13px;cursor:pointer">Log out</button>';
+    }
+  } else {
+    // Not logged in - hide dashboard link
+    if (dashLink) dashLink.style.display = 'none';
+  }
+})();
+</script>
+
 </body>
 </html>
