@@ -13,7 +13,7 @@
  * ─────────────────────────────────────────────────────
  */
 
-const RAILWAY_URL = 'https://skillpath-production-2f55.up.railway.app'; // ← replace after Step 3
+const RAILWAY_URL = 'https://skillpath-production-4f85.up.railway.app'; // ← replace after Step 3
 
 const API_BASE = (() => {
   const host = window.location.hostname;
