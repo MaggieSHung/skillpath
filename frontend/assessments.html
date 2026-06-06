@@ -755,13 +755,12 @@
 </head>
 <body>
 <script>
-  // Auth guard - redirect to home if not logged in
+  // Auth guard - silent redirect to home if not logged in
   (function() {
     var token = localStorage.getItem('sp_token');
     var user = localStorage.getItem('sp_user');
     if (!token || !user) {
-      alert('Please log in to access this page.');
-      window.location.href = '/index.html';
+      window.location.replace('/index.html');
     }
   })();
 </script>
