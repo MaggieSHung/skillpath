@@ -768,7 +768,7 @@
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="catalog.html" class="active">Courses</a></li>
-      <li><a href='#' onclick="if(localStorage.getItem('sp_token')){window.location.href='assessments.html';}else{showAuthModal('login');}return false;">Assessments</a></li>
+      <li id='nav-assessments-catalog' style='display:none'><a href='assessments.html'>Assessments</a></li>
       <li id="nav-dashboard-link" style="display:none"><a href="dashboard.html">Dashboard</a></li>
     </ul>
     <div class="nav-right">
@@ -1020,7 +1020,7 @@ const COURSES = [
     track: 'data-analytics',
     weeks: 6, lessons: 24, projects: 5,
     priceUsd: 49, priceIdr: 790000,
-    enrolled: true, progress: 100, lessonsCompleted: 24,
+    enrolled: false, progress: 0, lessonsCompleted: 0,
     skills: ['VLOOKUP','INDEX/MATCH','PivotTables','Conditional formatting','Data cleaning','Google Sheets','Dashboard design'],
     modules: [
       { title: 'Spreadsheet fundamentals & navigation', type: 'video' },
@@ -1049,7 +1049,7 @@ const COURSES = [
     track: 'data-analytics',
     weeks: 8, lessons: 32, projects: 6,
     priceUsd: 69, priceIdr: 1099000,
-    enrolled: true, progress: 44, lessonsCompleted: 14,
+    enrolled: false, progress: 0, lessonsCompleted: 0,
     skills: ['SELECT/WHERE/GROUP BY','JOINs','Subqueries','CTEs','Window functions','PostgreSQL','BigQuery'],
     modules: [
       { title: 'SQL fundamentals: SELECT, WHERE, ORDER BY', type: 'video' },
@@ -1458,6 +1458,33 @@ applyFilters();
   } else {
     // Not logged in - hide dashboard link
     if (dashLink) dashLink.style.display = 'none';
+  }
+})();
+</script>
+
+
+<script>
+(function() {
+  var token = localStorage.getItem('sp_token');
+  var el = document.getElementById('nav-assessments-catalog');
+  if (el && token) el.style.display = '';
+
+  // Sync enrollment from backend
+  if (token) {
+    fetch('https://skillpath-production-4f85.up.railway.app/api/enrollments', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var enrolledIds = (data.courses || []).map(function(c) { return c.id; });
+      // Update COURSES data
+      if (typeof COURSES !== 'undefined') {
+        COURSES.forEach(function(c) {
+          c.enrolled = enrolledIds.indexOf(c.id) !== -1;
+        });
+        if (typeof renderCourses === 'function') renderCourses();
+      }
+    }).catch(function(){});
   }
 })();
 </script>
