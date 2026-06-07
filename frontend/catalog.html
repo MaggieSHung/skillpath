@@ -747,7 +747,7 @@
       .gets-grid { grid-template-columns: 1fr; }
     }
   </style>
-  <script src="https://app.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-AxwIChIG6RoK0zfZ"></script>
+  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-AxwIChIG6RoK0zfZ"></script>
 </head>
 <body>
 
@@ -1466,18 +1466,32 @@ applyFilters();
 <script>
 (function() {
   var token = localStorage.getItem('sp_token');
-  var el = document.getElementById('nav-assessments-catalog');
-  if (el && token) el.style.display = '';
+  var user = JSON.parse(localStorage.getItem('sp_user') || 'null');
 
-  // Sync enrollment from backend
-  if (token) {
+  // Show/hide assessments and dashboard
+  var assessEl = document.getElementById('nav-assessments-catalog');
+  var dashEl = document.getElementById('nav-dashboard-link');
+  if (token && user) {
+    if (assessEl) assessEl.style.display = '';
+    if (dashEl) dashEl.style.display = '';
+
+    // Update nav buttons to greeting + logout
+    var authDiv = document.getElementById('nav-auth-buttons');
+    if (authDiv) {
+      var firstName = user.name.split(' ')[0];
+      authDiv.innerHTML =
+        '<span style="font-size:13px;color:var(--ink2)">Hi, ' + firstName + '</span>' +
+        '<button class="nav-btn-ghost" onclick="localStorage.removeItem('sp_token');localStorage.removeItem('sp_user');location.reload()">Log out</button>' +
+        '<button class="nav-btn-primary" onclick="window.location.href='dashboard.html'">My account</button>';
+    }
+
+    // Sync enrollments from backend
     fetch('https://skillpath-production-4f85.up.railway.app/api/enrollments', {
       headers: { Authorization: 'Bearer ' + token }
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       var enrolledIds = (data.courses || []).map(function(c) { return c.id; });
-      // Update COURSES data
       if (typeof COURSES !== 'undefined') {
         COURSES.forEach(function(c) {
           c.enrolled = enrolledIds.indexOf(c.id) !== -1;
