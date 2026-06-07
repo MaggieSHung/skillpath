@@ -1315,7 +1315,7 @@ function openModal(id) {
       <button class="btn-modal-preview">Preview free lesson</button>
       ${c.enrolled
         ? `<button class="btn-modal-continue">Continue course →</button>`
-        : `<button class="btn-modal-enroll" onclick="skillpathBuy(${c.id}, '${c.title}', ${c.price_idr})">Enroll now →</button>`
+        : `<button class="btn-modal-enroll" onclick="event.stopPropagation();skillpathBuy(${c.id}, '${c.title}', ${c.price_idr})">Enroll now →</button>`
       }
     </div>
   `;

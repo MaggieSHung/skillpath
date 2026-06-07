@@ -973,9 +973,9 @@
         <li><a href="#how-it-works">How it works</a></li>
         <li><a href="#pricing">Pricing</a></li>
       </ul>
-      <div class="nav-actions">
-        <button class="btn-ghost" onclick="window.location.href='dashboard.html'">Log in</button>
-        <button class="btn-primary" onclick="window.location.href='catalog.html'">Get started</button>
+      <div class="nav-actions" id="nav-actions">
+        <button class="btn-ghost" onclick="openModal('login')">Log in</button>
+        <button class="btn-primary" onclick="openModal('register')">Get started</button>
       </div>
     </div>
   </div>
@@ -1651,6 +1651,22 @@
 })();
 </script>
 
+
+<script>
+(function() {
+  var token = localStorage.getItem('sp_token');
+  var user = JSON.parse(localStorage.getItem('sp_user') || 'null');
+  var navActions = document.getElementById('nav-actions');
+  if (token && user && navActions) {
+    var firstName = user.name.split(' ')[0];
+    navActions.innerHTML =
+      '<span style="font-size:14px;color:var(--ink2)">Hi, ' + firstName + ' 👋</span>' +
+      '<button class="btn-ghost" onclick="window.location.href='dashboard.html'">Dashboard</button>' +
+      '<button class="btn-primary" onclick="localStorage.removeItem('sp_token');localStorage.removeItem('sp_user');location.reload()">Log out</button>';
+  }
+})();
+</script>
+
 </body>
 </html>
 </footer>
@@ -1718,6 +1734,22 @@
   var el = document.getElementById('nav-assessments-index');
   if (el && !token) {
     el.parentElement.style.display = 'none';
+  }
+})();
+</script>
+
+
+<script>
+(function() {
+  var token = localStorage.getItem('sp_token');
+  var user = JSON.parse(localStorage.getItem('sp_user') || 'null');
+  var navActions = document.getElementById('nav-actions');
+  if (token && user && navActions) {
+    var firstName = user.name.split(' ')[0];
+    navActions.innerHTML =
+      '<span style="font-size:14px;color:var(--ink2)">Hi, ' + firstName + ' 👋</span>' +
+      '<button class="btn-ghost" onclick="window.location.href='dashboard.html'">Dashboard</button>' +
+      '<button class="btn-primary" onclick="localStorage.removeItem('sp_token');localStorage.removeItem('sp_user');location.reload()">Log out</button>';
   }
 })();
 </script>
