@@ -44,6 +44,7 @@ app.use('/api/auth',        authRoutes);
 app.use('/api/courses',     courseRoutes);
 app.use('/api/enrollments', enrollRoutes);
 app.use('/api/progress',    progressRoutes);
+app.use('/api/admin', require('./routes/admin'));
 app.use('/api/payments',    paymentRoutes);
 
 // ── 404 handler ──────────────────────────────────────
