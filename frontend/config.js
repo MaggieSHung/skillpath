@@ -177,6 +177,24 @@ function markEnrolled(id) {
   if (btn) btn.outerHTML = '<span style="color:#16a34a;font-weight:600;font-size:13px">✓ Enrolled</span>';
 }
 
+
+function spToast(msg, type) {
+  var existing = document.getElementById('sp-toast-wrap');
+  if (!existing) {
+    existing = document.createElement('div');
+    existing.id = 'sp-toast-wrap';
+    existing.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:99999;display:flex;flex-direction:column;gap:8px;';
+    document.body.appendChild(existing);
+  }
+  var colors = { success: '#16a34a', error: '#dc2626', info: '#2563eb' };
+  var el = document.createElement('div');
+  el.style.cssText = 'background:' + (colors[type]||'#333') + ';color:#fff;border-radius:8px;padding:12px 18px;font-size:13px;max-width:300px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateX(120%);transition:transform .3s;';
+  el.innerHTML = '<span>' + msg + '</span>';
+  existing.appendChild(el);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.style.transform = 'translateX(0)'; }); });
+  setTimeout(function(){ el.style.transform = 'translateX(120%)'; setTimeout(function(){ el.remove(); }, 400); }, 4000);
+}
+
 function skillpathBuy(id, title, price) {
   var tok = localStorage.getItem('sp_token');
   if (!tok) { showAuthModal('login'); return; }
@@ -188,13 +206,13 @@ function skillpathBuy(id, title, price) {
   .then(function(r){return r.json();})
   .then(function(d){
     window.snap.pay(d.snap_token, {
-      onSuccess: function(){ markEnrolled(id); alert('Enrolled in ' + title + '!'); },
-      onPending: function(){ alert('Payment pending.'); },
-      onError: function(){ alert('Payment failed.'); },
+      onSuccess: function(){ markEnrolled(id); spToast('You are now enrolled in ' + title + '!', 'success'); },
+      onPending: function(){ spToast('Payment pending - we will enroll you once confirmed.', 'info'); },
+      onError: function(){ spToast('Payment failed. Please try again.', 'error'); },
       onClose: function(){}
     });
   })
-  .catch(function(){ alert('Network error.'); });
+  .catch(function(e){ console.log('Payment catch:', e); });
 }
 
 function showAuthModal(type) {
