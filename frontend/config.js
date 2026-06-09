@@ -197,7 +197,12 @@ function spToast(msg, type) {
 
 function skillpathBuy(id, title, price) {
   var tok = localStorage.getItem('sp_token');
-  if (!tok) { showAuthModal('login'); return; }
+  if (!tok) {
+    // Remember what they wanted to buy, then show register modal
+    window._pendingPurchase = {id: id, title: title, price: price};
+    showAuthModal('register');
+    return;
+  }
   fetch(API + '/api/payments/create', {
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
@@ -229,8 +234,8 @@ function showAuthModal(type) {
     html += '<button onclick="spLogin()" style="width:100%;padding:11px;background:#0d1b2a;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">Log in</button>';
     html += '<p style="font-size:13px;color:#666;margin-top:16px">No account? <a onclick="showAuthModal(\'register\')" style="color:#2563eb;cursor:pointer">Create one</a></p>';
   } else {
-    html += '<h2 style="font-size:22px;margin-bottom:4px">Get started</h2>';
-    html += '<p style="color:#666;font-size:13px;margin-bottom:20px">Create your free account.</p>';
+    html += '<h2 style="font-size:22px;margin-bottom:4px">Create your free account</h2>';
+    html += '<p style="color:#666;font-size:13px;margin-bottom:20px">Sign up to enroll and start learning.</p>';
     html += '<div style="margin-bottom:12px"><label style="font-size:12px;color:#444;display:block;margin-bottom:4px">Full name</label><input id="sp-name" type="text" placeholder="Budi Santoso" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;box-sizing:border-box"></div>';
     html += '<div style="margin-bottom:12px"><label style="font-size:12px;color:#444;display:block;margin-bottom:4px">Email</label><input id="sp-email" type="email" placeholder="you@example.com" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;box-sizing:border-box"></div>';
     html += '<div style="margin-bottom:16px"><label style="font-size:12px;color:#444;display:block;margin-bottom:4px">Password</label><input id="sp-pw" type="password" placeholder="Min. 6 characters" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:14px;box-sizing:border-box"></div>';
@@ -253,7 +258,14 @@ function spLogin() {
     localStorage.setItem('sp_token', res.d.token);
     localStorage.setItem('sp_user', JSON.stringify(res.d.user));
     document.getElementById('sp-auth-modal').remove();
-    location.reload();
+    // Auto-proceed to payment if they came from Enroll button
+    if (window._pendingPurchase) {
+      var p = window._pendingPurchase;
+      window._pendingPurchase = null;
+      setTimeout(function(){ skillpathBuy(p.id, p.title, p.price); }, 500);
+    } else {
+      location.reload();
+    }
   }).catch(function(){ err.textContent='Network error.'; err.style.display='block'; });
 }
 
@@ -269,6 +281,13 @@ function spRegister() {
     localStorage.setItem('sp_token', res.d.token);
     localStorage.setItem('sp_user', JSON.stringify(res.d.user));
     document.getElementById('sp-auth-modal').remove();
-    location.reload();
+    // Auto-proceed to payment if they came from Enroll button
+    if (window._pendingPurchase) {
+      var p = window._pendingPurchase;
+      window._pendingPurchase = null;
+      setTimeout(function(){ skillpathBuy(p.id, p.title, p.price); }, 500);
+    } else {
+      location.reload();
+    }
   }).catch(function(){ err.textContent='Network error.'; err.style.display='block'; });
 }
