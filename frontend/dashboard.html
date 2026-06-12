@@ -826,7 +826,7 @@
     <div class="sb-user" onclick="if(confirm('Log out?')) window.location.href='index.html'">
       <div class="sb-avatar" aria-hidden="true">BS</div>
       <div>
-        <div class="sb-user-name">Budi Santoso</div>
+        <div class="sb-user-name" id="sb-user-name">Loading...</div>
         <div class="sb-user-role">Student · Data track</div>
       </div>
     </div>
@@ -869,11 +869,10 @@
       <div class="welcome-glow" aria-hidden="true"></div>
       <div>
         <div class="welcome-eyebrow">Good morning</div>
-        <h1 class="welcome-heading">Welcome back,<br/><em>Budi.</em></h1>
-        <p class="welcome-sub">You're 44% through SQL for Data Analysis. Keep going — you're ahead of 78% of your cohort.</p>
+        <h1 class="welcome-heading">Welcome back,<br/><em id="welcome-name">...</em></h1>
+        <p class="welcome-sub" id="welcome-sub">Loading your progress...</p>
         <div class="welcome-streak">
-          <div class="streak-pill">🔥 <span>12</span>-day streak</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.3)">Last session: 2 hours ago</div>
+          <div id="welcome-enrolled-info" style="font-size:12px;color:rgba(255,255,255,.5)">Loading...</div>
         </div>
       </div>
       <div class="welcome-actions">
@@ -881,8 +880,7 @@
           Continue learning
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <div class="welcome-meta">SQL · Lesson 14 of 32</div>
-        <div class="welcome-meta">Est. completion in 5 weeks</div>
+        <div class="welcome-meta" id="welcome-meta-1"></div><div class="welcome-meta" id="welcome-meta-2"></div>
       </div>
     </div>
 
@@ -1260,67 +1258,148 @@
   var API = 'https://skillpath-production-4f85.up.railway.app';
   var token = localStorage.getItem('sp_token');
   var user = JSON.parse(localStorage.getItem('sp_user') || 'null');
+  var icons = {'excel-google-sheets':'📊','sql-for-data-analysis':'🗄️','python-for-data':'🐍','data-visualization-dashboards':'📈'};
 
-  // Update sidebar user info
+  // Set user name immediately from localStorage
   if (user) {
-    var nameEl = document.querySelector('.sb-user-name');
-    var roleEl = document.querySelector('.sb-user-role');
-    if (nameEl) nameEl.textContent = user.name;
-    if (roleEl) roleEl.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+    var firstName = user.name.split(' ')[0];
+    var welcomeEl = document.getElementById('welcome-name');
+    var sbNameEl = document.getElementById('sb-user-name');
+    var sbRoleEl = document.querySelector('.sb-user-role');
+    if (welcomeEl) welcomeEl.textContent = firstName + '.';
+    if (sbNameEl) sbNameEl.textContent = user.name;
+    if (sbRoleEl) sbRoleEl.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
   }
 
-  // Load real enrolled courses
   if (!token) return;
+
+  // Load enrollments
   fetch(API + '/api/enrollments', { headers: { Authorization: 'Bearer ' + token } })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       var courses = data.courses || [];
-      var container = document.querySelector('.enrolled-list');
-      if (!container) return;
+
+      // ── Welcome section ──────────────────────────────
+      var totalLessons = courses.reduce(function(s,c){ return s + parseInt(c.lessons_completed||0); }, 0);
+      var totalCourses = courses.length;
+
+      // Find most active course (highest progress but not 100%)
+      var activeCourse = courses.find(function(c){ return c.progress_pct > 0 && c.progress_pct < 100; })
+                      || courses[0];
+
+      var subEl = document.getElementById('welcome-sub');
+      var metaEl1 = document.getElementById('welcome-meta-1');
+      var metaEl2 = document.getElementById('welcome-meta-2');
+      var infoEl = document.getElementById('welcome-enrolled-info');
 
       if (courses.length === 0) {
-        container.innerHTML = '<div style="padding:24px;text-align:center;color:#7c7c9a;font-size:13px">You have not enrolled in any courses yet.<br><a href="catalog.html" style="color:#2563eb;margin-top:8px;display:inline-block">Browse courses →</a></div>';
-        return;
+        if (subEl) subEl.textContent = 'Start your learning journey — browse and enroll in a course!';
+        if (infoEl) infoEl.textContent = 'No courses enrolled yet';
+      } else if (activeCourse) {
+        if (subEl) subEl.textContent = "You're " + activeCourse.progress_pct + "% through " + activeCourse.title + ". Keep going!";
+        if (metaEl1) metaEl1.textContent = activeCourse.title.split(' ').slice(0,3).join(' ') + ' · ' + (activeCourse.lessons_completed||0) + ' of ' + activeCourse.lesson_count + ' lessons';
+        if (metaEl2) metaEl2.textContent = totalCourses + ' course' + (totalCourses > 1 ? 's' : '') + ' enrolled · ' + totalLessons + ' lessons done';
+        if (infoEl) infoEl.textContent = totalCourses + ' enrolled · ' + totalLessons + ' lessons completed';
       }
 
-      var icons = { 'excel-google-sheets': '📊', 'sql-for-data-analysis': '🗄️', 'python-for-data': '🐍', 'data-visualization-dashboards': '📈' };
-      var html = '';
-      courses.forEach(function(c) {
-        var pct = c.progress_pct || 0;
-        var icon = icons[c.slug] || '📘';
-        var status = pct >= 100 ? 'Complete' : pct > 0 ? 'In progress' : 'Not started';
-        var statusColor = pct >= 100 ? '#16a34a' : pct > 0 ? '#2563eb' : '#7c7c9a';
-        html += '<div class="enrolled-item">' +
-          '<div class="enrolled-icon">' + icon + '</div>' +
-          '<div class="enrolled-info">' +
-            '<div class="enrolled-title">' + c.title + '</div>' +
-            '<div class="enrolled-meta">' + c.lesson_count + ' lessons · ' + c.duration_weeks + ' weeks</div>' +
-            '<div style="height:4px;background:#f0f0f0;border-radius:2px;margin-top:8px;overflow:hidden">' +
-              '<div style="height:100%;width:' + pct + '%;background:#2563eb;border-radius:2px;transition:width .6s"></div>' +
-            '</div>' +
-          '</div>' +
-          '<div class="enrolled-right">' +
-            '<div class="enrolled-pct">' + pct + '%</div>' +
-            '<div class="enrolled-lessons">' + (c.lessons_completed || 0) + '/' + c.lesson_count + ' lessons</div>' +
-            '<div class="enrolled-status" style="color:' + statusColor + ';font-size:11px;font-weight:600;margin-top:4px">' + status + '</div>' +
-          '</div>' +
-        '</div>';
-      });
-      container.innerHTML = html;
+      // ── Stats cards ──────────────────────────────────
+      var lessonsEl = document.getElementById('count-lessons');
+      var certsEl = document.getElementById('count-certs');
+      var projectsEl = document.getElementById('count-projects');
+      var hoursEl = document.getElementById('count-hours');
+      if (lessonsEl) lessonsEl.textContent = totalLessons;
+      if (certsEl) certsEl.textContent = courses.filter(function(c){ return c.progress_pct >= 100; }).length;
+      if (projectsEl) projectsEl.textContent = courses.reduce(function(s,c){ return s + (c.project_count||0); }, 0);
+      if (hoursEl) hoursEl.textContent = Math.round(totalLessons * 1.5);
 
-      // Update sidebar progress too
+      // Update stat sub-labels
+      var subLabels = document.querySelectorAll('.stat-card-sub');
+      if (subLabels[0]) subLabels[0].textContent = 'Across ' + totalCourses + ' enrolled course' + (totalCourses !== 1 ? 's' : '');
+      if (subLabels[1]) subLabels[1].textContent = 'Est. ' + Math.round(totalLessons * 1.5) + ' hrs total';
+      if (subLabels[2]) subLabels[2].textContent = courses.filter(function(c){ return c.progress_pct >= 100; }).length + ' course' + (courses.filter(function(c){ return c.progress_pct >= 100; }).length !== 1 ? 's' : '') + ' complete';
+      if (subLabels[3]) subLabels[3].textContent = totalCourses + ' course' + (totalCourses !== 1 ? 's' : '') + ' enrolled';
+
+      // ── Enrolled courses list ────────────────────────
+      var container = document.querySelector('.enrolled-list');
+      if (container) {
+        if (courses.length === 0) {
+          container.innerHTML = '<div style="padding:24px;text-align:center;color:#7c7c9a;font-size:13px">No courses yet.<br><a href="catalog.html" style="color:#2563eb;margin-top:8px;display:inline-block">Browse courses →</a></div>';
+        } else {
+          var html = '';
+          courses.forEach(function(c) {
+            var pct = c.progress_pct || 0;
+            var icon = icons[c.slug] || '📘';
+            var status = pct >= 100 ? 'Complete' : pct > 0 ? 'In progress' : 'Not started';
+            var statusColor = pct >= 100 ? '#16a34a' : pct > 0 ? '#2563eb' : '#7c7c9a';
+            html += '<div class="enrolled-item">' +
+              '<div class="enrolled-icon">' + icon + '</div>' +
+              '<div class="enrolled-info">' +
+                '<div class="enrolled-title">' + c.title + '</div>' +
+                '<div class="enrolled-meta">' + c.lesson_count + ' lessons · ' + c.duration_weeks + ' weeks · Enrolled ' + fmtDate(c.enrolled_at) + '</div>' +
+                '<div style="height:4px;background:#f0f0f0;border-radius:2px;margin-top:8px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:#2563eb;border-radius:2px;transition:width .6s"></div></div>' +
+              '</div>' +
+              '<div class="enrolled-right">' +
+                '<div class="enrolled-pct">' + pct + '%</div>' +
+                '<div class="enrolled-lessons">' + (c.lessons_completed||0) + '/' + c.lesson_count + '</div>' +
+                '<div class="enrolled-status" style="color:' + statusColor + ';font-size:11px;font-weight:600;margin-top:4px">' + status + '</div>' +
+              '</div>' +
+            '</div>';
+          });
+          container.innerHTML = html;
+        }
+      }
+
+      // ── Recent activity ──────────────────────────────
+      var activityList = document.querySelector('.activity-list');
+      if (activityList) {
+        if (courses.length === 0) {
+          activityList.innerHTML = '<div style="padding:16px;color:#7c7c9a;font-size:13px;text-align:center">No activity yet.</div>';
+        } else {
+          var actHtml = '';
+          // Show enrollment events
+          courses.slice().reverse().forEach(function(c) {
+            actHtml += '<div class="activity-item">' +
+              '<div class="activity-dot-wrap"><div class="activity-dot ad-green"></div><div class="activity-line"></div></div>' +
+              '<div class="activity-content">' +
+                '<div class="activity-title">Enrolled in <strong>' + c.title + '</strong></div>' +
+                '<div class="activity-time">' + fmtDate(c.enrolled_at) + '</div>' +
+              '</div></div>';
+          });
+          // Show completed courses
+          courses.filter(function(c){ return c.progress_pct >= 100; }).forEach(function(c) {
+            actHtml += '<div class="activity-item">' +
+              '<div class="activity-dot-wrap"><div class="activity-dot ad-gold"></div></div>' +
+              '<div class="activity-content">' +
+                '<div class="activity-title">Completed <strong>' + c.title + '</strong> 🎉</div>' +
+                '<div class="activity-time">Course complete</div>' +
+              '</div></div>';
+          });
+          if (!actHtml) actHtml = '<div style="padding:16px;color:#7c7c9a;font-size:13px;text-align:center">No activity yet.</div>';
+          activityList.innerHTML = actHtml;
+        }
+      }
+
+      // ── Sidebar progress ─────────────────────────────
       var sbProgress = document.querySelector('.sb-progress-card');
       if (sbProgress) {
         var sbHtml = '<div class="sb-progress-label">My courses</div>';
-        courses.slice(0, 3).forEach(function(c) {
-          sbHtml += '<div class="sb-progress-course">' +
-            '<div class="sb-progress-course-name">' + c.title.split(' ').slice(0,3).join(' ') + '</div>' +
-            '<div class="sb-progress-bar"><div class="sb-progress-fill fill-accent" style="width:' + (c.progress_pct||0) + '%"></div></div>' +
-          '</div>';
-        });
+        if (courses.length === 0) {
+          sbHtml += '<div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:8px">No courses yet</div>';
+        } else {
+          courses.slice(0,3).forEach(function(c) {
+            sbHtml += '<div class="sb-progress-course"><div class="sb-progress-course-name">' + c.title.split(' ').slice(0,3).join(' ') + '</div><div class="sb-progress-bar"><div class="sb-progress-fill fill-accent" style="width:' + (c.progress_pct||0) + '%"></div></div></div>';
+          });
+        }
         sbProgress.innerHTML = sbHtml;
       }
-    }).catch(function(e) { console.log('Dashboard load error:', e); });
+
+    }).catch(function(e) { console.log('Dashboard error:', e); });
+
+  function fmtDate(str) {
+    if (!str) return '';
+    var d = new Date(str);
+    return d.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+  }
 })();
 </script>
 
