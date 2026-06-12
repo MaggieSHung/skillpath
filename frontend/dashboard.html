@@ -1254,5 +1254,75 @@
   });
 </script>
 <script src="config.js"></script>
+
+<script>
+(function() {
+  var API = 'https://skillpath-production-4f85.up.railway.app';
+  var token = localStorage.getItem('sp_token');
+  var user = JSON.parse(localStorage.getItem('sp_user') || 'null');
+
+  // Update sidebar user info
+  if (user) {
+    var nameEl = document.querySelector('.sb-user-name');
+    var roleEl = document.querySelector('.sb-user-role');
+    if (nameEl) nameEl.textContent = user.name;
+    if (roleEl) roleEl.textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+  }
+
+  // Load real enrolled courses
+  if (!token) return;
+  fetch(API + '/api/enrollments', { headers: { Authorization: 'Bearer ' + token } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var courses = data.courses || [];
+      var container = document.querySelector('.enrolled-list');
+      if (!container) return;
+
+      if (courses.length === 0) {
+        container.innerHTML = '<div style="padding:24px;text-align:center;color:#7c7c9a;font-size:13px">You have not enrolled in any courses yet.<br><a href="catalog.html" style="color:#2563eb;margin-top:8px;display:inline-block">Browse courses →</a></div>';
+        return;
+      }
+
+      var icons = { 'excel-google-sheets': '📊', 'sql-for-data-analysis': '🗄️', 'python-for-data': '🐍', 'data-visualization-dashboards': '📈' };
+      var html = '';
+      courses.forEach(function(c) {
+        var pct = c.progress_pct || 0;
+        var icon = icons[c.slug] || '📘';
+        var status = pct >= 100 ? 'Complete' : pct > 0 ? 'In progress' : 'Not started';
+        var statusColor = pct >= 100 ? '#16a34a' : pct > 0 ? '#2563eb' : '#7c7c9a';
+        html += '<div class="enrolled-item">' +
+          '<div class="enrolled-icon">' + icon + '</div>' +
+          '<div class="enrolled-info">' +
+            '<div class="enrolled-title">' + c.title + '</div>' +
+            '<div class="enrolled-meta">' + c.lesson_count + ' lessons · ' + c.duration_weeks + ' weeks</div>' +
+            '<div style="height:4px;background:#f0f0f0;border-radius:2px;margin-top:8px;overflow:hidden">' +
+              '<div style="height:100%;width:' + pct + '%;background:#2563eb;border-radius:2px;transition:width .6s"></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="enrolled-right">' +
+            '<div class="enrolled-pct">' + pct + '%</div>' +
+            '<div class="enrolled-lessons">' + (c.lessons_completed || 0) + '/' + c.lesson_count + ' lessons</div>' +
+            '<div class="enrolled-status" style="color:' + statusColor + ';font-size:11px;font-weight:600;margin-top:4px">' + status + '</div>' +
+          '</div>' +
+        '</div>';
+      });
+      container.innerHTML = html;
+
+      // Update sidebar progress too
+      var sbProgress = document.querySelector('.sb-progress-card');
+      if (sbProgress) {
+        var sbHtml = '<div class="sb-progress-label">My courses</div>';
+        courses.slice(0, 3).forEach(function(c) {
+          sbHtml += '<div class="sb-progress-course">' +
+            '<div class="sb-progress-course-name">' + c.title.split(' ').slice(0,3).join(' ') + '</div>' +
+            '<div class="sb-progress-bar"><div class="sb-progress-fill fill-accent" style="width:' + (c.progress_pct||0) + '%"></div></div>' +
+          '</div>';
+        });
+        sbProgress.innerHTML = sbHtml;
+      }
+    }).catch(function(e) { console.log('Dashboard load error:', e); });
+})();
+</script>
+
 </body>
 </html>

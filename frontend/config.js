@@ -264,7 +264,7 @@ function spLogin() {
       window._pendingPurchase = null;
       setTimeout(function(){ skillpathBuy(p.id, p.title, p.price); }, 500);
     } else {
-      location.reload();
+      window.location.href = 'dashboard.html';
     }
   }).catch(function(){ err.textContent='Network error.'; err.style.display='block'; });
 }
@@ -287,7 +287,7 @@ function spRegister() {
       window._pendingPurchase = null;
       setTimeout(function(){ skillpathBuy(p.id, p.title, p.price); }, 500);
     } else {
-      location.reload();
+      window.location.href = 'dashboard.html';
     }
   }).catch(function(){ err.textContent='Network error.'; err.style.display='block'; });
 }
