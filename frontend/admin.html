@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — SkillPath</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f4f5f7;--white:#ffffff;--navy:#0D1B2A;--accent:#2563eb;--accent-l:#eff6ff;--green:#16a34a;--green-l:#f0fdf4;--red:#dc2626;--red-l:#fef2f2;--yellow:#d97706;--yellow-l:#fffbeb;--ink:#1a1a2e;--ink2:#4a4a6a;--ink3:#7c7c9a;--border:#e5e7eb;--radius:8px;--radius-lg:14px;--sans:"DM Sans",sans-serif;--mono:"DM Mono",monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh}
+.topnav{height:60px;background:var(--navy);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:100}
+.topnav-logo{font-size:16px;font-weight:600;color:#fff;letter-spacing:-.02em}
+.topnav-logo span{color:#60a5fa}
+.topnav-right{display:flex;align-items:center;gap:12px}
+.topnav-user{font-size:13px;color:rgba(255,255,255,.6)}
+.btn-logout-top{font-size:12px;padding:6px 14px;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:var(--radius);cursor:pointer}
+.btn-logout-top:hover{background:rgba(255,255,255,.2)}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px}
+.page-title{font-size:24px;font-weight:600;color:var(--navy);letter-spacing:-.03em;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--ink3);margin-bottom:28px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px}
+.stat-label{font-size:11px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.stat-value{font-size:28px;font-weight:600;color:var(--navy);letter-spacing:-.03em}
+.stat-sub{font-size:12px;color:var(--ink3);margin-top:4px}
+.tabs{display:flex;gap:4px;margin-bottom:20px}
+.tab{font-family:var(--sans);font-size:13px;font-weight:500;padding:8px 18px;border-radius:var(--radius);border:1px solid var(--border);background:var(--white);color:var(--ink3);cursor:pointer;transition:all .2s}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.table-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.table-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border)}
+.table-title{font-size:15px;font-weight:600;color:var(--navy)}
+.table-count{font-size:12px;color:var(--ink3);background:var(--bg);padding:3px 10px;border-radius:999px}
+.search-wrap{padding:12px 24px;border-bottom:1px solid var(--border)}
+.search-input{width:100%;max-width:320px;border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;font-family:var(--sans);font-size:13px;color:var(--ink);outline:none}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--ink3)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;padding:12px 24px;text-align:left;background:var(--bg);border-bottom:1px solid var(--border)}
+td{padding:14px 24px;font-size:13px;color:var(--ink2);border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.user-cell{display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.user-name{font-weight:500;color:var(--ink);font-size:13px}
+.user-email{font-size:11px;color:var(--ink3);margin-top:1px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.badge-paid{background:var(--green-l);color:var(--green)}
+.badge-pending{background:var(--yellow-l);color:var(--yellow)}
+.badge-failed{background:var(--red-l);color:var(--red)}
+.badge-admin{background:#ede9fe;color:#7c3aed}
+.badge-student{background:var(--accent-l);color:var(--accent)}
+.amount{font-family:var(--mono);font-size:13px;color:var(--ink)}
+.date-cell{font-size:12px;color:var(--ink3);white-space:nowrap}
+.order-id{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.empty,.loading{text-align:center;padding:48px 24px;color:var(--ink3);font-size:13px}
+.access-denied{text-align:center;padding:80px 24px;display:none}
+.access-denied h2{font-size:20px;color:var(--navy);margin-bottom:8px}
+</style>
+</head>
+<body>
+<script>
+(function(){
+  var token=localStorage.getItem("sp_token");
+  var user=JSON.parse(localStorage.getItem("sp_user")||"null");
+  if(!token||!user){window.location.replace("/index.html");return;}
+  if(user.role!=="admin"){
+    document.addEventListener("DOMContentLoaded",function(){
+      document.getElementById("main-content").style.display="none";
+      document.getElementById("access-denied").style.display="block";
+    });
+  }
+})();
+</script>
+<nav class="topnav">
+  <div class="topnav-logo">Skill<span>Path</span> <span style="font-size:11px;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:4px;margin-left:8px;font-weight:400">Admin</span></div>
+  <div class="topnav-right">
+    <span class="topnav-user" id="admin-name"></span>
+    <button class="btn-logout-top" onclick="doLogout()">Log out</button>
+  </div>
+</nav>
+<div class="container">
+  <div id="access-denied" class="access-denied">
+    <h2>Access Denied</h2>
+    <p>You need admin privileges to view this page.</p><br>
+    <a href="/index.html" style="color:var(--accent)">Back to homepage</a>
+  </div>
+</div>
+<div class="container" id="main-content">
+  <h1 class="page-title">Admin Dashboard</h1>
+  <p class="page-sub">Manage members and monitor payments</p>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Total Members</div><div class="stat-value" id="stat-members">—</div><div class="stat-sub">Registered students</div></div>
+    <div class="stat-card"><div class="stat-label">Total Payments</div><div class="stat-value" id="stat-payments">—</div><div class="stat-sub">All transactions</div></div>
+    <div class="stat-card"><div class="stat-label">Enrollments</div><div class="stat-value" id="stat-enrollments">—</div><div class="stat-sub">Courses enrolled</div></div>
+    <div class="stat-card"><div class="stat-label">Revenue</div><div class="stat-value" id="stat-revenue">—</div><div class="stat-sub">From paid transactions</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('members')">Members</button>
+    <button class="tab" onclick="switchTab('payments')">Payments</button>
+  </div>
+  <div id="tab-members" class="table-card">
+    <div class="table-header"><span class="table-title">Members</span><span class="table-count" id="members-count">Loading...</span></div>
+    <div class="search-wrap"><input class="search-input" id="members-search" type="text" placeholder="Search by name or email..." oninput="filterMembers()"></div>
+    <div id="members-body"><div class="loading">Loading members...</div></div>
+  </div>
+  <div id="tab-payments" class="table-card" style="display:none">
+    <div class="table-header"><span class="table-title">Payment History</span><span class="table-count" id="payments-count">Loading...</span></div>
+    <div class="search-wrap"><input class="search-input" id="payments-search" type="text" placeholder="Search by name, email or order ID..." oninput="filterPayments()"></div>
+    <div id="payments-body"><div class="loading">Loading payments...</div></div>
+  </div>
+</div>
+<script>
+var API="https://skillpath-production-4f85.up.railway.app";
+var token=localStorage.getItem("sp_token");
+var user=JSON.parse(localStorage.getItem("sp_user")||"null");
+var allMembers=[],allPayments=[];
+if(user)document.getElementById("admin-name").textContent=user.name;
+window.addEventListener("DOMContentLoaded",function(){if(user&&user.role==="admin"){loadStats();loadMembers();}});
+function switchTab(tab){
+  document.getElementById("tab-members").style.display=tab==="members"?"block":"none";
+  document.getElementById("tab-payments").style.display=tab==="payments"?"block":"none";
+  document.querySelectorAll(".tab").forEach(function(t,i){t.classList.toggle("active",(i===0&&tab==="members")||(i===1&&tab==="payments"));});
+  if(tab==="payments"&&allPayments.length===0)loadPayments();
+}
+function loadStats(){
+  fetch(API+"/api/admin/stats",{headers:{Authorization:"Bearer "+token}})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    document.getElementById("stat-members").textContent=d.total_members||0;
+    document.getElementById("stat-payments").textContent=d.total_payments||0;
+    document.getElementById("stat-enrollments").textContent=d.total_enrollments||0;
+    document.getElementById("stat-revenue").textContent="Rp "+fmtIDR(d.total_revenue_idr||0);
+  }).catch(function(){});
+}
+function loadMembers(){
+  fetch(API+"/api/admin/members",{headers:{Authorization:"Bearer "+token}})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    allMembers=d.members||[];
+    document.getElementById("members-count").textContent=allMembers.length+" members";
+    renderMembers(allMembers);
+  }).catch(function(){document.getElementById("members-body").innerHTML="<div class=\"empty\">Failed to load.</div>";});
+}
+function renderMembers(members){
+  if(!members.length){document.getElementById("members-body").innerHTML="<div class=\"empty\">No members found.</div>";return;}
+  var html="<table><thead><tr><th>Member</th><th>Role</th><th>Courses</th><th>Spent</th><th>Joined</th></tr></thead><tbody>";
+  members.forEach(function(m){
+    var ini=m.name.split(" ").map(function(w){return w[0];}).join("").substring(0,2).toUpperCase();
+    html+="<tr><td><div class=\"user-cell\"><div class=\"avatar\">"+ini+"</div><div><div class=\"user-name\">"+m.name+"</div><div class=\"user-email\">"+m.email+"</div></div></div></td><td><span class=\"badge badge-"+m.role+"\">"+m.role+"</span></td><td>"+(m.courses_enrolled||0)+" courses</td><td class=\"amount\">Rp "+fmtIDR(m.total_spent||0)+"</td><td class=\"date-cell\">"+fmtDate(m.created_at)+"</td></tr>";
+  });
+  html+="</tbody></table>";
+  document.getElementById("members-body").innerHTML=html;
+}
+function filterMembers(){
+  var q=document.getElementById("members-search").value.toLowerCase();
+  renderMembers(allMembers.filter(function(m){return m.name.toLowerCase().includes(q)||m.email.toLowerCase().includes(q);}));
+}
+function loadPayments(){
+  fetch(API+"/api/admin/payments",{headers:{Authorization:"Bearer "+token}})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    allPayments=d.payments||[];
+    document.getElementById("payments-count").textContent=allPayments.length+" transactions";
+    renderPayments(allPayments);
+  }).catch(function(){document.getElementById("payments-body").innerHTML="<div class=\"empty\">Failed to load.</div>";});
+}
+function renderPayments(payments){
+  if(!payments.length){document.getElementById("payments-body").innerHTML="<div class=\"empty\">No payments found.</div>";return;}
+  var html="<table><thead><tr><th>Member</th><th>Course</th><th>Order ID</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>";
+  payments.forEach(function(p){
+    html+="<tr><td><div class=\"user-cell\"><div class=\"avatar\" style=\"background:#6366f1\">"+p.user_name.substring(0,2).toUpperCase()+"</div><div><div class=\"user-name\">"+p.user_name+"</div><div class=\"user-email\">"+p.user_email+"</div></div></div></td><td style=\"max-width:180px;font-size:13px\">"+p.course_title+"</td><td class=\"order-id\">"+p.order_id+"</td><td class=\"amount\">Rp "+fmtIDR(p.amount_idr)+"</td><td><span class=\"badge badge-"+p.status+"\">"+p.status+"</span></td><td class=\"date-cell\">"+fmtDate(p.created_at)+"</td></tr>";
+  });
+  html+="</tbody></table>";
+  document.getElementById("payments-body").innerHTML=html;
+}
+function filterPayments(){
+  var q=document.getElementById("payments-search").value.toLowerCase();
+  renderPayments(allPayments.filter(function(p){return p.user_name.toLowerCase().includes(q)||p.user_email.toLowerCase().includes(q)||p.order_id.toLowerCase().includes(q);}));
+}
+function fmtIDR(n){return parseInt(n).toLocaleString("id-ID");}
+function fmtDate(str){if(!str)return "—";var d=new Date(str);return d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});}
+function doLogout(){localStorage.removeItem("sp_token");localStorage.removeItem("sp_user");window.location.href="/index.html";}
+</script>
+</body>
+</html>
