@@ -1254,7 +1254,7 @@
 <script src="config.js"></script>
 
 <script>
-(function() {
+(async function() {
   var API = 'https://skillpath-production-4f85.up.railway.app';
   var token = localStorage.getItem('sp_token');
   var user = JSON.parse(localStorage.getItem('sp_user') || 'null');
@@ -1272,6 +1272,10 @@
   }
 
   if (!token) return;
+
+  // Sync any pending payments first (in case the Midtrans webhook hasn't
+  // reached the backend yet), then load enrollments as before.
+  await syncPayments();
 
   // Load enrollments
   fetch(API + '/api/enrollments', { headers: { Authorization: 'Bearer ' + token } })

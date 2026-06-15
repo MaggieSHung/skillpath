@@ -164,10 +164,21 @@ document.addEventListener('DOMContentLoaded', function() {
     btn.onclick = function() { skillpathBuy(courseIds[i], courseTitles[i], coursePrices[i]); };
   });
 
-  // Load enrollments if logged in
+  // Sync any pending payments (in case the Midtrans webhook hasn't fired yet),
+  // then load enrollments if logged in
   var tok = localStorage.getItem('sp_token');
-  if (tok) loadEnrollments(tok);
+  if (tok) {
+    syncPayments().then(function(){ loadEnrollments(tok); });
+  }
 });
+
+function syncPayments() {
+  var tok = localStorage.getItem('sp_token');
+  if (!tok) return Promise.resolve();
+  return fetch(API + '/api/payments/sync', {method:'POST', headers:{Authorization:'Bearer '+tok}})
+    .then(function(r){return r.json();})
+    .catch(function(){return null;});
+}
 
 function loadEnrollments(tok) {
   fetch(API + '/api/enrollments', {headers:{Authorization:'Bearer '+tok}})
@@ -215,8 +226,8 @@ function skillpathBuy(id, title, price) {
   .then(function(r){return r.json();})
   .then(function(d){
     window.snap.pay(d.snap_token, {
-      onSuccess: function(){ markEnrolled(id); spToast('You are now enrolled in ' + title + '!', 'success'); },
-      onPending: function(){ spToast('Payment pending - we will enroll you once confirmed.', 'info'); },
+      onSuccess: function(){ syncPayments().then(function(){ markEnrolled(id); spToast('You are now enrolled in ' + title + '!', 'success'); }); },
+      onPending: function(){ syncPayments().then(function(){ spToast('Payment pending - we will enroll you once confirmed.', 'info'); }); },
       onError: function(){ spToast('Payment failed. Please try again.', 'error'); },
       onClose: function(){}
     });
