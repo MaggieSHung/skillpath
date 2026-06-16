@@ -1382,7 +1382,7 @@ function openModal(id) {
       <span style="font-size:12px;color:var(--ink3)">One-time · Lifetime access</span>
     </div>
     <div class="modal-footer-btns">
-      <button class="btn-modal-preview" onclick="openPreview()">Preview free lesson</button>
+
       ${c.enrolled
         ? `<button class="btn-modal-continue">Continue course →</button>`
         : `<button class="btn-modal-enroll" onclick="event.stopPropagation();skillpathBuy(${c.id}, '${c.title}', ${c.price_idr})">Enroll now →</button>`
