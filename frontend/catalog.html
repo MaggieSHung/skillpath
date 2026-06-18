@@ -387,6 +387,19 @@
     .badge-popular   { background: var(--gold-l);   color: var(--gold);   }
     .badge-demand    { background: #E8EDF3;          color: var(--navy);   }
     .badge-ready     { background: var(--blue-l);    color: var(--blue);   }
+    .badge-soon      { background: #F3F0FF;          color: #7C3AED;       }
+    .ic-purple { background: #F3F0FF; }
+    .ic-rose   { background: #FFF1F2; }
+    .bar-purple { background: #7C3AED; }
+    .bar-rose   { background: #F43F5E; }
+    .course-card.coming-soon { opacity: .72; }
+    .coming-soon-overlay {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; color: #7C3AED;
+      background: #F3F0FF; border-radius: 999px;
+      padding: 5px 12px; pointer-events: none;
+    }
+    .coming-soon-overlay svg { flex-shrink: 0; }
     .badge-bundle    { background: var(--coral-l);   color: var(--coral);  }
 
     .card-step { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--ink3); margin-bottom: 4px; }
@@ -898,7 +911,7 @@
             <svg class="filter-check-tick" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
           <span class="filter-opt-label">Cloud &amp; Infrastructure</span>
-          <span class="filter-opt-count">0</span>
+          <span class="filter-opt-count">2</span>
         </label>
         <label class="filter-opt" data-filter="track" data-val="ai">
           <input type="checkbox"/>
@@ -906,7 +919,7 @@
             <svg class="filter-check-tick" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
           <span class="filter-opt-label">AI &amp; Automation</span>
-          <span class="filter-opt-count">0</span>
+          <span class="filter-opt-count">2</span>
         </label>
       </div>
     </div>
@@ -1191,6 +1204,91 @@ const COURSES = [
     ],
     gets: ['Certificate of completion','6 portfolio-ready projects','Lifetime access','Power BI & Tableau licences','Community access'],
   },
+  {
+    id: 5, slug: 'aws-cloud-foundations',
+    icon: '☁', iconBg: 'ic-purple', bar: 'bar-purple',
+    step: 'Course 05 · Beginner', title: 'AWS Cloud Foundations',
+    badge: 'Coming Soon', badgeClass: 'badge-soon',
+    desc: 'Understand cloud infrastructure from the ground up. Launch servers, store data, and configure networks on AWS.',
+    level: 'beginner', track: 'cloud',
+    weeks: 8, lessons: 28, projects: 5, priceUsd: 79, priceIdr: 1249000,
+    comingSoon: true, enrolled: false, progress: 0, lessonsCompleted: 0,
+    skills: ['AWS EC2','S3','IAM','VPC','RDS','CloudWatch','Cloud architecture'],
+    modules: [
+      { title: 'Cloud computing concepts and AWS global infrastructure', type: 'video' },
+      { title: 'IAM: users, roles, policies and security best practices', type: 'video' },
+      { title: 'EC2: launching, connecting and managing instances', type: 'video' },
+      { title: 'S3: storage, buckets, versioning and lifecycle rules', type: 'video' },
+      { title: 'VPC: subnets, routing, security groups and NAT', type: 'video' },
+      { title: 'RDS: managed databases on the cloud', type: 'video' },
+      { title: 'CloudWatch: monitoring, alerts and cost management', type: 'quiz' },
+      { title: 'Capstone: Deploy a 3-tier web app on AWS', type: 'project' },
+    ],
+    gets: ['Certificate of completion','5 portfolio-ready projects','Lifetime access','AWS Free Tier walkthroughs','Community access'],
+  },
+  {
+    id: 6, slug: 'linux-devops-essentials',
+    icon: '⋯', iconBg: 'ic-purple', bar: 'bar-purple',
+    step: 'Course 06 · Beginner-Intermediate', title: 'Linux and DevOps Essentials',
+    badge: 'Coming Soon', badgeClass: 'badge-soon',
+    desc: 'Master the command line, automate deployments, and manage servers like a pro.',
+    level: 'beginner', track: 'cloud',
+    weeks: 7, lessons: 26, projects: 4, priceUsd: 69, priceIdr: 1099000,
+    comingSoon: true, enrolled: false, progress: 0, lessonsCompleted: 0,
+    skills: ['Linux CLI','Bash scripting','Docker','Git and CI/CD','Nginx','SSH','System administration'],
+    modules: [
+      { title: 'Linux filesystem, permissions and essential commands', type: 'video' },
+      { title: 'Bash scripting: variables, loops and automation', type: 'video' },
+      { title: 'Package management, services and process control', type: 'video' },
+      { title: 'Docker: containers, images and Compose workflows', type: 'video' },
+      { title: 'Git workflows and CI/CD pipeline basics', type: 'video' },
+      { title: 'Nginx: web server setup, reverse proxy and SSL', type: 'video' },
+      { title: 'Project: Automate a multi-service deployment with Bash and Docker', type: 'project' },
+    ],
+    gets: ['Certificate of completion','4 portfolio-ready projects','Lifetime access','Lab VM environment included','Community access'],
+  },
+  {
+    id: 7, slug: 'prompt-engineering-llms',
+    icon: '◎', iconBg: 'ic-rose', bar: 'bar-rose',
+    step: 'Course 07 · Beginner', title: 'Prompt Engineering and LLMs',
+    badge: 'Coming Soon', badgeClass: 'badge-soon',
+    desc: 'Go beyond basic ChatGPT prompts. Learn systematic techniques to get reliable output from any large language model.',
+    level: 'beginner', track: 'ai',
+    weeks: 5, lessons: 20, projects: 4, priceUsd: 59, priceIdr: 929000,
+    comingSoon: true, enrolled: false, progress: 0, lessonsCompleted: 0,
+    skills: ['Prompt design','Chain-of-thought','RAG basics','OpenAI API','Claude API','System prompts','Evaluation'],
+    modules: [
+      { title: 'How LLMs work: tokens, context and temperature', type: 'video' },
+      { title: 'Prompt anatomy: role, instruction, context and output format', type: 'video' },
+      { title: 'Advanced techniques: chain-of-thought, few-shot and self-consistency', type: 'video' },
+      { title: 'Using the OpenAI and Claude APIs in Python', type: 'video' },
+      { title: 'Building a RAG pipeline: embeddings and vector search', type: 'video' },
+      { title: 'Evaluating and testing prompt reliability', type: 'quiz' },
+      { title: 'Capstone: Build an AI-powered document Q&A tool', type: 'project' },
+    ],
+    gets: ['Certificate of completion','4 portfolio-ready projects','Lifetime access','API credits included','Community access'],
+  },
+  {
+    id: 8, slug: 'ai-workflow-automation',
+    icon: '⚡', iconBg: 'ic-rose', bar: 'bar-rose',
+    step: 'Course 08 · Intermediate', title: 'AI Workflow Automation',
+    badge: 'Coming Soon', badgeClass: 'badge-soon',
+    desc: 'Automate repetitive work using AI-powered tools. Connect apps and build no-code pipelines that run while you sleep.',
+    level: 'intermediate', track: 'ai',
+    weeks: 6, lessons: 22, projects: 5, priceUsd: 69, priceIdr: 1099000,
+    comingSoon: true, enrolled: false, progress: 0, lessonsCompleted: 0,
+    skills: ['n8n','Zapier','Make','OpenAI API','Webhooks','Google Workspace automation','Airtable'],
+    modules: [
+      { title: 'Automation fundamentals: triggers, actions and logic', type: 'video' },
+      { title: 'Zapier and Make: no-code workflow design', type: 'video' },
+      { title: 'n8n: self-hosted automation with branching and loops', type: 'video' },
+      { title: 'Integrating AI into workflows: summarise, classify and generate', type: 'video' },
+      { title: 'Google Workspace automation: Sheets, Docs and Gmail', type: 'video' },
+      { title: 'Webhooks, APIs and custom HTTP requests', type: 'video' },
+      { title: 'Capstone: Build a fully automated AI content pipeline', type: 'project' },
+    ],
+    gets: ['Certificate of completion','5 portfolio-ready projects','Lifetime access','n8n and Zapier templates included','Community access'],
+  },
 ];
 
 /* ─────────────────────────────────────────
@@ -1237,7 +1335,7 @@ function renderGrid(courses) {
   }
 
   grid.innerHTML = courses.map((c, i) => `
-    <article class="course-card ${c.enrolled ? 'enrolled' : ''} fade-in"
+    <article class="course-card ${c.enrolled ? 'enrolled' : ''} ${c.comingSoon ? 'coming-soon' : ''} fade-in"
              style="animation-delay:${i * 0.06}s"
              role="listitem"
              onclick="openModal(${c.id})"
@@ -1275,7 +1373,9 @@ function renderGrid(courses) {
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Continue
                </button>`
-            : `<button class="btn-enroll" onclick="event.stopPropagation();skillpathBuy(${c.id}, '${c.title}', ${c.price_idr})">Enroll →</button>`
+            : c.comingSoon
+              ? `<div class="coming-soon-overlay"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Coming Soon</div>`
+              : `<button class="btn-enroll" onclick="event.stopPropagation();skillpathBuy(${c.id}, '${c.title}', ${c.price_idr})">Enroll →</button>`
           }
         </div>
       </div>
@@ -1385,7 +1485,9 @@ function openModal(id) {
 
       ${c.enrolled
         ? `<button class="btn-modal-continue">Continue course →</button>`
-        : `<button class="btn-modal-enroll" onclick="event.stopPropagation();skillpathBuy(${c.id}, '${c.title}', ${c.price_idr})">Enroll now →</button>`
+        : c.comingSoon
+          ? `<button class="btn-modal-enroll" disabled style="opacity:.5;cursor:not-allowed;">Coming Soon</button>`
+          : `<button class="btn-modal-enroll" onclick="event.stopPropagation();skillpathBuy(${c.id}, '${c.title}', ${c.price_idr})">Enroll now →</button>`
       }
     </div>
   `;
