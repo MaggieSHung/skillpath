@@ -499,6 +499,14 @@
       color: var(--navy);
     }
     .enrolled-lessons { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+    .btn-mark-complete {
+      margin-top: 8px; padding: 5px 11px; font-size: 11px; font-weight: 500;
+      background: var(--accent-l); color: var(--accent); border: 1px solid var(--accent-l2);
+      border-radius: var(--radius); cursor: pointer; font-family: var(--sans);
+      transition: all var(--ease); white-space: nowrap; display: block;
+    }
+    .btn-mark-complete:hover { background: var(--accent); color: #fff; }
+    .btn-mark-complete:disabled { opacity: .5; cursor: not-allowed; }
     .enrolled-status {
       display: inline-flex; align-items: center; gap: 5px;
       font-size: 11px; font-weight: 500;
@@ -1340,9 +1348,10 @@
                 '<div style="height:4px;background:#f0f0f0;border-radius:2px;margin-top:8px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:#2563eb;border-radius:2px;transition:width .6s"></div></div>' +
               '</div>' +
               '<div class="enrolled-right">' +
-                '<div class="enrolled-pct">' + pct + '%</div>' +
-                '<div class="enrolled-lessons">' + (c.lessons_completed||0) + '/' + c.lesson_count + '</div>' +
-                '<div class="enrolled-status" style="color:' + statusColor + ';font-size:11px;font-weight:600;margin-top:4px">' + status + '</div>' +
+                '<div class="enrolled-pct" id="pct-' + c.id + '">' + pct + '%</div>' +
+                '<div class="enrolled-lessons" id="lessons-' + c.id + '">' + (c.lessons_completed||0) + '/' + c.lesson_count + '</div>' +
+                '<div class="enrolled-status" style="color:' + statusColor + ';font-size:11px;font-weight:600;margin-top:4px" id="status-' + c.id + '">' + status + '</div>' +
+                (pct < 100 ? '<button class="btn-mark-complete" id="btn-' + c.id + '" onclick="markNextLesson(' + c.id + ',' + c.lesson_count + ',event)">+ Mark lesson done</button>' : '') +
               '</div>' +
             '</div>';
           });
@@ -1395,6 +1404,49 @@
       }
 
     }).catch(function(e) { console.log('Dashboard error:', e); });
+
+  function markNextLesson(courseId, totalLessons, e) {
+    e.stopPropagation();
+    var API = 'https://skillpath-production-4f85.up.railway.app';
+    var token = localStorage.getItem('sp_token');
+    var btn = document.getElementById('btn-' + courseId);
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+    fetch(API + '/api/progress/' + courseId, { headers: { Authorization: 'Bearer ' + token } })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var completed = data.completed_lessons || [];
+        var nextIndex = 0;
+        while (completed.indexOf(nextIndex) !== -1) nextIndex++;
+        if (nextIndex >= totalLessons) { if (btn) btn.textContent = 'All done!'; return; }
+        return fetch(API + '/api/progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ course_id: courseId, lesson_index: nextIndex })
+        }).then(function(r) { return r.json(); })
+          .then(function(res) {
+            var newPct = res.progress_pct || 0;
+            var newDone = res.completed_lessons || (completed.length + 1);
+            var pctEl = document.getElementById('pct-' + courseId);
+            var lessonsEl = document.getElementById('lessons-' + courseId);
+            var statusEl = document.getElementById('status-' + courseId);
+            if (pctEl) pctEl.textContent = newPct + '%';
+            if (lessonsEl) lessonsEl.textContent = newDone + '/' + totalLessons;
+            var newStatus = newPct >= 100 ? 'Complete' : 'In progress';
+            var newColor = newPct >= 100 ? '#16a34a' : '#2563eb';
+            if (statusEl) { statusEl.textContent = newStatus; statusEl.style.color = newColor; }
+            var lessonsCard = document.getElementById('count-lessons');
+            if (lessonsCard) lessonsCard.textContent = parseInt(lessonsCard.textContent||0) + 1;
+            if (newPct >= 100) {
+              if (btn) btn.remove();
+              var certsEl = document.getElementById('count-certs');
+              if (certsEl) certsEl.textContent = parseInt(certsEl.textContent||0) + 1;
+            } else {
+              if (btn) { btn.disabled = false; btn.textContent = '+ Mark lesson done'; }
+            }
+          });
+      })
+      .catch(function() { if (btn) { btn.disabled = false; btn.textContent = '+ Mark lesson done'; } });
+  }
 
   function fmtDate(str) {
     if (!str) return '';
