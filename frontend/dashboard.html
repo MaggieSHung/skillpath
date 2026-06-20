@@ -1278,9 +1278,8 @@
 
   if (!token) return;
 
-  // Sync any pending payments first (in case the Midtrans webhook hasn't
-  // reached the backend yet), then load enrollments as before.
-  await syncPayments();
+  // Sync payments silently in background so page renders immediately
+  syncPayments();
 
   // Load enrollments
   fetch(API + '/api/enrollments', { headers: { Authorization: 'Bearer ' + token } })

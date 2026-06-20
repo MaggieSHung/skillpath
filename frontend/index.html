@@ -1024,50 +1024,50 @@
       <!-- Right column: learning path card -->
       <div class="hero-card fade-up delay-2" aria-hidden="true">
         <div class="hero-card-label">Data &amp; Analytics Track</div>
-        <div class="hero-card-path">
-          <div class="hero-path-step">
+        <div class="hero-card-path" id="hero-track-steps">
+          <div class="hero-path-step" id="hero-step-1">
             <div class="step-num">1</div>
             <div class="step-info">
               <div class="step-title">Excel &amp; Google Sheets</div>
               <div class="step-meta">6 weeks · 24 lessons</div>
             </div>
-            <span class="step-badge badge-done">Done</span>
+            <span class="step-badge badge-done" id="hero-badge-1">Done</span>
           </div>
-          <div class="hero-path-step active">
+          <div class="hero-path-step active" id="hero-step-2">
             <div class="step-num">2</div>
             <div class="step-info">
               <div class="step-title">SQL for Data Analysis</div>
               <div class="step-meta">8 weeks · 32 lessons</div>
             </div>
-            <span class="step-badge badge-now">In progress</span>
+            <span class="step-badge badge-now" id="hero-badge-2">In progress</span>
           </div>
-          <div class="hero-path-step">
+          <div class="hero-path-step" id="hero-step-3">
             <div class="step-num">3</div>
             <div class="step-info">
               <div class="step-title">Python for Data</div>
               <div class="step-meta">10 weeks · 38 lessons</div>
             </div>
-            <span class="step-badge badge-next">Up next</span>
+            <span class="step-badge badge-next" id="hero-badge-3">Up next</span>
           </div>
-          <div class="hero-path-step">
+          <div class="hero-path-step" id="hero-step-4">
             <div class="step-num">4</div>
             <div class="step-info">
               <div class="step-title">Data Visualization</div>
               <div class="step-meta">8 weeks · 30 lessons</div>
             </div>
-            <span class="step-badge badge-next">Locked</span>
+            <span class="step-badge badge-next" id="hero-badge-4">Locked</span>
           </div>
         </div>
         <div class="hero-card-footer">
           <div>
             <div class="hero-card-footer-label">Track progress</div>
             <div style="width:160px;height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:6px;overflow:hidden;">
-              <div style="width:38%;height:100%;background:var(--accent-l2);border-radius:2px;"></div>
+              <div id="hero-progress-bar" style="width:38%;height:100%;background:var(--accent-l2);border-radius:2px;transition:width .6s ease;"></div>
             </div>
           </div>
           <div style="text-align:right">
             <div class="hero-card-footer-label">Completion</div>
-            <div class="hero-card-footer-val">38%</div>
+            <div class="hero-card-footer-val" id="hero-pct">38%</div>
           </div>
         </div>
       </div>
@@ -1754,5 +1754,44 @@
 })();
 </script>
 
+
+<script>
+(function(){
+  var API="https://skillpath-production-4f85.up.railway.app";
+  var token=localStorage.getItem("sp_token");
+  if(!token)return;
+  var slugOrder=["excel-google-sheets","sql-data-analysis","python-for-data","data-visualization"];
+  fetch(API+"/api/enrollments",{headers:{Authorization:"Bearer "+token}})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var courses=data.courses||[];
+      var bySlug={};
+      courses.forEach(function(c){bySlug[c.slug]=c;});
+      var totalPct=0;
+      slugOrder.forEach(function(slug,i){
+        var n=i+1;
+        var badge=document.getElementById("hero-badge-"+n);
+        var step=document.getElementById("hero-step-"+n);
+        if(!badge||!step)return;
+        var course=bySlug[slug];
+        if(!course){
+          badge.textContent="Locked";badge.className="step-badge badge-next";
+          step.classList.remove("active");
+        } else {
+          var pct=course.progress_pct||0;
+          totalPct+=pct;
+          if(pct>=100){badge.textContent="Done";badge.className="step-badge badge-done";step.classList.remove("active");}
+          else if(pct>0){badge.textContent="In progress";badge.className="step-badge badge-now";step.classList.add("active");}
+          else{badge.textContent="Enrolled";badge.className="step-badge badge-next";step.classList.remove("active");}
+        }
+      });
+      var overall=Math.round(totalPct/4);
+      var bar=document.getElementById("hero-progress-bar");
+      var pctEl=document.getElementById("hero-pct");
+      if(bar)bar.style.width=overall+"%";
+      if(pctEl)pctEl.textContent=overall+"%";
+    }).catch(function(){});
+})();
+</script>
 </body>
 </html>
