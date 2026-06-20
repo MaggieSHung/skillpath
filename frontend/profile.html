@@ -52,7 +52,10 @@
     .mini-stat-label{font-size:11px;color:var(--ink3);}
     .profile-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;margin-bottom:20px;}
     .profile-header{display:flex;align-items:center;gap:20px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-    .profile-avatar-lg{width:64px;height:64px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#fff;flex-shrink:0;}
+    .profile-avatar-lg{width:64px;height:64px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;color:#fff;flex-shrink:0;overflow:hidden;}
+    .avatar-wrap{position:relative;width:64px;height:64px;flex-shrink:0;}
+    .avatar-edit-btn{position:absolute;bottom:0;right:0;width:22px;height:22px;background:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--white);}
+    #avatar-file-input{display:none;}
     .profile-name{font-size:18px;font-weight:600;color:var(--ink);margin-bottom:3px;}
     .profile-email{font-size:13px;color:var(--ink3);}
     .profile-role-badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;background:var(--accent-l);color:var(--accent);padding:3px 9px;border-radius:999px;margin-top:6px;}
@@ -118,7 +121,13 @@
     </div>
     <div class="profile-card">
       <div class="profile-header">
-        <div class="profile-avatar-lg" id="profile-avatar">?</div>
+        <div class="avatar-wrap">
+          <div class="profile-avatar-lg" id="profile-avatar">?</div>
+          <label class="avatar-edit-btn" for="avatar-file-input" title="Change photo">
+            <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5L10.5 3.5L4 10H2V8L8.5 1.5Z" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+          <input type="file" id="avatar-file-input" accept="image/*" onchange="handleAvatarUpload(event)"/>
+        </div>
         <div>
           <div class="profile-name" id="profile-name">Loading...</div>
           <div class="profile-email" id="profile-email"></div>
@@ -167,6 +176,15 @@
     if(sba){sba.textContent='';sba.style.backgroundImage='url('+savedAvatar+')';
       sba.style.backgroundSize='cover';sba.style.backgroundPosition='center';}
   }
+  var savedAvatar=localStorage.getItem('sp_avatar');
+  if(savedAvatar){
+    var ael=document.getElementById('profile-avatar');
+    ael.textContent='';ael.style.backgroundImage='url('+savedAvatar+')';
+    ael.style.backgroundSize='cover';ael.style.backgroundPosition='center';
+    var sba=document.getElementById('sb-avatar');
+    if(sba){sba.textContent='';sba.style.backgroundImage='url('+savedAvatar+')';
+      sba.style.backgroundSize='cover';sba.style.backgroundPosition='center';}
+  }
   document.getElementById('input-email').value=user.email;
   if(user.created_at){var d=new Date(user.created_at);document.getElementById('stat-joined').textContent=d.toLocaleDateString('en-GB',{month:'short',year:'numeric'});}
   fetch(API+'/api/enrollments',{headers:{Authorization:'Bearer '+token}})
@@ -177,6 +195,25 @@
       document.getElementById('stat-lessons').textContent=courses.reduce(function(s,c){return s+parseInt(c.lessons_completed||0);},0);
     }).catch(function(){});
 })();
+function handleAvatarUpload(event){
+  var file=event.target.files[0];
+  if(!file)return;
+  if(file.size>2*1024*1024){showToast("Image must be under 2MB.");return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var dataUrl=e.target.result;
+    localStorage.setItem("sp_avatar",dataUrl);
+    var el=document.getElementById("profile-avatar");
+    el.textContent="";el.style.backgroundImage="url("+dataUrl+")";
+    el.style.backgroundSize="cover";el.style.backgroundPosition="center";
+    var sb=document.getElementById("sb-avatar");
+    if(sb){sb.textContent="";sb.style.backgroundImage="url("+dataUrl+")";
+      sb.style.backgroundSize="cover";sb.style.backgroundPosition="center";}
+    showToast("Photo updated.");
+  };
+  reader.readAsDataURL(file);
+}
+
 function saveProfile(){
   var API='https://skillpath-production-4f85.up.railway.app';
   var token=localStorage.getItem('sp_token');
