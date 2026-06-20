@@ -936,7 +936,7 @@
           <div class="stat-card-icon ic-coral" aria-hidden="true">
             <svg viewBox="0 0 17 17" fill="none"><rect x="2" y="2" width="13" height="13" rx="2" stroke="#C05A2A" stroke-width="1.4"/><path d="M5.5 8.5l2 2 4-4" stroke="#C05A2A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <span class="stat-card-delta delta-up">+1 submitted</span>
+          <span class="stat-card-delta delta-up" id="badge-submitted" style="display:none"></span>
         </div>
         <div class="stat-card-val" id="count-projects">0</div>
         <div class="stat-card-label">Projects submitted</div>
@@ -1317,7 +1317,10 @@
       var hoursEl = document.getElementById('count-hours');
       if (lessonsEl) lessonsEl.textContent = totalLessons;
       if (certsEl) certsEl.textContent = courses.filter(function(c){ return c.progress_pct >= 100; }).length;
-      if (projectsEl) projectsEl.textContent = courses.reduce(function(s,c){ return s + parseInt(c.project_count||0); }, 0);
+      if (projectsEl) projectsEl.textContent = 0;
+      var totalAvailProjects = courses.reduce(function(s,c){ return s + parseInt(c.project_count||0); }, 0);
+      var projSubEl = document.querySelector('#count-projects ~ .stat-card-sub');
+      if (projSubEl) projSubEl.textContent = totalAvailProjects + ' projects available';
       if (hoursEl) hoursEl.textContent = Math.round(totalLessons * 1.5);
 
       // Update stat sub-labels
