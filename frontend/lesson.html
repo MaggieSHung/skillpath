@@ -224,6 +224,7 @@
     }
     .badge-module { background: var(--blue-l); color: var(--blue); }
     .badge-level  { background: var(--accent-l); color: var(--accent); }
+    .badge-level-advanced { background: #1B5FAD1A; color: var(--blue); font-weight: 600; }
     .badge-dur    { background: var(--bg2); color: var(--ink3); }
     .badge-done   { background: var(--accent-l2); color: var(--accent2); }
 
@@ -822,6 +823,218 @@ const CURRICULUM = {
     ]
   },
 
+  'excel-google-sheets-advanced': {
+    title: 'Excel & Google Sheets — Tingkat Lanjutan',
+    icon: '📊',
+    modules: [
+      {
+        title: 'Modul 6 — Power Query & Otomasi Data',
+        lessons: [
+          {
+            title: 'Mengenal Power Query',
+            tagline: 'Apa itu Power Query, kapan digunakan, dan cara membukanya di Excel maupun Sheets.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Power Query adalah mesin transformasi data bawaan Excel', b: 'Setiap kali kamu impor data dari CSV, database, atau web, Power Query yang bekerja di baliknya. Applied Steps merekam setiap transformasi — transparan dan bisa diaudit.' },
+              { h: 'Sekali setup, selamanya tinggal Refresh', b: 'Tambah data baru ke sumber, klik Refresh — semua langkah transformasi diulang otomatis. Tidak ada copy-paste, tidak ada rumus manual.' },
+              { h: 'Power Query tidak mengubah data mentah aslinya', b: 'Semua transformasi ada di Power Query Editor. Data sumber tidak pernah disentuh — ini membuat pipeline data yang aman dan bisa di-rollback.' },
+              { h: 'Applied Steps: sejarah transformasi yang bisa diedit', b: 'Setiap aksi di Power Query menghasilkan satu step. Kamu bisa klik langkah mana saja untuk melihat kondisi data saat itu, atau hapus langkah yang salah.' },
+            ],
+            tip: 'Power Query tersedia di Excel 2016 ke atas dan built-in di Excel 365. Jangan pernah edit data langsung di sheet hasil Power Query — perubahan akan hilang saat di-refresh. Semua edit harus dilakukan di dalam Editor.',
+          },
+          {
+            title: 'Transformasi Data di Power Query Editor',
+            tagline: 'Bersihkan data kotor secara otomatis: ubah tipe, hapus duplikat, split kolom, dan isi nilai kosong.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Trim dan Capitalize Each Word: dua klik untuk nama bersih', b: 'Transform > Format > Trim menghapus spasi ekstra. Capitalize Each Word merapikan kapitalisasi. Keduanya langsung masuk ke Applied Steps dan bisa diulang otomatis.' },
+              { h: 'Selalu set tipe data eksplisit di setiap kolom', b: 'Kolom bertipe "Any" (ikon ABC123) artinya Power Query tidak tahu tipe datanya. Selalu ubah ke tipe yang tepat — ini mencegah error saat data baru masuk dengan format berbeda.' },
+              { h: 'Remove Duplicates dan Remove Blank Rows dalam satu alur', b: 'Home > Remove Rows menyediakan keduanya. Power Query memproses seluruh baris, bukan hanya satu kolom — lebih menyeluruh dari Remove Duplicates Excel biasa.' },
+              { h: 'Split Column otomatis memecah berdasarkan delimiter', b: 'Transform > Split Column > By Delimiter memisahkan kolom berdasarkan spasi, koma, atau karakter kustom — untuk seluruh kolom sekaligus.' },
+            ],
+            tip: 'Klik kanan header kolom untuk melihat semua opsi transformasi yang tersedia. Gunakan View > Column Quality untuk melihat persentase valid, error, dan empty di setiap kolom — cara cepat mengaudit kualitas data sebelum mulai membersihkan.',
+          },
+          {
+            title: 'Gabungkan & Append Tabel',
+            tagline: 'Merge queries untuk join tabel seperti SQL, dan append untuk menumpuk data dari banyak sumber.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Merge = JOIN, Append = UNION', b: 'Merge menggabungkan dua tabel berdasarkan kolom kunci yang cocok (seperti SQL JOIN). Append menumpuk baris dari banyak tabel dengan struktur yang sama (seperti SQL UNION).' },
+              { h: 'Left Outer Join: tampilkan semua baris dari tabel kiri', b: 'Home > Combine > Merge Queries > Left Outer. Baris yang tidak cocok tetap tampil dengan null di kolom tabel kanan — sama seperti VLOOKUP tapi lebih andal.' },
+              { h: 'Append dari folder: gabung semua file otomatis', b: 'Get Data > From Folder menggabungkan semua file di folder menjadi satu tabel. Taruh file baru di folder, klik Refresh — data baru otomatis masuk.' },
+              { h: 'Anti Join untuk menemukan baris yang tidak cocok', b: 'Left Anti di Join Kind menemukan baris di tabel kiri yang tidak ada padanannya di tabel kanan — cara cepat identifikasi produk tanpa penjualan atau pelanggan tanpa transaksi.' },
+            ],
+            tip: 'Pastikan nama kolom di kedua tabel identik persis termasuk huruf besar/kecil dan spasi — perbedaan kecil menyebabkan kolom tidak terhubung. Saat Append dari folder, Power Query menambahkan kolom Source.Name yang menunjukkan asal file setiap baris.',
+          },
+          {
+            title: 'Refresh Otomatis & M Language Dasar',
+            tagline: 'Jadwalkan refresh data dan kenali M Language — bahasa pemrograman di balik setiap langkah Power Query.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Refresh otomatis saat file dibuka atau tiap X menit', b: 'Klik kanan query > Properties > centang "Refresh data when opening the file" untuk laporan harian. "Refresh every X minutes" untuk dashboard yang terus terbuka.' },
+              { h: 'Setiap Applied Step menghasilkan satu baris kode M', b: 'Klik step di Applied Steps, lihat formula bar — itu kode M yang dihasilkan. Kamu bisa edit langsung untuk transformasi yang tidak ada di menu.' },
+              { h: 'Advanced Editor: lihat seluruh pipeline sebagai skrip', b: 'Home > Advanced Editor menampilkan semua step sebagai skrip M dengan pola let...in. Mengedit di sini jauh lebih cepat untuk perubahan massal.' },
+              { h: 'Parameter membuat query dinamis dan reusable', b: 'Home > Manage Parameters > New Parameter. Alih-alih hardcode nilai seperti 2024, buat parameter — ubah dari satu tempat, seluruh query menyesuaikan.' },
+            ],
+            tip: 'Simpan query sebagai Connection Only (Close & Load To > Only Create Connection) untuk query intermediate yang hanya dipakai query lain. Dokumentasikan query kompleks dengan komentar M menggunakan // — penting untuk query yang dikelola tim.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 7 — Rumus Dinamis & Formula Modern',
+        lessons: [
+          {
+            title: 'XLOOKUP — Pengganti VLOOKUP yang Lebih Powerful',
+            tagline: 'Cari data ke segala arah, tangani error otomatis, dan cocokkan parsial — semua dalam satu fungsi.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Tidak perlu nomor kolom — tunjuk langsung kolom hasilnya', b: '=XLOOKUP(E2,A:A,C:C) — tiga argumen: nilai dicari, kolom pencarian, kolom hasil. Tidak ada nomor kolom yang harus dihitung, dan bisa mencari ke kiri.' },
+              { h: 'Argumen keempat sebagai pengganti IFERROR', b: '=XLOOKUP(E2,A:A,C:C,"Tidak Ditemukan") — nilai jika tidak ditemukan langsung di argumen keempat. Tidak perlu membungkus dengan IFERROR.' },
+              { h: 'XLOOKUP bisa mengembalikan banyak kolom sekaligus', b: 'Jika kolom hasil adalah range multi-kolom, XLOOKUP mengembalikan seluruh baris yang cocok. Satu rumus menggantikan banyak VLOOKUP paralel.' },
+              { h: 'Match mode untuk pencarian rentang dan wildcard', b: 'Argumen kelima: 0 = exact (default), 1 = exact atau lebih besar, -1 = exact atau lebih kecil, 2 = wildcard. Berguna untuk tabel harga berjenjang dan pencarian parsial.' },
+            ],
+            tip: 'Untuk nested lookup dua kriteria: =XLOOKUP(B2, XLOOKUP(A2,KolomA,KolomB), KolomC) — menggantikan INDEX/MATCH/MATCH yang jauh lebih rumit. XLOOKUP tidak tersedia di Excel 2019 ke bawah — gunakan INDEX/MATCH sebagai alternatif kompatibel.',
+          },
+          {
+            title: 'Fungsi Array Dinamis: FILTER, SORT & UNIQUE',
+            tagline: 'Hasilkan daftar yang otomatis menyesuaikan ukuran berdasarkan kondisi — tanpa Ctrl+Shift+Enter.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'FILTER mengekstrak baris berdasarkan kondisi dan otomatis spill', b: '=FILTER(A2:D100,C2:C100>1000000) mengembalikan semua baris yang memenuhi kondisi. Hasilnya spill otomatis ke sel bawah tanpa Ctrl+Shift+Enter.' },
+              { h: 'Gabungkan kondisi dengan * (AND) dan + (OR)', b: '=FILTER(A2:D100,(C2:C100>1000000)*(B2:B100="Jakarta")) — tanda bintang untuk AND karena TRUE=1 dan FALSE=0. Tanda plus untuk OR.' },
+              { h: 'SORT mengurutkan array tanpa mengubah data asli', b: '=SORT(A2:D100,3,-1) mengurutkan berdasarkan kolom ke-3 secara descending. Gabungkan dengan FILTER: =SORT(FILTER(...),3,-1) untuk satu formula filter+sort.' },
+              { h: 'UNIQUE mengembalikan nilai yang tidak duplikat', b: '=UNIQUE(B2:B100) mengekstrak setiap nilai unik. Gabungkan dengan SORT: =SORT(UNIQUE(B2:B100)) untuk daftar unik terurut — sumber dropdown yang selalu terkini.' },
+            ],
+            tip: 'Jika sel di bawah formula FILTER sudah berisi data, Excel menampilkan #SPILL! — pastikan area output selalu kosong. FILTER menerima argumen ketiga untuk pesan kustom jika tidak ada baris yang cocok: =FILTER(A2:D100,C2:C100>1000000,"Tidak ada data").',
+          },
+          {
+            title: 'LET & LAMBDA — Buat Fungsi Sendiri',
+            tagline: 'Sederhanakan rumus panjang dengan LET, dan buat fungsi kustom reusable dengan LAMBDA.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'LET memberi nama pada bagian rumus yang berulang', b: '=LET(diskon, B2*0.2, pajak, (B2-diskon)*0.11, B2-diskon+pajak) — kalkulasi yang sama tidak perlu ditulis dua kali. Rumus jadi lebih bersih dan mudah diaudit.' },
+              { h: 'LAMBDA membuat fungsi Excel tanpa VBA', b: '=LAMBDA(x, x*1.11) membuat fungsi yang mengalikan input dengan 1.11. Simpan di Name Manager dengan nama "TambahPPN" dan panggil sebagai =TambahPPN(B2) dari mana saja.' },
+              { h: 'Gabungkan LAMBDA dengan MAP dan BYROW', b: '=MAP(A2:A100, LAMBDA(x, x*1.11)) menerapkan fungsi LAMBDA ke setiap elemen array. Setara dengan .map() di JavaScript — operasi fungsional langsung di Excel.' },
+              { h: 'LET mendukung hingga 126 pasang nama-nilai', b: 'Gunakan LET untuk memecah rumus kompleks menjadi langkah-langkah bernama yang terbaca seperti kode program — sangat memudahkan debugging dan dokumentasi.' },
+            ],
+            tip: 'Fungsi LAMBDA yang disimpan di Name Manager tidak bisa langsung dipakai di file lain — kamu perlu menyertakan definisi Name Manager atau membuat add-in. Gunakan LAMBDA dengan REDUCE untuk kalkulasi akumulasi dan SCAN untuk running total tanpa kolom bantu.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 8 — VBA & Macro Lanjutan',
+        lessons: [
+          {
+            title: 'Merekam Macro & Mengenal VBA Editor',
+            tagline: 'Rekam aksi manual menjadi macro, baca kode yang dihasilkan, dan jalankan ulang dengan satu klik.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Record Macro merekam setiap aksi sebagai kode VBA', b: 'Developer > Record Macro: lakukan format, navigasi, rumus seperti biasa. Stop Recording. Semua langkah tersimpan sebagai kode yang bisa diputar ulang kapan saja.' },
+              { h: 'VBA Editor (Alt+F11) menampilkan kode yang dihasilkan', b: 'Setiap macro bisa dibaca, dimodifikasi, dan dipahami dari VBA Editor. Ini cara terbaik mulai belajar VBA — rekam aksi sederhana, lalu baca kodenya.' },
+              { h: 'Tombol sheet membuat macro bisa diakses siapa pun', b: 'Insert > Button > Assign Macro. Siapa pun bisa menjalankan macro dengan klik tombol tanpa perlu tahu cara membuka Developer tab.' },
+              { h: 'Selalu simpan sebagai .xlsm, bukan .xlsx', b: 'Format .xlsx secara diam-diam menghapus semua VBA. Selalu simpan file yang berisi macro sebagai .xlsm — Excel akan mengingatkan jika kamu mencoba menyimpan sebagai .xlsx.' },
+            ],
+            tip: 'Gunakan "Use Relative References" sebelum merekam jika macro harus bergerak relatif dari sel yang aktif. Tambahkan keyboard shortcut di dialog Record Macro untuk akses cepat — misalnya Ctrl+Shift+F untuk FormatLaporan.',
+          },
+          {
+            title: 'Variabel, Kondisi & Loop di VBA',
+            tagline: 'Gunakan Dim, If/Then, For, dan For Each untuk membuat macro yang cerdas dan berulang secara dinamis.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Dim mendeklarasikan variabel dengan tipe yang tepat', b: 'Dim namaSiswa As String, nilaiUjian As Double. Mendeklarasikan tipe mencegah error konversi dan membuat kode lebih efisien daripada menggunakan tipe Variant.' },
+              { h: 'If/Then/Else untuk logika bercabang di VBA', b: 'If nilai >= 75 Then result = "Lulus" Else result = "Tidak Lulus" End If. Pola yang sama dengan IF di sheet, tapi bisa melakukan aksi yang jauh lebih kompleks.' },
+              { h: 'For loop mengulang sejumlah aksi yang pasti', b: 'For i = 1 To 100 ... Next i. Berguna saat kamu tahu persis berapa kali perulangan harus terjadi — misalnya memproses 100 baris.' },
+              { h: 'For Each untuk iterasi di seluruh sel dalam range', b: 'For Each cell In Range("A1:A100") — berulang untuk setiap sel tanpa perlu tahu indeksnya. Lebih bersih dari For loop untuk operasi pada koleksi objek.' },
+            ],
+            tip: 'Selalu gunakan Option Explicit di atas setiap modul VBA — ini memaksa semua variabel dideklarasikan dengan Dim dan mencegah typo variabel yang sulit dideteksi. Tekan F8 di VBA Editor untuk menjalankan kode baris per baris (step through) saat debugging.',
+          },
+          {
+            title: 'Membuat Fungsi Kustom (UDF) & Otomasi Laporan',
+            tagline: 'Buat fungsi Excel sendiri dengan VBA, dan otomasi laporan bulanan dari awal hingga selesai.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Function vs Sub: Function mengembalikan nilai, Sub tidak', b: 'Function HitungPPN(harga As Double) As Double — bisa dipanggil dari sel sheet sebagai =HitungPPN(B2). Sub hanya menjalankan aksi, tidak mengembalikan nilai ke sel.' },
+              { h: 'UDF bisa dipakai di seluruh workbook seperti fungsi bawaan', b: 'Setelah dibuat di VBA Editor, fungsi kustom langsung tersedia di semua sheet — muncul di autocomplete dengan nama yang kamu beri.' },
+              { h: 'Events menjalankan macro otomatis saat kondisi tertentu', b: 'Worksheet_Change(ByVal Target As Range) berjalan otomatis setiap kali sel berubah. Workbook_Open berjalan saat file dibuka. Events membuat workbook yang responsif.' },
+              { h: 'Macro otomasi laporan end-to-end', b: 'Gabungkan semua kemampuan: buka file sumber, bersihkan data, jalankan kalkulasi, format output, simpan laporan — semua dalam satu macro yang dijalankan satu klik setiap bulan.' },
+            ],
+            tip: 'Tambahkan komentar di UDF menggunakan tanda petik tunggal (\') — komentar ini muncul sebagai tooltip saat pengguna mengetik nama fungsi di sel. Gunakan On Error Resume Next dengan bijak — jangan sembunyikan semua error, hanya error yang benar-benar diharapkan.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 9 — Power Pivot & Data Modeling',
+        lessons: [
+          {
+            title: 'Mengaktifkan Power Pivot & Memahami Data Model',
+            tagline: 'Bedakan Data Model dari tabel sheet biasa, dan pahami mengapa ini solusi untuk dataset besar.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Power Pivot menangani jutaan baris tanpa memperlambat Excel', b: 'Data Model menggunakan mesin VertiPaq in-memory yang dikompresi. Tabel dengan 5 juta baris dimuat dalam hitungan detik — jauh melampaui batas 1 juta baris sheet Excel.' },
+              { h: 'Data Model memungkinkan relasi antar banyak tabel', b: 'Alih-alih VLOOKUP yang rapuh, Data Model menghubungkan tabel melalui relasi permanen. Pivot Table bisa mengambil data dari tabel mana pun yang terhubung.' },
+              { h: 'Aktifkan Power Pivot lewat File > Options > Add-ins', b: 'Power Pivot harus diaktifkan di Excel 2016-2019. Di Excel 365, sudah tersedia langsung di tab Data. Setelah aktif, tab Power Pivot muncul di ribbon.' },
+              { h: 'Masukkan tabel ke Data Model saat impor atau dari Power Query', b: 'Saat Close & Load dari Power Query, pilih "Add this data to the Data Model". Atau dari tabel yang sudah ada: Power Pivot > Add to Data Model.' },
+            ],
+            tip: 'Data Model menyimpan data terpisah dari sheet — file Excel bisa jauh lebih kecil dari yang diperkirakan karena kompresi VertiPaq. Jika file Excel kamu tiba-tiba besar sekali, periksa apakah ada duplikasi data antara sheet dan Data Model.',
+          },
+          {
+            title: 'Relasi Antar Tabel & DAX Dasar',
+            tagline: 'Hubungkan tabel tanpa VLOOKUP dan tulis kalkulasi DAX pertamamu: CALCULATE, SUMX, dan RELATED.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Buat relasi dengan drag-and-drop di Diagram View', b: 'Di Power Pivot > Diagram View, seret kolom ID dari tabel Fakta ke kolom ID di tabel Dimensi. Relasi terbentuk — tidak perlu VLOOKUP lagi di Data Model.' },
+              { h: 'Star Schema: satu tabel fakta, banyak tabel dimensi', b: 'Tabel Fakta berisi transaksi (penjualan, log). Tabel Dimensi berisi atribut (produk, pelanggan, kalender). Star Schema membuat query DAX lebih cepat dan model lebih mudah dipahami.' },
+              { h: 'CALCULATE mengubah konteks filter kalkulasi', b: 'CALCULATE(SUM(Penjualan[Total]), Produk[Kategori]="Laptop") menghitung total hanya untuk Laptop, terlepas dari filter Pivot Table yang sedang aktif.' },
+              { h: 'RELATED mengambil kolom dari tabel yang berelasi', b: '=RELATED(Produk[Harga]) di tabel Penjualan mengambil harga dari tabel Produk berdasarkan relasi yang sudah dibuat — setara dengan VLOOKUP tapi jauh lebih andal.' },
+            ],
+            tip: 'SUMX(Penjualan, Penjualan[Qty] * RELATED(Produk[Harga])) menghitung total penjualan row by row — ini yang tidak bisa dilakukan dengan SUM biasa. SUMX adalah iterator yang sangat powerful untuk kalkulasi yang membutuhkan akses ke kolom dari tabel lain per baris.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 10 — Advanced Dashboard & Storytelling',
+        lessons: [
+          {
+            title: 'Prinsip Desain Dashboard Eksekutif',
+            tagline: 'Hierarki visual, pemilihan warna, dan tata letak yang membuat eksekutif mengambil keputusan bukan mempertanyakan data.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Dashboard eksekutif: tiga KPI, satu kesimpulan', b: 'Eksekutif tidak punya waktu untuk mengeksplorasi. Dashboard mereka harus menjawab "Apa yang harus saya tahu sekarang?" dalam 5 detik — tiga angka paling penting, satu tren, satu tindakan.' },
+              { h: 'Hindari 10 kesalahan desain paling umum', b: 'Terlalu banyak grafik, dual axis yang menyesatkan, warna tanpa makna, angka tanpa konteks, tidak ada hierarki visual. Setiap elemen harus menjawab pertanyaan atau dihapus.' },
+              { h: 'Warna harus menyampaikan makna, bukan dekorasi', b: 'Merah = di bawah target, hijau = di atas target, abu-abu = konteks. Gunakan warna brand hanya untuk elemen yang ingin menonjol. Konsistensi lebih penting dari estetika.' },
+              { h: 'Rancang untuk audiens eksekutif vs analis berbeda', b: 'Eksekutif: ringkasan, tidak ada filter, tidak ada drill-down. Analis: semua dimensi, filter dinamis, tabel detail. Buat dua versi dari data yang sama jika audiens berbeda.' },
+            ],
+            tip: 'Tes 5 detik versi eksekutif: tampilkan dashboard 5 detik, tutup, tanya "apa satu tindakan yang harus saya ambil?" Jika tidak bisa menjawab, dashboard belum selesai. Whitespace adalah tanda kepercayaan diri — dashboard yang padat terlihat tidak yakin dengan datanya.',
+          },
+          {
+            title: 'Conditional Formatting Berbasis Rumus',
+            tagline: 'Gunakan rumus kustom di conditional formatting untuk menyorot pola kompleks yang tidak bisa dilakukan aturan bawaan.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Aturan berbasis rumus membuka kemungkinan tak terbatas', b: 'Home > Conditional Formatting > New Rule > Use a formula. Tulis rumus yang mengembalikan TRUE/FALSE — baris yang menghasilkan TRUE mendapat format yang kamu tentukan.' },
+              { h: 'Sorot seluruh baris berdasarkan nilai satu kolom', b: 'Untuk menyorot seluruh baris ketika kolom C berisi "Terlambat": pilih seluruh range A1:E100, buat aturan =$C1="Terlambat". Tanda $ pada kolom C mengunci kolom, bukan baris.' },
+              { h: 'Referensi campuran ($) adalah kunci conditional formatting', b: '$C1 mengunci kolom C tapi membiarkan baris bergerak — sehingga setiap baris dievaluasi berdasarkan nilai di kolom C-nya sendiri. Ini adalah konsep paling penting dalam CF berbasis rumus.' },
+              { h: 'Traffic light dan heatmap dengan formula kustom', b: 'Tiga aturan dengan ambang batas berbeda (merah/kuning/hijau) menciptakan traffic light indicator. Icon Sets dengan formula kustom memungkinkan ambang batas dinamis berbasis persentil.' },
+            ],
+            tip: 'Urutan aturan conditional formatting penting — aturan di atas dievaluasi lebih dahulu. Gunakan "Stop if true" untuk mencegah aturan di bawahnya diterapkan pada sel yang sudah terformat. Manage Rules (Home > Conditional Formatting > Manage Rules) untuk melihat dan mengatur urutan semua aturan.',
+          },
+          {
+            title: 'Chart Lanjutan, Sparklines & Distribusi Final',
+            tagline: 'Waterfall chart, combo chart, dan sparklines untuk visualisasi tepat — ditutup dengan proteksi dan distribusi profesional.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Waterfall chart untuk analisis bridge (jembatan)', b: 'Menampilkan bagaimana nilai akhir terbentuk dari komponen positif dan negatif. Insert > Waterfall. Klik kanan bar pertama/terakhir > Set as Total untuk menandai total.' },
+              { h: 'Combo chart: kolom dan garis dalam satu grafik', b: 'Insert > Combo Chart. Set satu seri sebagai kolom (volume), satu sebagai garis (margin %). Secondary Axis untuk skala berbeda. Berguna untuk menampilkan volume dan persentase bersamaan.' },
+              { h: 'Sparklines: mini-grafik di dalam sel', b: 'Insert > Sparklines. Pilih Line, Column, atau Win/Loss. Sparkline masuk ke satu sel dan menampilkan tren data satu baris — tambah konteks visual tanpa membutuhkan grafik terpisah.' },
+              { h: 'Proteksi dan distribusi: langkah akhir yang tidak boleh dilewati', b: 'Kunci formula (Protect Sheet), sembunyikan sheet data mentah (klik kanan tab > Hide), jalankan Document Inspector, ekspor sebagai PDF. Urutan ini memastikan file yang dibagikan aman dan profesional.' },
+            ],
+            tip: 'Untuk Waterfall chart yang menggunakan data akrual (bukan absolut), kamu mungkin perlu mengatur subtotal secara manual karena Excel tidak selalu mendeteksi otomatis. Sparklines tidak bisa dicetak secara terpisah — mereka ikut sel yang berisi mereka.',
+          },
+        ]
+      },
+    ]
+  },
+
   'sql-data-analysis': {
     title: 'SQL for Data Analysis',
     icon: '🗄️',
@@ -1149,7 +1362,7 @@ function renderLesson(idx) {
     <div class="lesson-header anim-1">
       <div class="lesson-badges">
         <span class="badge badge-module">${les.modTitle}</span>
-        <span class="badge badge-level">${les.level}</span>
+        <span class="badge ${les.level === 'Lanjutan' ? 'badge-level-advanced' : 'badge-level'}">${les.level}</span>
         <span class="badge badge-dur">${les.duration}</span>
         ${isDone ? '<span class="badge badge-done">✓ Completed</span>' : ''}
       </div>

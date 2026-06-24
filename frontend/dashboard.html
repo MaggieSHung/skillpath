@@ -863,7 +863,7 @@
         </div>
       </div>
       <div class="welcome-actions">
-        <button class="btn-continue" onclick="window.location.href='catalog.html'">
+        <button class="btn-continue" id="btn-continue-learning" onclick="window.location.href='catalog.html'">
           Continue learning
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
@@ -1242,7 +1242,7 @@
   var API = 'https://skillpath-production-4f85.up.railway.app';
   var token = localStorage.getItem('sp_token');
   var user = JSON.parse(localStorage.getItem('sp_user') || 'null');
-  var icons = {'excel-google-sheets':'📊','sql-for-data-analysis':'🗄️','python-for-data':'🐍','data-visualization-dashboards':'📈'};
+  var icons = {'excel-google-sheets':'📊','excel-google-sheets-advanced':'📊','sql-data-analysis':'🗄️','sql-for-data-analysis':'🗄️','python-for-data':'🐍','data-visualization':'📈','data-visualization-dashboards':'📈'};
 
   // Set user name immediately from localStorage
   if (user) {
@@ -1310,6 +1310,13 @@
       if (subLabels[3]) subLabels[3].textContent = totalCourses + ' course' + (totalCourses !== 1 ? 's' : '') + ' enrolled';
 
       // ── Enrolled courses list ────────────────────────
+      // Wire Continue learning button to first enrolled course
+      var continueBtn = document.getElementById('btn-continue-learning');
+      if (continueBtn && courses.length > 0) {
+        var firstCourse = courses.slice().sort(function(a,b){ return (b.progress_pct||0) - (a.progress_pct||0); })[0];
+        continueBtn.onclick = function(){ window.location.href = 'lesson.html?course=' + firstCourse.slug; };
+      }
+
       var container = document.querySelector('.enrolled-list');
       if (container) {
         if (courses.length === 0) {
@@ -1324,7 +1331,7 @@
             html += '<div class="enrolled-item">' +
               '<div class="enrolled-icon">' + icon + '</div>' +
               '<div class="enrolled-info">' +
-                '<div class="enrolled-title">' + c.title + '</div>' +
+                '<div class="enrolled-title"><a href="lesson.html?course=' + c.slug + '" style="color:inherit;text-decoration:none;">' + c.title + '</a></div>' +
                 '<div class="enrolled-meta">' + c.lesson_count + ' lessons · ' + c.duration_weeks + ' weeks · Enrolled ' + fmtDate(c.enrolled_at) + '</div>' +
                 '<div style="height:4px;background:#f0f0f0;border-radius:2px;margin-top:8px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:#2563eb;border-radius:2px;transition:width .6s"></div></div>' +
               '</div>' +
