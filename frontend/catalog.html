@@ -943,14 +943,6 @@
           <span class="filter-opt-label">Intermediate</span>
           <span class="filter-opt-count">2</span>
         </label>
-        <label class="filter-opt" data-filter="level" data-val="advanced">
-          <input type="checkbox"/>
-          <div class="filter-check">
-            <svg class="filter-check-tick" viewBox="0 0 8 6" fill="none"><path d="M1 3l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <span class="filter-opt-label">Advanced</span>
-          <span class="filter-opt-count">1</span>
-        </label>
       </div>
     </div>
 
@@ -1213,32 +1205,6 @@ const COURSES = [
     gets: ['Certificate of completion','6 portfolio-ready projects','Lifetime access','Power BI & Tableau licences','Community access'],
   },
   {
-    id: 9,
-    slug: 'excel-google-sheets-advanced',
-    icon: '📊',
-    iconBg: 'ic-teal',
-    bar: 'bar-teal',
-    step: 'Course 01B · Advanced',
-    title: 'Excel & Google Sheets — Tingkat Lanjutan',
-    badge: 'Advanced',
-    badgeClass: 'badge-demand',
-    desc: 'Power Query, rumus array dinamis, VBA, Power Pivot & DAX, dan advanced dashboard. Untuk yang sudah selesai Modul 1–5.',
-    level: 'advanced',
-    track: 'data-analytics',
-    weeks: 6, lessons: 15, projects: 3,
-    priceUsd: 49, priceIdr: 790000,
-    enrolled: false, progress: 0, lessonsCompleted: 0,
-    skills: ['Power Query','M Language','XLOOKUP','FILTER/SORT/UNIQUE','LAMBDA','VBA','Power Pivot','DAX','Advanced Dashboard'],
-    modules: [
-      { title: 'Modul 6 — Power Query & Otomasi Data', type: 'video' },
-      { title: 'Modul 7 — Rumus Dinamis & Formula Modern', type: 'video' },
-      { title: 'Modul 8 — VBA & Macro Lanjutan', type: 'video' },
-      { title: 'Modul 9 — Power Pivot & Data Modeling', type: 'video' },
-      { title: 'Modul 10 — Advanced Dashboard & Storytelling', type: 'project' },
-    ],
-    gets: ['Certificate of completion','3 portfolio-ready projects','Lifetime access','All future updates','Community access'],
-  },
-  {
     id: 5, slug: 'aws-cloud-foundations',
     icon: '☁', iconBg: 'ic-purple', bar: 'bar-purple',
     step: 'Course 05 · Beginner', title: 'AWS Cloud Foundations',
@@ -1403,7 +1369,7 @@ function renderGrid(courses) {
             <div class="card-price-alt">${fmtAlt(c)}</div>
           </div>
           ${c.enrolled
-            ? `<button class="btn-continue" onclick="event.stopPropagation();window.location.href='lesson.html?course='+${JSON.stringify(c.slug)}">
+            ? `<button class="btn-continue" onclick="event.stopPropagation();openModal(${c.id})">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Continue
                </button>`
@@ -1546,14 +1512,6 @@ function closeModal() {
   activeCourse = null;
   closePreview();
 }
-
-// Navigate to lesson page for enrolled course
-document.getElementById('modal-drawer').addEventListener('click', function(e) {
-  var btn = e.target.closest('.btn-modal-continue');
-  if (btn && activeCourse) {
-    window.location.href = 'lesson.html?course=' + activeCourse.slug;
-  }
-});
 
 function openPreview() {
   if (!activeCourse) return;
