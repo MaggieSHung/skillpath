@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lesson · SkillPath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0D1B2A;
+      --navy2:      #142236;
+      --navy3:      #1C2F44;
+      --navy4:      #243650;
+      --ink:        #1A1A1A;
+      --ink2:       #4A4A4A;
+      --ink3:       #8A8A8A;
+      --ink4:       #C0C0C0;
+      --bg:         #F6F5F2;
+      --bg2:        #EFEDE8;
+      --bg3:        #E6E4DE;
+      --white:      #FFFFFF;
+      --accent:     #1A6B4A;
+      --accent2:    #0F4F35;
+      --accent-l:   #E3F2EC;
+      --accent-l2:  #C5E8D5;
+      --gold:       #C9960C;
+      --gold-l:     #FEF6E0;
+      --red:        #B93C3C;
+      --red-l:      #FDEAEA;
+      --blue:       #1B5FAD;
+      --blue-l:     #E5EEF9;
+      --coral:      #C05A2A;
+      --coral-l:    #FAEEE7;
+      --border:     rgba(26,26,26,.08);
+      --border2:    rgba(26,26,26,.13);
+      --sb-width:   240px;
+      --serif:      'Instrument Serif', Georgia, serif;
+      --sans:       'DM Sans', sans-serif;
+      --mono:       'DM Mono', monospace;
+      --radius:     7px;
+      --radius-lg:  13px;
+      --ease:       .2s ease;
+    }
+
+    html, body { height: 100%; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+    }
+
+    /* ── Sidebar (identical to dashboard) ───────────────────── */
+    .sidebar {
+      width: var(--sb-width);
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      overflow-y: auto;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, var(--navy) 0%, var(--navy2) 100%);
+    }
+
+    .sb-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .sb-logo-mark {
+      width: 30px; height: 30px;
+      background: var(--accent);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sb-logo-mark svg { width: 16px; height: 16px; }
+    .sb-logo-name { font-size: 15px; font-weight: 500; letter-spacing: -.02em; color: #fff; }
+    .sb-logo-name span { color: var(--accent-l2); }
+
+    .sb-group { padding: 20px 12px 4px; }
+    .sb-group-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.22);
+      padding: 0 8px; margin-bottom: 4px;
+    }
+    .sb-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius);
+      cursor: pointer; transition: background var(--ease);
+      text-decoration: none; margin-bottom: 1px;
+    }
+    .sb-item:hover { background: rgba(255,255,255,.06); }
+    .sb-item.active { background: rgba(26,107,74,.25); }
+    .sb-icon {
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; opacity: .5;
+    }
+    .sb-item.active .sb-icon { opacity: 1; }
+    .sb-icon svg { width: 16px; height: 16px; }
+    .sb-label { font-size: 13px; font-weight: 400; color: rgba(255,255,255,.45); flex: 1; }
+    .sb-item.active .sb-label { color: var(--accent-l2); font-weight: 500; }
+    .sb-badge {
+      font-size: 10px; font-weight: 500;
+      background: var(--accent); color: #fff;
+      border-radius: 999px; padding: 1px 7px;
+    }
+
+    .sb-progress-card {
+      margin: 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .sb-progress-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.28); margin-bottom: 10px;
+    }
+    .sb-progress-course { margin-bottom: 10px; }
+    .sb-progress-course:last-child { margin-bottom: 0; }
+    .sb-progress-course-name { font-size: 11px; color: rgba(255,255,255,.55); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sb-progress-bar { height: 3px; background: rgba(255,255,255,.1); border-radius: 2px; overflow: hidden; }
+    .sb-progress-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+    .fill-accent { background: var(--accent-l2); }
+    .fill-gold   { background: var(--gold); }
+    .fill-blue   { background: #6BAEE8; }
+
+    .sb-footer {
+      margin-top: auto; padding: 16px 12px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .sb-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: var(--radius);
+      cursor: pointer; transition: background var(--ease);
+    }
+    .sb-user:hover { background: rgba(255,255,255,.05); }
+    .sb-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 500; color: #fff; flex-shrink: 0;
+    }
+    .sb-user-name { font-size: 12px; font-weight: 500; color: rgba(255,255,255,.7); }
+    .sb-user-role { font-size: 11px; color: rgba(255,255,255,.3); }
+
+    /* ── Main ─────────────────────────────────────────────────── */
+    .main { margin-left: var(--sb-width); flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      position: sticky; top: 0; z-index: 40;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 8px; }
+    .topbar-breadcrumb { font-size: 13px; color: var(--ink3); }
+    .topbar-breadcrumb a { color: var(--ink3); text-decoration: none; transition: color var(--ease); }
+    .topbar-breadcrumb a:hover { color: var(--accent); }
+    .topbar-breadcrumb span { color: var(--ink); font-weight: 500; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-btn {
+      width: 34px; height: 34px; border-radius: var(--radius);
+      background: none; border: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background var(--ease); color: var(--ink3);
+    }
+    .topbar-btn:hover { background: var(--bg2); color: var(--ink); }
+
+    .content { padding: 32px; flex: 1; }
+
+    /* ── Access denied ────────────────────────────────────────── */
+    .access-denied {
+      max-width: 480px; margin: 80px auto; text-align: center;
+    }
+    .access-denied-icon {
+      width: 64px; height: 64px; border-radius: 16px;
+      background: var(--gold-l); margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center; font-size: 28px;
+    }
+    .access-denied h2 {
+      font-family: var(--serif); font-size: 24px; font-weight: 400;
+      color: var(--navy); margin-bottom: 10px;
+    }
+    .access-denied p { font-size: 14px; color: var(--ink3); margin-bottom: 24px; line-height: 1.65; }
+    .btn-enroll {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: var(--radius);
+      padding: 11px 24px; font-size: 14px; font-weight: 500;
+      font-family: var(--sans); cursor: pointer;
+      transition: background var(--ease);
+      text-decoration: none;
+    }
+    .btn-enroll:hover { background: var(--accent2); }
+
+    /* ── Lesson header ────────────────────────────────────────── */
+    .lesson-header { margin-bottom: 24px; }
+    .lesson-badges { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 500; font-family: var(--mono);
+    }
+    .badge-module { background: var(--blue-l); color: var(--blue); }
+    .badge-level  { background: var(--accent-l); color: var(--accent); }
+    .badge-level-advanced { background: #1B5FAD1A; color: var(--blue); font-weight: 600; }
+    .badge-dur    { background: var(--bg2); color: var(--ink3); }
+    .badge-done   { background: var(--accent-l2); color: var(--accent2); }
+
+    .lesson-title {
+      font-family: var(--serif); font-size: 30px; font-weight: 400;
+      color: var(--navy); letter-spacing: -.02em; line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .lesson-tagline { font-size: 14px; color: var(--ink3); font-weight: 300; }
+
+    /* ── Two-column layout ────────────────────────────────────── */
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      align-items: start;
+      margin-top: 24px;
+    }
+
+    /* ── Video ────────────────────────────────────────────────── */
+    .video-wrap {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--navy);
+      aspect-ratio: 16/9;
+      position: relative;
+    }
+    .video-wrap iframe, .video-wrap video { width: 100%; height: 100%; border: none; display: block; }
+    .video-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 14px; color: #fff;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy3) 100%);
+    }
+    .video-placeholder-ring {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(26,107,74,.25);
+      border: 2px solid rgba(197,232,213,.3);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .video-placeholder-ring svg { width: 24px; height: 24px; }
+    .video-placeholder p { font-size: 13px; color: rgba(255,255,255,.35); }
+
+    /* ── Lesson nav ───────────────────────────────────────────── */
+    .lesson-nav {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-top: 14px;
+    }
+    .btn-nav {
+      display: flex; align-items: center; gap: 7px;
+      padding: 9px 16px; border-radius: var(--radius);
+      border: 1px solid var(--border2);
+      background: var(--white);
+      font-size: 13px; font-weight: 400; color: var(--ink2);
+      font-family: var(--sans); cursor: pointer;
+      transition: border-color var(--ease), color var(--ease), background var(--ease);
+    }
+    .btn-nav:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); background: var(--accent-l); }
+    .btn-nav:disabled { opacity: .35; cursor: default; }
+
+    .btn-complete {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: var(--radius);
+      padding: 9px 20px; font-size: 13px; font-weight: 500;
+      font-family: var(--sans); cursor: pointer;
+      transition: background var(--ease), transform .1s;
+    }
+    .btn-complete:hover { background: var(--accent2); }
+    .btn-complete:active { transform: scale(.97); }
+    .btn-complete.done { background: var(--bg3); color: var(--ink3); cursor: default; }
+
+    /* ── Expert tip ───────────────────────────────────────────── */
+    .tip-wrap {
+      display: flex; gap: 12px;
+      background: var(--gold-l);
+      border: 1px solid rgba(201,150,12,.2);
+      border-radius: var(--radius);
+      padding: 14px 16px; margin-top: 16px;
+    }
+    .tip-label {
+      font-size: 10px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--gold); flex-shrink: 0; padding-top: 1px;
+      font-family: var(--mono);
+    }
+    .tip-text { font-size: 13px; color: #78350f; line-height: 1.6; }
+
+    /* ── Cards (right panel) ──────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .card + .card { margin-top: 16px; }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title { font-size: 13px; font-weight: 500; color: var(--navy); }
+    .card-meta  { font-size: 12px; color: var(--ink3); font-family: var(--mono); }
+    .card-body  { padding: 16px 20px; }
+
+    /* ── Key points ───────────────────────────────────────────── */
+    .key-point {
+      display: flex; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .key-point:first-child { padding-top: 0; }
+    .key-point:last-child  { border-bottom: none; padding-bottom: 0; }
+    .kp-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: 10px; font-weight: 500;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px; font-family: var(--mono);
+    }
+    .kp-body { font-size: 13px; line-height: 1.55; }
+    .kp-body strong { display: block; font-weight: 500; color: var(--navy); margin-bottom: 2px; }
+    .kp-body span { color: var(--ink2); }
+
+    /* ── Lesson list ──────────────────────────────────────────── */
+    .progress-row {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--ink3); margin-bottom: 8px;
+      font-family: var(--mono);
+    }
+    .progress-track {
+      height: 4px; background: var(--bg2);
+      border-radius: 2px; overflow: hidden; margin-bottom: 16px;
+    }
+    .progress-fill {
+      height: 100%; background: var(--accent);
+      border-radius: 2px; transition: width .8s ease;
+    }
+
+    .module-group { margin-bottom: 12px; }
+    .module-group:last-child { margin-bottom: 0; }
+    .module-label {
+      font-size: 10px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--ink3);
+      padding: 4px 0 6px; font-family: var(--mono);
+    }
+    .lesson-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: var(--radius);
+      cursor: pointer; transition: background var(--ease);
+      text-decoration: none;
+    }
+    .lesson-item:hover { background: var(--bg); }
+    .lesson-item.active { background: var(--accent-l); }
+    .li-icon {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 1.5px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; flex-shrink: 0; color: var(--ink4);
+      font-family: var(--mono);
+    }
+    .li-icon.done   { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .li-icon.active { border-color: var(--accent); color: var(--accent); }
+    .li-title {
+      font-size: 12px; flex: 1; line-height: 1.35;
+      color: var(--ink2);
+    }
+    .lesson-item.active .li-title { color: var(--accent2); font-weight: 500; }
+    .li-dur { font-size: 11px; color: var(--ink4); font-family: var(--mono); flex-shrink: 0; }
+
+    /* ── Toast ────────────────────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--navy); color: #fff;
+      padding: 12px 20px; border-radius: var(--radius);
+      font-size: 13px; font-weight: 400;
+      box-shadow: 0 4px 20px rgba(13,27,42,.25);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity .2s, transform .2s;
+      pointer-events: none; z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.ok  { background: var(--accent); }
+    .toast.err { background: var(--red); }
+
+    /* ── Animations ───────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .anim-1 { animation: fadeUp .35s ease both; }
+    .anim-2 { animation: fadeUp .35s .07s ease both; }
+    .anim-3 { animation: fadeUp .35s .14s ease both; }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .lesson-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      :root { --sb-width: 0px; }
+      .sidebar { transform: translateX(-240px); transition: transform .25s ease; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .content { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Auth guard -->
+<script>
+  (function(){
+    var _proto = window.location.protocol;
+    var _host  = window.location.hostname;
+    window.window.PREVIEW_MODE = (_proto === 'file:' || _host === '' || _host === 'localhost');
+    if (!window.window.PREVIEW_MODE) {
+      var _tok = localStorage.getItem('sp_token');
+      var _usr = localStorage.getItem('sp_user');
+      if (!_tok || !_usr) window.location.replace('index.html');
+    }
+  })();
+</script>
+
+<!-- ═══════════════════  SIDEBAR  ══════════════════════════════ -->
+<div id="sidebar-root"></div>
+<script src="sidebar.js"></script>
+
+<!-- ═══════════════════  MAIN  ═════════════════════════════════ -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="topbar-btn" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Menu">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+      <span class="topbar-breadcrumb">
+        <a href="dashboard.html">SkillPath</a> ›
+        <a href="catalog.html" id="bc-course">Course</a> ›
+        <span id="bc-lesson">Lesson</span>
+      </span>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn" aria-label="Help">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M6.2 6c.2-1 1.1-1.7 2-1.7C9.2 4.3 10 5 10 6c0 1-1 1.5-1.8 2-.4.3-.7.7-.7 1.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".7" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="content" id="main-content">
+    <!-- Populated by JS -->
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════  DATA & LOGIC  ════════════════════════ -->
+<script>
+/* ── Curriculum ──────────────────────────────────────────────────
+   lesson_index is 0-based and maps 1:1 to the backend progress API.
+   Add youtubeId once videos are uploaded.
+────────────────────────────────────────────────────────────────── */
+const CURRICULUM = {
+  'excel-google-sheets': {
+    title: 'Excel & Google Sheets Mastery',
+    icon: '📊',
+    modules: [
+      {
+        title: 'Module 1 — Foundations',
+        lessons: [
+          {
+            title: 'Navigating Excel & Google Sheets',
+            tagline: 'Interface tour, keyboard shortcuts, and the difference between the two tools.',
+            duration: '4 min', level: 'Beginner', youtubeId: '',
+            keyPoints: [
+              { h: 'Two tools, one mindset', b: 'Excel and Google Sheets share the same grid logic. Concepts transfer directly — focus on ideas, not menus.' },
+              { h: 'The Name Box & Formula Bar are your compass', b: 'These two elements show exactly where you are and what a cell contains. Mastering them speeds up every task you\'ll ever do.' },
+              { h: 'Freeze rows & columns for large datasets', b: 'View > Freeze keeps headers visible as you scroll. Essential the moment your data exceeds one screen.' },
+              { h: 'Three shortcuts that save the most time', b: 'Ctrl+Home (jump to A1), Ctrl+End (last used cell), Ctrl+Arrow (jump to data edge). These work in both Excel and Sheets.' },
+            ],
+            tip: 'Practice switching between Excel and Sheets for the same task at least once a week. The muscle memory of knowing both tools fluently makes you far more valuable than specialists in only one.',
+          },
+          {
+            title: 'Data Entry & Cell Formatting',
+            tagline: 'Enter data fast and make it readable with formats, alignment, and conditional styles.',
+            duration: '4 min', level: 'Beginner', youtubeId: '',
+            keyPoints: [
+              { h: 'Data types determine how calculations work', b: 'Excel stores numbers, dates, and text differently. Wrong type = broken formulas. Always verify the cell format matches the data you\'re entering.' },
+              { h: 'Format vs value — never confuse them', b: 'The displayed format (e.g. 50%) and the underlying value (0.5) are separate. Format only changes what you see, never what the cell actually holds.' },
+              { h: 'Ctrl+1 opens the Format Cells dialog', b: 'The fastest route to all formatting options in one place. Works identically in Excel and Sheets.' },
+              { h: 'Conditional formatting makes patterns visible instantly', b: 'Color scales or icon sets turn raw numbers into visual signals — insights you\'d miss staring at plain numbers.' },
+            ],
+            tip: 'Create a formatting template once: define your header colors, number formats, and font sizes. Apply it in seconds with Format Painter (Ctrl+Shift+C to copy, Ctrl+Shift+V to paste). Consistent formatting makes you look more professional.',
+          },
+          {
+            title: 'Working with Rows, Columns & Ranges',
+            tagline: 'Select, insert, delete, and reference data ranges with precision and speed.',
+            duration: '3 min', level: 'Beginner', youtubeId: '',
+            keyPoints: [
+              { h: 'Ranges are the basic unit of everything', b: 'Almost every formula, chart, and PivotTable references a range. Knowing how to select and name them fluently is the most foundational skill in the tool.' },
+              { h: 'Named ranges make formulas readable', b: 'Name a range "SalesData" and write =SUM(SalesData) instead of =SUM(B2:B500). Easier to understand, easier to maintain, far less error-prone.' },
+              { h: 'Inserting rows shifts references — watch for this', b: 'Formulas that reference fixed ranges may exclude new data when a row is inserted above. Use Excel Tables or OFFSET for dynamic ranges.' },
+              { h: 'Ctrl+Shift+End selects to last used cell', b: 'The fastest way to select your entire dataset without scrolling. Indispensable for large imports and unknown dataset sizes.' },
+            ],
+            tip: 'Use Ctrl+T to convert any data range to an Excel Table. Tables auto-expand when you add rows — every formula referencing the Table automatically includes new data. It\'s one of the most powerful habits to build early.',
+          },
+          {
+            title: 'Basic Formulas & Operators',
+            tagline: 'SUM, AVERAGE, COUNT — and the order-of-operations rules that prevent calculation errors.',
+            duration: '4 min', level: 'Beginner', youtubeId: '',
+            keyPoints: [
+              { h: 'All formulas start with =', b: 'The equals sign tells Excel/Sheets to calculate rather than display text. Without it, you\'re entering a label, not a formula.' },
+              { h: 'Order of operations follows BODMAS/PEMDAS', b: 'Brackets first, then exponents, then multiply/divide, then add/subtract. Use parentheses to be explicit and avoid calculation surprises.' },
+              { h: '$A$1 vs A1 — the most important distinction in Excel', b: 'Absolute references ($A$1) stay fixed when you copy. Relative references (A1) shift. This single concept is the source of the majority of formula errors beginners make.' },
+              { h: 'SUM, AVERAGE, COUNT, MAX, MIN cover 80% of needs', b: 'Master these five functions before moving to anything else. They handle the vast majority of everyday analysis tasks.' },
+            ],
+            tip: 'Use F4 to cycle through reference types while editing a formula: A1 → $A$1 → A$1 → $A1. Far faster than typing dollar signs manually. This shortcut alone saves hours over a working life.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 2 — Fungsi-Fungsi Inti',
+        lessons: [
+          {
+            title: 'VLOOKUP & HLOOKUP',
+            tagline: 'Cari dan ambil nilai dari tabel referensi secara otomatis. Backbone dari hampir setiap laporan berbasis spreadsheet.',
+            duration: '5 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'VLOOKUP hanya bisa melihat ke kanan', b: 'VLOOKUP mencari nilai di kolom paling kiri tabel, lalu mengambil nilai dari kolom di kanannya. Kolom pencarian harus selalu menjadi kolom pertama.' },
+              { h: 'Argumen keempat FALSE berarti persis sama', b: 'FALSE mencari nilai yang persis cocok — ini yang hampir selalu kamu mau untuk ID, kode, atau nama. TRUE hanya untuk tabel rentang seperti tabel pajak.' },
+              { h: 'IFERROR menangani #N/A dengan rapi', b: '=IFERROR(VLOOKUP(...), "Tidak ditemukan") mencegah error merah yang mengganggu ketika nilai tidak ditemukan di tabel referensi.' },
+              { h: 'Kunci tabel sumber dengan $ saat menyalin', b: 'Gunakan $A:$C bukan A:C. Tanpa tanda dolar, tabel referensi bergeser saat rumus disalin ke bawah dan hasilnya jadi salah.' },
+            ],
+            tip: 'VLOOKUP tidak bisa melihat ke kiri. Jika kamu perlu mencari ke kiri, gunakan INDEX+MATCH atau XLOOKUP di Excel 365. Gunakan seluruh kolom (A:C) bukan rentang tetap agar data baru otomatis tercakup.',
+          },
+          {
+            title: 'Fungsi IF & Logika Bersarang',
+            tagline: 'Buat keputusan otomatis di spreadsheet. Logika tunggal, ganda, dan kondisi majemuk dengan AND/OR.',
+            duration: '5 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'IF bekerja seperti pertanyaan ya-atau-tidak', b: '=IF(kondisi, nilai_jika_ya, nilai_jika_tidak). Semua logika kondisional di spreadsheet berakar dari pola sederhana ini.' },
+              { h: 'AND membutuhkan semua kondisi benar, OR cukup satu', b: '=IF(AND(B2>=75, C2>=80%), "Lulus", "Tidak Lulus") — ganti AND dengan OR untuk cukup satu syarat terpenuhi.' },
+              { h: 'IFS lebih bersih dari IF bersarang panjang', b: '=IFS(B2>=85,"A", B2>=70,"B", B2>=55,"C", TRUE,"D") jauh lebih mudah dibaca dari empat level IF bersarang.' },
+              { h: 'SWITCH cocok untuk nilai kategori diskrit', b: '=SWITCH(A2, "M","Pria", "F","Wanita", "Tidak Diketahui") — lebih bersih dari IF bersarang untuk kategori dengan nilai pasti.' },
+            ],
+            tip: 'Untuk debugging IF yang kompleks, evaluasi kondisinya di sel terpisah dulu. Ketik kondisinya saja seperti B2>=75 dan tekan Enter — Excel menampilkan TRUE atau FALSE sehingga kamu tahu persis kondisi mana yang gagal.',
+          },
+          {
+            title: 'SUMIF, COUNTIF & AVERAGEIF',
+            tagline: 'Jumlahkan, hitung, dan rata-ratakan data berdasarkan kriteria. Fondasi laporan penjualan dan analisis kategori.',
+            duration: '5 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'SUMIF: cari di sini, cari ini, jumlahkan itu', b: '=SUMIF(A:A,"Laptop",C:C) menjumlahkan kolom C hanya untuk baris di mana kolom A berisi "Laptop". Gunakan referensi sel agar dinamis.' },
+              { h: 'Wildcard * dan ? membuat SUMIF lebih fleksibel', b: '=SUMIF(A:A,"Lap*",C:C) cocok dengan Laptop, Laptop Pro, Laptop Gaming. Tanda * untuk banyak karakter, ? untuk satu karakter.' },
+              { h: 'SUMIFS mendukung banyak kriteria sekaligus', b: '=SUMIFS(C:C, A:A,"Laptop", B:B,"Jakarta") — kolom yang dijumlahkan ditulis pertama, lalu pasangan rentang-kriteria.' },
+              { h: 'COUNTIF hanya butuh dua argumen', b: '=COUNTIF(C:C,">1000000") menghitung berapa baris dengan nilai di atas satu juta. Tidak perlu kolom ketiga karena hanya menghitung baris.' },
+            ],
+            tip: 'SUMIFS lebih fleksibel dari SUMIF dan bisa digunakan untuk satu kriteria maupun banyak kriteria. Banyak profesional menjadikan SUMIFS sebagai standar dan tidak lagi menggunakan SUMIF sama sekali.',
+          },
+          {
+            title: 'Fungsi Tanggal & Waktu',
+            tagline: 'Hitung durasi, ekstrak komponen tanggal, dan buat laporan berbasis periode waktu.',
+            duration: '4 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Tanggal di spreadsheet adalah angka', b: 'Excel menyimpan tanggal sebagai jumlah hari sejak 1 Januari 1900. Itulah mengapa kamu bisa mengurangi dua tanggal untuk mendapat selisih hari.' },
+              { h: 'TODAY() dan NOW() selalu terperbarui', b: 'TODAY() mengembalikan tanggal hari ini, NOW() menambahkan waktu saat ini. Keduanya diperbarui setiap kali spreadsheet dibuka.' },
+              { h: 'DATEDIF menghitung selisih dalam hari, bulan, atau tahun', b: '=DATEDIF(A1,A2,"Y") menghitung tahun penuh. "M" untuk bulan, "D" untuk hari. Fungsi tersembunyi yang tidak muncul di autocomplete.' },
+              { h: 'EDATE menambah atau mengurangi bulan', b: '=EDATE(A1,3) menghasilkan tanggal tiga bulan setelah A1. Sempurna untuk jatuh tempo kontrak dan jadwal cicilan.' },
+            ],
+            tip: 'Jika tanggal rata kiri di sel, itu teks bukan tanggal. Gunakan DATEVALUE() untuk mengonversinya. NETWORKDAYS(start,end) menghitung hari kerja otomatis mengecualikan akhir pekan.',
+          },
+          {
+            title: 'Fungsi Teks',
+            tagline: 'Bersihkan, gabungkan, ekstrak, dan transformasikan data teks secara otomatis tanpa edit manual.',
+            duration: '4 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'TRIM menghilangkan spasi tersembunyi yang merusak VLOOKUP', b: 'Spasi ekstra sebelum atau setelah teks secara diam-diam menyebabkan VLOOKUP gagal. TRIM adalah fungsi pertama untuk data impor.' },
+              { h: 'LEFT, RIGHT, MID mengekstrak bagian teks', b: 'LEFT(A1,3) ambil 3 karakter pertama. RIGHT(A1,3) dari kanan. MID(A1,5,4) mulai karakter ke-5 ambil 4 karakter.' },
+              { h: 'PROPER dan UPPER/LOWER menstandardisasi huruf', b: '=PROPER(TRIM(A1)) membersihkan spasi sekaligus mengkapitalkan huruf pertama setiap kata. Satu rumus untuk membersihkan nama dari CRM.' },
+              { h: 'SUBSTITUTE mengganti teks dalam formula', b: '=SUBSTITUTE(A1,"-","/") mengganti semua tanda minus dengan garis miring. Argumen keempat mengontrol kemunculan keberapa yang diganti.' },
+            ],
+            tip: 'TEXTJOIN(pemisah, abaikan_kosong, rentang) menggabungkan seluruh kolom dalam satu rumus: =TEXTJOIN(", ",TRUE,A1:A10). CLEAN(teks) menghapus karakter tak tercetak dari impor PDF atau web.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 3 — Pivot Table & Analisis Data',
+        lessons: [
+          {
+            title: 'Membuat Pivot Table Pertama',
+            tagline: 'Dari ribuan baris ke ringkasan bermakna dalam tiga klik. Cara tercepat menganalisis data di spreadsheet.',
+            duration: '5 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Data harus bersih sebelum Pivot Table', b: 'Setiap kolom butuh header yang jelas, tidak ada baris atau kolom kosong di tengah, dan setiap kolom berisi satu jenis data saja.' },
+              { h: 'Empat area: Rows, Columns, Values, Filters', b: 'Rows untuk kategori di sisi kiri, Columns untuk dimensi horizontal, Values untuk apa yang dihitung, Filters untuk kontrol global.' },
+              { h: 'Double-click nilai untuk drill-down', b: 'Klik dua kali pada nilai mana pun di Pivot Table membuka lembar baru berisi semua baris yang berkontribusi ke angka itu. Fitur audit yang sangat berguna.' },
+              { h: 'Refresh setelah data berubah', b: 'Pivot Table tidak memperbarui otomatis. Klik kanan > Refresh atau Alt+F5. Tanpa refresh, Pivot Table menampilkan data lama meski sumber sudah diperbarui.' },
+            ],
+            tip: 'Ubah data sumbermu menjadi Excel Table (Ctrl+T) sebelum membuat Pivot Table. Ketika tabel bertambah baris, cukup refresh — data baru otomatis masuk tanpa perlu mengubah sumber data.',
+          },
+          {
+            title: 'Filter, Sort & Slicer',
+            tagline: 'Kontrol Pivot Table dengan filter interaktif. Buat laporan yang bisa diklik oleh siapa pun.',
+            duration: '4 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Area Filters menambahkan dropdown kontrol global', b: 'Seret field ke area Filters untuk membuat dropdown di atas Pivot Table. Pilih nilai tertentu dan seluruh Pivot Table hanya menampilkan data itu.' },
+              { h: 'Slicer adalah filter visual berbentuk tombol', b: 'Insert > Slicer. Klik tombol produk atau region dan Pivot Table langsung difilter. Jauh lebih intuitif dari dropdown untuk pengguna non-teknis.' },
+              { h: 'Satu Slicer bisa mengontrol beberapa Pivot Table', b: 'Klik Slicer > Report Connections > centang Pivot Table lain. Satu klik memperbarui semua Pivot Table di halaman — dasar dashboard interaktif.' },
+              { h: 'Timeline adalah Slicer khusus untuk tanggal', b: 'Insert > Timeline memungkinkan filter berdasarkan bulan, kuartal, atau tahun secara visual dan intuitif tanpa dropdown.' },
+            ],
+            tip: 'Untuk menghapus semua filter dari Pivot Table sekaligus: PivotTable Analyze > Clear > Clear Filters. Untuk menghapus filter dari Slicer, klik ikon X di pojok kanan atas Slicer.',
+          },
+          {
+            title: 'Pivot Chart',
+            tagline: 'Buat grafik yang terhubung langsung dengan Pivot Table. Satu klik Slicer, grafik langsung berubah.',
+            duration: '4 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Pivot Chart tersinkronisasi otomatis dengan Pivot Table', b: 'Apapun yang berubah di Pivot Table — filter, sort — langsung tercermin di grafik. Tidak ada koneksi data yang perlu dikonfigurasi manual.' },
+              { h: 'Slicer juga mengontrol Pivot Chart', b: 'Slicer yang tersambung ke Pivot Table secara otomatis juga mengontrol Pivot Chart-nya. Tabel dan grafik berubah bersamaan dari satu klik.' },
+              { h: 'Pilih tipe grafik sesuai cerita datanya', b: 'Line Chart untuk tren waktu. Bar/Column Chart untuk perbandingan kategori. Ganti tipe: klik kanan grafik > Change Chart Type.' },
+              { h: 'Sembunyikan field button untuk presentasi bersih', b: 'Klik kanan grafik > Hide All Field Buttons on Chart. Membuat grafik lebih rapi untuk presentasi tanpa kehilangan fungsionalitas interaktifnya.' },
+            ],
+            tip: 'Untuk menyimpan Pivot Chart sebagai gambar: klik grafik, Ctrl+C, lalu Paste Special > Picture di PowerPoint atau Word. Gambar tersemat tidak berubah saat file dibagikan.',
+          },
+          {
+            title: 'Teknik Analisis Lanjutan',
+            tagline: 'Calculated fields, grouping tanggal, dan persentase dari total untuk laporan yang lebih informatif.',
+            duration: '5 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Calculated Field membuat kolom baru tanpa mengubah data', b: 'PivotTable Analyze > Fields, Items & Sets > Calculated Field. Buat field Margin % = Keuntungan/Total Penjualan langsung di dalam Pivot Table.' },
+              { h: 'Grouping tanggal otomatis ke bulan, kuartal, tahun', b: 'Klik kanan pada field tanggal > Group > pilih Months dan Years. Tidak perlu membuat kolom Bulan dan Tahun secara manual di data sumber.' },
+              { h: 'Show Values As mengubah tampilan nilai', b: '% of Grand Total menampilkan setiap nilai sebagai persentase dari total. Running Total menampilkan nilai kumulatif. Difference From menampilkan perubahan dari periode sebelumnya.' },
+              { h: 'Double-click untuk drill-down ke detail', b: 'Klik dua kali nilai apapun membuka sheet baru dengan semua baris sumber. Cara tercepat untuk audit dan investigasi anomali.' },
+            ],
+            tip: 'Untuk menyimpan Pivot Table sebagai tabel biasa: salin lalu Paste Special > Values Only. Hasilnya adalah tabel statis yang tidak bergantung pada data sumber — aman untuk dibagikan.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 4 — Visualisasi Data & Grafik',
+        lessons: [
+          {
+            title: 'Prinsip Visualisasi Data',
+            tagline: 'Mengapa sebagian besar grafik gagal menyampaikan pesannya — dan cara memperbaikinya.',
+            duration: '4 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Empat tipe cerita data: perbandingan, komposisi, distribusi, hubungan', b: 'Perbandingan (siapa terbesar?) pakai bar. Komposisi (apa yang membentuk keseluruhan?) pakai pie jika sedikit. Distribusi pakai histogram. Hubungan pakai scatter.' },
+              { h: 'Data-ink ratio: maksimalkan data, minimalkan dekorasi', b: 'Setiap elemen yang tidak menambah informasi harus dihilangkan: gridline tebal, border kotak, latar belakang berwarna, efek 3D.' },
+              { h: 'Judul grafik harus menceritakan kesimpulannya', b: 'Bukan "Penjualan per Produk" — itu deskripsi. Yang baik: "Laptop Mendominasi 45% Total Penjualan Q1 2025". Ceritakan pesannya di judul.' },
+              { h: 'Tes 5 detik: apakah pesan langsung tersampaikan?', b: 'Tampilkan grafik 5 detik ke seseorang. Tanya satu hal yang paling mereka ingat. Jika bukan poin utama, grafik perlu direvisi.' },
+            ],
+            tip: 'Warna punya makna: merah untuk negatif/bahaya, hijau untuk positif/aman, biru untuk netral. Untuk presentasi ke eksekutif: satu grafik, satu pesan, maksimal tiga warna.',
+          },
+          {
+            title: 'Grafik Bar & Kolom',
+            tagline: 'Grafik paling serbaguna untuk perbandingan. Format, label, dan sorot data paling penting.',
+            duration: '5 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Selalu urutkan bar dari terbesar ke terkecil', b: 'Bar yang tidak diurutkan memaksa mata memindai ke sana ke sini. Klik kanan > Sort > Largest to Smallest. Kecuali ada urutan alami seperti bulan.' },
+              { h: 'Label langsung di bar menggantikan sumbu', b: 'Klik kanan > Add Data Labels. Pilih posisi Inside End atau Outside End. Ini membuat grafik jauh lebih mudah dipahami terutama saat dicetak.' },
+              { h: 'Sorot satu bar dengan warna berbeda untuk fokus', b: 'Klik dua kali satu bar (klik pertama pilih semua, klik kedua pilih satu). Ubah warnanya. Satu warna berbeda lebih berpengaruh dari lima warna berbeda.' },
+              { h: 'Bar horizontal lebih baik untuk nama panjang', b: 'Nama produk atau kategori yang panjang terbaca nyaman secara horizontal. Bar vertikal memaksa rotasi label yang sulit dibaca.' },
+            ],
+            tip: 'Grouped bar chart berguna untuk membandingkan dua periode atau dua segmen sekaligus. Jangan gunakan lebih dari tiga kelompok — terlalu ramai dan sulit dibaca.',
+          },
+          {
+            title: 'Grafik Garis & Tren',
+            tagline: 'Visualisasikan perubahan seiring waktu dan tambahkan trendline untuk proyeksi yang meyakinkan.',
+            duration: '4 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Line chart adalah grafik standar untuk deret waktu', b: 'Otak manusia membaca pergerakan kiri ke kanan sebagai perjalanan waktu. Gunakan Line with Markers untuk data dengan sedikit titik.' },
+              { h: 'Trendline menunjukkan arah umum mengabaikan fluktuasi', b: 'Klik kanan garis > Add Trendline > Linear. R-squared mendekati 1 berarti tren sangat konsisten, mendekati 0 berarti acak.' },
+              { h: 'Trendline bisa diperpanjang sebagai proyeksi', b: 'Format Trendline > Forward periods: 3 menampilkan proyeksi 3 periode ke depan. Berguna untuk mengkomunikasikan ekspektasi ke manajemen.' },
+              { h: 'Gabungkan warna dan style garis untuk grafik hitam-putih', b: 'Solid untuk data aktual, putus-putus untuk target atau proyeksi. Membuat grafik bisa dibaca tanpa warna saat dicetak.' },
+            ],
+            tip: 'Forecast Sheet di Excel: Data > Forecast Sheet. Excel menganalisis data historis dan membuat proyeksi dengan interval kepercayaan secara otomatis — jauh lebih canggih dari trendline manual.',
+          },
+          {
+            title: 'Scatter Plot & Grafik Lanjutan',
+            tagline: 'Visualisasikan korelasi, distribusi, dan hierarki dengan scatter, histogram, waterfall, dan treemap.',
+            duration: '5 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Scatter plot menampilkan hubungan antara dua variabel', b: 'Titik yang mengikuti diagonal ke atas = korelasi positif. Diagonal ke bawah = korelasi negatif. Tersebar acak = tidak ada korelasi.' },
+              { h: 'R-squared mengukur kekuatan hubungan', b: 'R2 = 0.8 berarti 80% variasi Y bisa dijelaskan oleh variasi X. Ini fondasi regresi linier yang digunakan setiap analis data.' },
+              { h: 'Histogram menampilkan distribusi frekuensi', b: 'Insert > Histogram. Bar bersentuhan satu sama lain karena menampilkan rentang kontinu. Bentuk lonceng = normal, condong kiri/kanan = skewed.' },
+              { h: 'Waterfall Chart ideal untuk laporan keuangan', b: 'Menampilkan bagaimana total akhir terbentuk dari komponen positif dan negatif: pendapatan, dikurangi beban, tampilkan laba bersih.' },
+            ],
+            tip: 'Treemap adalah pilihan modern untuk data hierarki. Insert > Treemap menampilkan komposisi dalam kotak bersarang — ukuran proporsional dengan nilai. Lebih informatif dari pie chart untuk data dengan banyak kategori.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 5 — Dashboard & Otomasi',
+        lessons: [
+          {
+            title: 'Prinsip Desain Dashboard',
+            tagline: 'Rencanakan layout dashboard profesional: hierarki visual, penggunaan warna, dan organisasi informasi.',
+            duration: '4 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Hierarki: KPI besar di atas, detail di bawah', b: 'Baris pertama untuk 3-4 angka KPI paling penting. Baris kedua untuk grafik tren dan perbandingan. Baris bawah untuk tabel detail.' },
+              { h: 'Satu warna utama, satu aksen, abu-abu untuk sisanya', b: 'Satu warna utama untuk angka penting, satu aksen untuk peringatan, abu-abu untuk semua elemen pendukung. Lebih dari tiga warna membuat dashboard tidak profesional.' },
+              { h: 'Whitespace adalah alat desain, bukan ruang terbuang', b: 'Ruang kosong di sekitar elemen penting membuat elemen itu lebih menonjol. Dashboard yang padat menyebabkan kelelahan kognitif.' },
+              { h: 'Tes 3 detik: apakah KPI utama langsung terlihat?', b: 'Tampilkan dashboard 3 detik ke orang baru. Tanya satu hal yang mereka ingat. Jika bukan KPI utama, revisi hierarki layoutnya.' },
+            ],
+            tip: 'Sembunyikan gridline Excel (View > Show > Gridlines hilangkan centang) dan set zoom ke 100% sebelum menampilkan dashboard. Gridline yang terlihat membuat dashboard seperti spreadsheet biasa.',
+          },
+          {
+            title: 'Menghubungkan Data Antar Sheet & File',
+            tagline: 'Bangun dashboard yang menarik data dari beberapa sheet dan file secara otomatis.',
+            duration: '4 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Referensi antar sheet: NamaSheet!AlamatSel', b: '=Data!B2 mengambil nilai dari sheet "Data", sel B2. Apapun yang berubah di B2 otomatis diperbarui di sheet tujuan.' },
+              { h: 'INDIRECT membangun referensi dari teks', b: '=INDIRECT(A1&"!B2") berguna ketika nama sheet bisa berubah berdasarkan pilihan pengguna di dropdown — dasar laporan multi-sheet dinamis.' },
+              { h: 'Named range membuat rumus mudah dibaca dan dipelihara', b: '=SUM(PenjualanBulanan) jauh lebih jelas dari =SUM(Data!B2:B500). Buat named range sekali, gunakan di seluruh workbook.' },
+              { h: 'Periksa external links sebelum presentasi', b: 'Data > Edit Links menampilkan semua koneksi eksternal dan statusnya. Koneksi putus karena file dipindahkan adalah sumber masalah yang umum.' },
+            ],
+            tip: 'Hindari rantai referensi panjang: A1 di Sheet1 → B2 di Sheet2 → C3 di Sheet3. Ambil data langsung dari sumbernya. Rantai panjang sulit di-debug dan lambat diperbarui.',
+          },
+          {
+            title: 'Macro & Otomasi Dasar',
+            tagline: 'Rekam dan jalankan macro untuk mengotomasi tugas berulang. Tidak perlu bisa coding.',
+            duration: '5 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Record Macro merekam setiap aksi sebagai kode VBA', b: 'Developer > Record Macro: lakukan format, navigasi, rumus seperti biasa. Stop Recording. Semua langkah tersimpan sebagai macro yang bisa diputar ulang.' },
+              { h: 'Rekaman absolut vs relatif menentukan cara kerja macro', b: 'Absolut: macro selalu ke sel yang sama. Relatif: macro bergerak relatif terhadap sel aktif. Gunakan relatif untuk macro yang harus bekerja di posisi mana pun.' },
+              { h: 'Tombol membuat macro bisa diakses siapa pun', b: 'Insert > Button (Form Control) > Assign Macro. Siapa pun bisa menjalankan macro dengan klik tombol tanpa perlu tahu cara membuka Developer tab.' },
+              { h: 'Selalu simpan sebagai .xlsm', b: 'Format .xlsx secara diam-diam menghapus semua kode VBA. Selalu simpan file yang berisi macro sebagai .xlsm (Excel Macro-Enabled Workbook).' },
+            ],
+            tip: 'Lihat kode hasil rekaman: Developer > Visual Basic. Ini cara terbaik mulai belajar VBA — rekam aksi sederhana, lihat kodenya, pahami polanya. Tambahkan keyboard shortcut di dialog Record Macro untuk akses cepat.',
+          },
+          {
+            title: 'Melindungi & Berbagi Workbook',
+            tagline: 'Kunci formula, atur izin pengguna, dan bagikan workbook dengan aman kepada tim dan klien.',
+            duration: '3 menit', level: 'Menengah', youtubeId: '',
+            keyPoints: [
+              { h: 'Buka kunci semua sel dulu, kunci hanya formula', b: 'Ctrl+A > Format Cells > Protection > hilangkan Locked. Lalu pilih sel formula saja dan aktifkan Locked. Protect Sheet: pengguna bisa isi input tapi tidak bisa rusak formula.' },
+              { h: 'Review > Protect Sheet mengatur izin secara granular', b: 'Pilih tepat apa yang masih bisa dilakukan pengguna: memilih sel, format, sisipkan baris, dll. Default hampir sepenuhnya terkunci.' },
+              { h: 'Bagikan sebagai "Can View" untuk distribusi baca saja', b: 'Simpan ke OneDrive > Share > "Can View" mencegah modifikasi apapun. Untuk laporan yang tidak boleh diubah penerima.' },
+              { h: 'Ekspor sebagai PDF untuk distribusi final', b: 'File > Export > PDF. Layout terkunci, tidak bisa diubah, tampil sama di semua perangkat. Selalu ekspor laporan final sebagai PDF sebelum dikirim eksternal.' },
+            ],
+            tip: 'Sebelum berbagi file, jalankan Document Inspector: File > Info > Check for Issues > Inspect Document. Ini menemukan komentar, metadata personal, sheet tersembunyi yang mungkin tidak ingin kamu bagikan.',
+          },
+        ]
+      },
+    ]
+  },
+
+  'excel-google-sheets-advanced': {
+    title: 'Excel & Google Sheets — Tingkat Lanjutan',
+    icon: '📊',
+    modules: [
+      {
+        title: 'Modul 6 — Power Query & Otomasi Data',
+        lessons: [
+          {
+            title: 'Mengenal Power Query',
+            tagline: 'Apa itu Power Query, kapan digunakan, dan cara membukanya di Excel maupun Sheets.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Power Query adalah mesin transformasi data bawaan Excel', b: 'Setiap kali kamu impor data dari CSV, database, atau web, Power Query yang bekerja di baliknya. Applied Steps merekam setiap transformasi — transparan dan bisa diaudit.' },
+              { h: 'Sekali setup, selamanya tinggal Refresh', b: 'Tambah data baru ke sumber, klik Refresh — semua langkah transformasi diulang otomatis. Tidak ada copy-paste, tidak ada rumus manual.' },
+              { h: 'Power Query tidak mengubah data mentah aslinya', b: 'Semua transformasi ada di Power Query Editor. Data sumber tidak pernah disentuh — ini membuat pipeline data yang aman dan bisa di-rollback.' },
+              { h: 'Applied Steps: sejarah transformasi yang bisa diedit', b: 'Setiap aksi di Power Query menghasilkan satu step. Kamu bisa klik langkah mana saja untuk melihat kondisi data saat itu, atau hapus langkah yang salah.' },
+            ],
+            tip: 'Power Query tersedia di Excel 2016 ke atas dan built-in di Excel 365. Jangan pernah edit data langsung di sheet hasil Power Query — perubahan akan hilang saat di-refresh. Semua edit harus dilakukan di dalam Editor.',
+          },
+          {
+            title: 'Transformasi Data di Power Query Editor',
+            tagline: 'Bersihkan data kotor secara otomatis: ubah tipe, hapus duplikat, split kolom, dan isi nilai kosong.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Trim dan Capitalize Each Word: dua klik untuk nama bersih', b: 'Transform > Format > Trim menghapus spasi ekstra. Capitalize Each Word merapikan kapitalisasi. Keduanya langsung masuk ke Applied Steps dan bisa diulang otomatis.' },
+              { h: 'Selalu set tipe data eksplisit di setiap kolom', b: 'Kolom bertipe "Any" (ikon ABC123) artinya Power Query tidak tahu tipe datanya. Selalu ubah ke tipe yang tepat — ini mencegah error saat data baru masuk dengan format berbeda.' },
+              { h: 'Remove Duplicates dan Remove Blank Rows dalam satu alur', b: 'Home > Remove Rows menyediakan keduanya. Power Query memproses seluruh baris, bukan hanya satu kolom — lebih menyeluruh dari Remove Duplicates Excel biasa.' },
+              { h: 'Split Column otomatis memecah berdasarkan delimiter', b: 'Transform > Split Column > By Delimiter memisahkan kolom berdasarkan spasi, koma, atau karakter kustom — untuk seluruh kolom sekaligus.' },
+            ],
+            tip: 'Klik kanan header kolom untuk melihat semua opsi transformasi yang tersedia. Gunakan View > Column Quality untuk melihat persentase valid, error, dan empty di setiap kolom — cara cepat mengaudit kualitas data sebelum mulai membersihkan.',
+          },
+          {
+            title: 'Gabungkan & Append Tabel',
+            tagline: 'Merge queries untuk join tabel seperti SQL, dan append untuk menumpuk data dari banyak sumber.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Merge = JOIN, Append = UNION', b: 'Merge menggabungkan dua tabel berdasarkan kolom kunci yang cocok (seperti SQL JOIN). Append menumpuk baris dari banyak tabel dengan struktur yang sama (seperti SQL UNION).' },
+              { h: 'Left Outer Join: tampilkan semua baris dari tabel kiri', b: 'Home > Combine > Merge Queries > Left Outer. Baris yang tidak cocok tetap tampil dengan null di kolom tabel kanan — sama seperti VLOOKUP tapi lebih andal.' },
+              { h: 'Append dari folder: gabung semua file otomatis', b: 'Get Data > From Folder menggabungkan semua file di folder menjadi satu tabel. Taruh file baru di folder, klik Refresh — data baru otomatis masuk.' },
+              { h: 'Anti Join untuk menemukan baris yang tidak cocok', b: 'Left Anti di Join Kind menemukan baris di tabel kiri yang tidak ada padanannya di tabel kanan — cara cepat identifikasi produk tanpa penjualan atau pelanggan tanpa transaksi.' },
+            ],
+            tip: 'Pastikan nama kolom di kedua tabel identik persis termasuk huruf besar/kecil dan spasi — perbedaan kecil menyebabkan kolom tidak terhubung. Saat Append dari folder, Power Query menambahkan kolom Source.Name yang menunjukkan asal file setiap baris.',
+          },
+          {
+            title: 'Refresh Otomatis & M Language Dasar',
+            tagline: 'Jadwalkan refresh data dan kenali M Language — bahasa pemrograman di balik setiap langkah Power Query.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Refresh otomatis saat file dibuka atau tiap X menit', b: 'Klik kanan query > Properties > centang "Refresh data when opening the file" untuk laporan harian. "Refresh every X minutes" untuk dashboard yang terus terbuka.' },
+              { h: 'Setiap Applied Step menghasilkan satu baris kode M', b: 'Klik step di Applied Steps, lihat formula bar — itu kode M yang dihasilkan. Kamu bisa edit langsung untuk transformasi yang tidak ada di menu.' },
+              { h: 'Advanced Editor: lihat seluruh pipeline sebagai skrip', b: 'Home > Advanced Editor menampilkan semua step sebagai skrip M dengan pola let...in. Mengedit di sini jauh lebih cepat untuk perubahan massal.' },
+              { h: 'Parameter membuat query dinamis dan reusable', b: 'Home > Manage Parameters > New Parameter. Alih-alih hardcode nilai seperti 2024, buat parameter — ubah dari satu tempat, seluruh query menyesuaikan.' },
+            ],
+            tip: 'Simpan query sebagai Connection Only (Close & Load To > Only Create Connection) untuk query intermediate yang hanya dipakai query lain. Dokumentasikan query kompleks dengan komentar M menggunakan // — penting untuk query yang dikelola tim.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 7 — Rumus Dinamis & Formula Modern',
+        lessons: [
+          {
+            title: 'XLOOKUP — Pengganti VLOOKUP yang Lebih Powerful',
+            tagline: 'Cari data ke segala arah, tangani error otomatis, dan cocokkan parsial — semua dalam satu fungsi.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Tidak perlu nomor kolom — tunjuk langsung kolom hasilnya', b: '=XLOOKUP(E2,A:A,C:C) — tiga argumen: nilai dicari, kolom pencarian, kolom hasil. Tidak ada nomor kolom yang harus dihitung, dan bisa mencari ke kiri.' },
+              { h: 'Argumen keempat sebagai pengganti IFERROR', b: '=XLOOKUP(E2,A:A,C:C,"Tidak Ditemukan") — nilai jika tidak ditemukan langsung di argumen keempat. Tidak perlu membungkus dengan IFERROR.' },
+              { h: 'XLOOKUP bisa mengembalikan banyak kolom sekaligus', b: 'Jika kolom hasil adalah range multi-kolom, XLOOKUP mengembalikan seluruh baris yang cocok. Satu rumus menggantikan banyak VLOOKUP paralel.' },
+              { h: 'Match mode untuk pencarian rentang dan wildcard', b: 'Argumen kelima: 0 = exact (default), 1 = exact atau lebih besar, -1 = exact atau lebih kecil, 2 = wildcard. Berguna untuk tabel harga berjenjang dan pencarian parsial.' },
+            ],
+            tip: 'Untuk nested lookup dua kriteria: =XLOOKUP(B2, XLOOKUP(A2,KolomA,KolomB), KolomC) — menggantikan INDEX/MATCH/MATCH yang jauh lebih rumit. XLOOKUP tidak tersedia di Excel 2019 ke bawah — gunakan INDEX/MATCH sebagai alternatif kompatibel.',
+          },
+          {
+            title: 'Fungsi Array Dinamis: FILTER, SORT & UNIQUE',
+            tagline: 'Hasilkan daftar yang otomatis menyesuaikan ukuran berdasarkan kondisi — tanpa Ctrl+Shift+Enter.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'FILTER mengekstrak baris berdasarkan kondisi dan otomatis spill', b: '=FILTER(A2:D100,C2:C100>1000000) mengembalikan semua baris yang memenuhi kondisi. Hasilnya spill otomatis ke sel bawah tanpa Ctrl+Shift+Enter.' },
+              { h: 'Gabungkan kondisi dengan * (AND) dan + (OR)', b: '=FILTER(A2:D100,(C2:C100>1000000)*(B2:B100="Jakarta")) — tanda bintang untuk AND karena TRUE=1 dan FALSE=0. Tanda plus untuk OR.' },
+              { h: 'SORT mengurutkan array tanpa mengubah data asli', b: '=SORT(A2:D100,3,-1) mengurutkan berdasarkan kolom ke-3 secara descending. Gabungkan dengan FILTER: =SORT(FILTER(...),3,-1) untuk satu formula filter+sort.' },
+              { h: 'UNIQUE mengembalikan nilai yang tidak duplikat', b: '=UNIQUE(B2:B100) mengekstrak setiap nilai unik. Gabungkan dengan SORT: =SORT(UNIQUE(B2:B100)) untuk daftar unik terurut — sumber dropdown yang selalu terkini.' },
+            ],
+            tip: 'Jika sel di bawah formula FILTER sudah berisi data, Excel menampilkan #SPILL! — pastikan area output selalu kosong. FILTER menerima argumen ketiga untuk pesan kustom jika tidak ada baris yang cocok: =FILTER(A2:D100,C2:C100>1000000,"Tidak ada data").',
+          },
+          {
+            title: 'LET & LAMBDA — Buat Fungsi Sendiri',
+            tagline: 'Sederhanakan rumus panjang dengan LET, dan buat fungsi kustom reusable dengan LAMBDA.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'LET memberi nama pada bagian rumus yang berulang', b: '=LET(diskon, B2*0.2, pajak, (B2-diskon)*0.11, B2-diskon+pajak) — kalkulasi yang sama tidak perlu ditulis dua kali. Rumus jadi lebih bersih dan mudah diaudit.' },
+              { h: 'LAMBDA membuat fungsi Excel tanpa VBA', b: '=LAMBDA(x, x*1.11) membuat fungsi yang mengalikan input dengan 1.11. Simpan di Name Manager dengan nama "TambahPPN" dan panggil sebagai =TambahPPN(B2) dari mana saja.' },
+              { h: 'Gabungkan LAMBDA dengan MAP dan BYROW', b: '=MAP(A2:A100, LAMBDA(x, x*1.11)) menerapkan fungsi LAMBDA ke setiap elemen array. Setara dengan .map() di JavaScript — operasi fungsional langsung di Excel.' },
+              { h: 'LET mendukung hingga 126 pasang nama-nilai', b: 'Gunakan LET untuk memecah rumus kompleks menjadi langkah-langkah bernama yang terbaca seperti kode program — sangat memudahkan debugging dan dokumentasi.' },
+            ],
+            tip: 'Fungsi LAMBDA yang disimpan di Name Manager tidak bisa langsung dipakai di file lain — kamu perlu menyertakan definisi Name Manager atau membuat add-in. Gunakan LAMBDA dengan REDUCE untuk kalkulasi akumulasi dan SCAN untuk running total tanpa kolom bantu.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 8 — VBA & Macro Lanjutan',
+        lessons: [
+          {
+            title: 'Merekam Macro & Mengenal VBA Editor',
+            tagline: 'Rekam aksi manual menjadi macro, baca kode yang dihasilkan, dan jalankan ulang dengan satu klik.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Record Macro merekam setiap aksi sebagai kode VBA', b: 'Developer > Record Macro: lakukan format, navigasi, rumus seperti biasa. Stop Recording. Semua langkah tersimpan sebagai kode yang bisa diputar ulang kapan saja.' },
+              { h: 'VBA Editor (Alt+F11) menampilkan kode yang dihasilkan', b: 'Setiap macro bisa dibaca, dimodifikasi, dan dipahami dari VBA Editor. Ini cara terbaik mulai belajar VBA — rekam aksi sederhana, lalu baca kodenya.' },
+              { h: 'Tombol sheet membuat macro bisa diakses siapa pun', b: 'Insert > Button > Assign Macro. Siapa pun bisa menjalankan macro dengan klik tombol tanpa perlu tahu cara membuka Developer tab.' },
+              { h: 'Selalu simpan sebagai .xlsm, bukan .xlsx', b: 'Format .xlsx secara diam-diam menghapus semua VBA. Selalu simpan file yang berisi macro sebagai .xlsm — Excel akan mengingatkan jika kamu mencoba menyimpan sebagai .xlsx.' },
+            ],
+            tip: 'Gunakan "Use Relative References" sebelum merekam jika macro harus bergerak relatif dari sel yang aktif. Tambahkan keyboard shortcut di dialog Record Macro untuk akses cepat — misalnya Ctrl+Shift+F untuk FormatLaporan.',
+          },
+          {
+            title: 'Variabel, Kondisi & Loop di VBA',
+            tagline: 'Gunakan Dim, If/Then, For, dan For Each untuk membuat macro yang cerdas dan berulang secara dinamis.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Dim mendeklarasikan variabel dengan tipe yang tepat', b: 'Dim namaSiswa As String, nilaiUjian As Double. Mendeklarasikan tipe mencegah error konversi dan membuat kode lebih efisien daripada menggunakan tipe Variant.' },
+              { h: 'If/Then/Else untuk logika bercabang di VBA', b: 'If nilai >= 75 Then result = "Lulus" Else result = "Tidak Lulus" End If. Pola yang sama dengan IF di sheet, tapi bisa melakukan aksi yang jauh lebih kompleks.' },
+              { h: 'For loop mengulang sejumlah aksi yang pasti', b: 'For i = 1 To 100 ... Next i. Berguna saat kamu tahu persis berapa kali perulangan harus terjadi — misalnya memproses 100 baris.' },
+              { h: 'For Each untuk iterasi di seluruh sel dalam range', b: 'For Each cell In Range("A1:A100") — berulang untuk setiap sel tanpa perlu tahu indeksnya. Lebih bersih dari For loop untuk operasi pada koleksi objek.' },
+            ],
+            tip: 'Selalu gunakan Option Explicit di atas setiap modul VBA — ini memaksa semua variabel dideklarasikan dengan Dim dan mencegah typo variabel yang sulit dideteksi. Tekan F8 di VBA Editor untuk menjalankan kode baris per baris (step through) saat debugging.',
+          },
+          {
+            title: 'Membuat Fungsi Kustom (UDF) & Otomasi Laporan',
+            tagline: 'Buat fungsi Excel sendiri dengan VBA, dan otomasi laporan bulanan dari awal hingga selesai.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Function vs Sub: Function mengembalikan nilai, Sub tidak', b: 'Function HitungPPN(harga As Double) As Double — bisa dipanggil dari sel sheet sebagai =HitungPPN(B2). Sub hanya menjalankan aksi, tidak mengembalikan nilai ke sel.' },
+              { h: 'UDF bisa dipakai di seluruh workbook seperti fungsi bawaan', b: 'Setelah dibuat di VBA Editor, fungsi kustom langsung tersedia di semua sheet — muncul di autocomplete dengan nama yang kamu beri.' },
+              { h: 'Events menjalankan macro otomatis saat kondisi tertentu', b: 'Worksheet_Change(ByVal Target As Range) berjalan otomatis setiap kali sel berubah. Workbook_Open berjalan saat file dibuka. Events membuat workbook yang responsif.' },
+              { h: 'Macro otomasi laporan end-to-end', b: 'Gabungkan semua kemampuan: buka file sumber, bersihkan data, jalankan kalkulasi, format output, simpan laporan — semua dalam satu macro yang dijalankan satu klik setiap bulan.' },
+            ],
+            tip: 'Tambahkan komentar di UDF menggunakan tanda petik tunggal (\') — komentar ini muncul sebagai tooltip saat pengguna mengetik nama fungsi di sel. Gunakan On Error Resume Next dengan bijak — jangan sembunyikan semua error, hanya error yang benar-benar diharapkan.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 9 — Power Pivot & Data Modeling',
+        lessons: [
+          {
+            title: 'Mengaktifkan Power Pivot & Memahami Data Model',
+            tagline: 'Bedakan Data Model dari tabel sheet biasa, dan pahami mengapa ini solusi untuk dataset besar.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Power Pivot menangani jutaan baris tanpa memperlambat Excel', b: 'Data Model menggunakan mesin VertiPaq in-memory yang dikompresi. Tabel dengan 5 juta baris dimuat dalam hitungan detik — jauh melampaui batas 1 juta baris sheet Excel.' },
+              { h: 'Data Model memungkinkan relasi antar banyak tabel', b: 'Alih-alih VLOOKUP yang rapuh, Data Model menghubungkan tabel melalui relasi permanen. Pivot Table bisa mengambil data dari tabel mana pun yang terhubung.' },
+              { h: 'Aktifkan Power Pivot lewat File > Options > Add-ins', b: 'Power Pivot harus diaktifkan di Excel 2016-2019. Di Excel 365, sudah tersedia langsung di tab Data. Setelah aktif, tab Power Pivot muncul di ribbon.' },
+              { h: 'Masukkan tabel ke Data Model saat impor atau dari Power Query', b: 'Saat Close & Load dari Power Query, pilih "Add this data to the Data Model". Atau dari tabel yang sudah ada: Power Pivot > Add to Data Model.' },
+            ],
+            tip: 'Data Model menyimpan data terpisah dari sheet — file Excel bisa jauh lebih kecil dari yang diperkirakan karena kompresi VertiPaq. Jika file Excel kamu tiba-tiba besar sekali, periksa apakah ada duplikasi data antara sheet dan Data Model.',
+          },
+          {
+            title: 'Relasi Antar Tabel & DAX Dasar',
+            tagline: 'Hubungkan tabel tanpa VLOOKUP dan tulis kalkulasi DAX pertamamu: CALCULATE, SUMX, dan RELATED.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Buat relasi dengan drag-and-drop di Diagram View', b: 'Di Power Pivot > Diagram View, seret kolom ID dari tabel Fakta ke kolom ID di tabel Dimensi. Relasi terbentuk — tidak perlu VLOOKUP lagi di Data Model.' },
+              { h: 'Star Schema: satu tabel fakta, banyak tabel dimensi', b: 'Tabel Fakta berisi transaksi (penjualan, log). Tabel Dimensi berisi atribut (produk, pelanggan, kalender). Star Schema membuat query DAX lebih cepat dan model lebih mudah dipahami.' },
+              { h: 'CALCULATE mengubah konteks filter kalkulasi', b: 'CALCULATE(SUM(Penjualan[Total]), Produk[Kategori]="Laptop") menghitung total hanya untuk Laptop, terlepas dari filter Pivot Table yang sedang aktif.' },
+              { h: 'RELATED mengambil kolom dari tabel yang berelasi', b: '=RELATED(Produk[Harga]) di tabel Penjualan mengambil harga dari tabel Produk berdasarkan relasi yang sudah dibuat — setara dengan VLOOKUP tapi jauh lebih andal.' },
+            ],
+            tip: 'SUMX(Penjualan, Penjualan[Qty] * RELATED(Produk[Harga])) menghitung total penjualan row by row — ini yang tidak bisa dilakukan dengan SUM biasa. SUMX adalah iterator yang sangat powerful untuk kalkulasi yang membutuhkan akses ke kolom dari tabel lain per baris.',
+          },
+        ]
+      },
+      {
+        title: 'Modul 10 — Advanced Dashboard & Storytelling',
+        lessons: [
+          {
+            title: 'Prinsip Desain Dashboard Eksekutif',
+            tagline: 'Hierarki visual, pemilihan warna, dan tata letak yang membuat eksekutif mengambil keputusan bukan mempertanyakan data.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Dashboard eksekutif: tiga KPI, satu kesimpulan', b: 'Eksekutif tidak punya waktu untuk mengeksplorasi. Dashboard mereka harus menjawab "Apa yang harus saya tahu sekarang?" dalam 5 detik — tiga angka paling penting, satu tren, satu tindakan.' },
+              { h: 'Hindari 10 kesalahan desain paling umum', b: 'Terlalu banyak grafik, dual axis yang menyesatkan, warna tanpa makna, angka tanpa konteks, tidak ada hierarki visual. Setiap elemen harus menjawab pertanyaan atau dihapus.' },
+              { h: 'Warna harus menyampaikan makna, bukan dekorasi', b: 'Merah = di bawah target, hijau = di atas target, abu-abu = konteks. Gunakan warna brand hanya untuk elemen yang ingin menonjol. Konsistensi lebih penting dari estetika.' },
+              { h: 'Rancang untuk audiens eksekutif vs analis berbeda', b: 'Eksekutif: ringkasan, tidak ada filter, tidak ada drill-down. Analis: semua dimensi, filter dinamis, tabel detail. Buat dua versi dari data yang sama jika audiens berbeda.' },
+            ],
+            tip: 'Tes 5 detik versi eksekutif: tampilkan dashboard 5 detik, tutup, tanya "apa satu tindakan yang harus saya ambil?" Jika tidak bisa menjawab, dashboard belum selesai. Whitespace adalah tanda kepercayaan diri — dashboard yang padat terlihat tidak yakin dengan datanya.',
+          },
+          {
+            title: 'Conditional Formatting Berbasis Rumus',
+            tagline: 'Gunakan rumus kustom di conditional formatting untuk menyorot pola kompleks yang tidak bisa dilakukan aturan bawaan.',
+            duration: '4 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Aturan berbasis rumus membuka kemungkinan tak terbatas', b: 'Home > Conditional Formatting > New Rule > Use a formula. Tulis rumus yang mengembalikan TRUE/FALSE — baris yang menghasilkan TRUE mendapat format yang kamu tentukan.' },
+              { h: 'Sorot seluruh baris berdasarkan nilai satu kolom', b: 'Untuk menyorot seluruh baris ketika kolom C berisi "Terlambat": pilih seluruh range A1:E100, buat aturan =$C1="Terlambat". Tanda $ pada kolom C mengunci kolom, bukan baris.' },
+              { h: 'Referensi campuran ($) adalah kunci conditional formatting', b: '$C1 mengunci kolom C tapi membiarkan baris bergerak — sehingga setiap baris dievaluasi berdasarkan nilai di kolom C-nya sendiri. Ini adalah konsep paling penting dalam CF berbasis rumus.' },
+              { h: 'Traffic light dan heatmap dengan formula kustom', b: 'Tiga aturan dengan ambang batas berbeda (merah/kuning/hijau) menciptakan traffic light indicator. Icon Sets dengan formula kustom memungkinkan ambang batas dinamis berbasis persentil.' },
+            ],
+            tip: 'Urutan aturan conditional formatting penting — aturan di atas dievaluasi lebih dahulu. Gunakan "Stop if true" untuk mencegah aturan di bawahnya diterapkan pada sel yang sudah terformat. Manage Rules (Home > Conditional Formatting > Manage Rules) untuk melihat dan mengatur urutan semua aturan.',
+          },
+          {
+            title: 'Chart Lanjutan, Sparklines & Distribusi Final',
+            tagline: 'Waterfall chart, combo chart, dan sparklines untuk visualisasi tepat — ditutup dengan proteksi dan distribusi profesional.',
+            duration: '5 menit', level: 'Lanjutan', youtubeId: '',
+            keyPoints: [
+              { h: 'Waterfall chart untuk analisis bridge (jembatan)', b: 'Menampilkan bagaimana nilai akhir terbentuk dari komponen positif dan negatif. Insert > Waterfall. Klik kanan bar pertama/terakhir > Set as Total untuk menandai total.' },
+              { h: 'Combo chart: kolom dan garis dalam satu grafik', b: 'Insert > Combo Chart. Set satu seri sebagai kolom (volume), satu sebagai garis (margin %). Secondary Axis untuk skala berbeda. Berguna untuk menampilkan volume dan persentase bersamaan.' },
+              { h: 'Sparklines: mini-grafik di dalam sel', b: 'Insert > Sparklines. Pilih Line, Column, atau Win/Loss. Sparkline masuk ke satu sel dan menampilkan tren data satu baris — tambah konteks visual tanpa membutuhkan grafik terpisah.' },
+              { h: 'Proteksi dan distribusi: langkah akhir yang tidak boleh dilewati', b: 'Kunci formula (Protect Sheet), sembunyikan sheet data mentah (klik kanan tab > Hide), jalankan Document Inspector, ekspor sebagai PDF. Urutan ini memastikan file yang dibagikan aman dan profesional.' },
+            ],
+            tip: 'Untuk Waterfall chart yang menggunakan data akrual (bukan absolut), kamu mungkin perlu mengatur subtotal secara manual karena Excel tidak selalu mendeteksi otomatis. Sparklines tidak bisa dicetak secara terpisah — mereka ikut sel yang berisi mereka.',
+          },
+        ]
+      },
+    ]
+  },
+
+  'sql-data-analysis': {
+    title: 'SQL for Data Analysis',
+    icon: '🗄️',
+    modules: [
+      { title: 'Module 1 — Database Fundamentals', lessons: [
+        { title: 'What Is a Database and Why SQL?', tagline: 'Understand how relational databases store data and where SQL fits in a data career.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Setting Up Your SQL Environment', tagline: 'Install PostgreSQL and connect with DBeaver or pgAdmin. Run your first query.', duration: '5 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Tables, Rows, and Columns', tagline: 'Understand schemas, primary keys, data types, and how data is structured relationally.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Your First SELECT Queries', tagline: 'Retrieve data with SELECT, filter with WHERE, and control output with aliases.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 2 — Filtering & Sorting', lessons: [
+        { title: 'Filtering with WHERE Conditions', tagline: 'Apply comparison operators, ranges, pattern matching, and null checks.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Sorting & Deduplicating Results', tagline: 'Order results by one or multiple columns and remove duplicate rows.', duration: '3 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Working with String Data', tagline: 'Clean and transform text columns using SQL string functions.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Working with Dates & Times', tagline: 'Filter and calculate with date columns — age, duration, and period comparisons.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 3 — Aggregation & Grouping', lessons: [
+        { title: 'Aggregate Functions', tagline: 'Summarize data across rows with COUNT, SUM, AVG, MIN, MAX.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'GROUP BY & HAVING', tagline: 'Group rows by category and filter grouped results.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Case Statements', tagline: 'Add conditional logic inside queries to segment and label data.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Subqueries', tagline: 'Nest one query inside another to break complex problems into smaller steps.', duration: '5 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 4 — Joining Tables', lessons: [
+        { title: 'INNER JOIN — Matching Records', tagline: 'Combine two tables by matching rows on a shared key.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'LEFT, RIGHT & FULL OUTER JOINs', tagline: 'Retain unmatched rows from one or both sides of a join.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Self Joins & Cross Joins', tagline: 'Join a table to itself and generate all row combinations.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Multi-Table Joins', tagline: 'Chain three or more joins and manage column naming conflicts.', duration: '5 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'UNION & Set Operations', tagline: 'Combine result sets vertically with UNION, INTERSECT, and EXCEPT.', duration: '4 min', level: 'Beginner', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 5 — Window Functions', lessons: [
+        { title: 'Introduction to Window Functions', tagline: 'Calculate values across related rows without collapsing results.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Ranking Functions', tagline: 'Rank rows within groups — useful for top-N queries and leaderboards.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Running Totals & Moving Averages', tagline: 'Calculate cumulative sums and rolling averages across ordered data.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'LAG & LEAD — Period-over-Period Analysis', tagline: 'Access values from previous or next rows to calculate growth rates.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 6 — Advanced SQL & Performance', lessons: [
+        { title: 'Common Table Expressions (CTEs)', tagline: 'Write readable multi-step queries using WITH clauses.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Views & Materialized Views', tagline: 'Save reusable query logic as views and cache results for performance.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Indexes & Query Performance', tagline: 'Speed up queries and use EXPLAIN ANALYZE to diagnose slow queries.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Inserting, Updating & Deleting Data', tagline: 'Write DML statements safely, including transactions and rollbacks.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Building an Analytical Query from Scratch', tagline: 'Combine joins, window functions, and CTEs to answer a real business question.', duration: '6 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Exporting Results & Next Steps', tagline: 'Export results to CSV and connect SQL to Python or Excel.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+    ]
+  },
+
+  'python-for-data': {
+    title: 'Python for Data (pandas)',
+    icon: '🐍',
+    modules: [
+      { title: 'Module 1 — Python Foundations', lessons: [
+        { title: 'Python Setup & Your First Script', tagline: 'Install Python and VS Code, and run your first lines of code.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Variables, Types & Operators', tagline: 'Store data in variables and write basic arithmetic and comparison expressions.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Lists, Tuples & Dictionaries', tagline: 'Work with Python\'s core data structures.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Control Flow — If, For, While', tagline: 'Write programs that make decisions and repeat tasks automatically.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Functions & Modules', tagline: 'Write reusable functions and import from Python\'s standard library.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'File I/O & Error Handling', tagline: 'Read and write files. Catch errors so scripts fail gracefully.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 2 — pandas Fundamentals', lessons: [
+        { title: 'Introducing pandas & DataFrames', tagline: 'Load data and inspect it with head, info, and describe.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Reading & Writing Data Files', tagline: 'Load CSVs, Excel files, and JSON into DataFrames.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Selecting & Indexing Data', tagline: 'Select columns, rows, and specific cells using loc and iloc.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Filtering & Sorting DataFrames', tagline: 'Filter rows by conditions and sort by one or multiple columns.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Adding & Transforming Columns', tagline: 'Create new columns and apply transformations using vectorized operations.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Handling Missing Data', tagline: 'Detect, drop, and fill missing values correctly.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 3 — Data Cleaning', lessons: [
+        { title: 'Fixing Data Types', tagline: 'Convert columns to the right type: strings to numbers, objects to dates.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'String Cleaning with .str', tagline: 'Standardize text: strip whitespace, fix casing, extract patterns.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Dealing with Duplicates', tagline: 'Find and remove duplicate rows with full control over what counts as duplicate.', duration: '3 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Reshaping Data — Melt & Pivot', tagline: 'Transform data between wide and long format.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Merging & Joining DataFrames', tagline: 'Combine DataFrames using SQL-style joins and vertical concatenation.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 4 — Analysis & Aggregation', lessons: [
+        { title: 'GroupBy — Split, Apply, Combine', tagline: 'Group data by columns and apply aggregate functions to each group.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Window Functions & Rolling Calculations', tagline: 'Calculate rolling averages, cumulative sums, and lagged values.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Time Series Analysis', tagline: 'Work with date indexes and resample data to different frequencies.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Cross-Tabulations & Frequency Tables', tagline: 'Summarize categorical data relationships with crosstabs.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Applying Custom Functions', tagline: 'Apply your own functions element-wise, row-wise, or column-wise.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 5 — Visualization with Python', lessons: [
+        { title: 'Matplotlib Basics', tagline: 'Create and customize line charts, bar charts, and scatter plots.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Seaborn for Statistical Plots', tagline: 'Build distribution plots, heatmaps, and pair plots with seaborn.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Plotting Directly from pandas', tagline: 'Use DataFrame.plot() for quick exploratory charts without leaving pandas.', duration: '3 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Interactive Charts with Plotly', tagline: 'Build interactive, web-ready charts using plotly express.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 6 — Automation & Real-World Workflows', lessons: [
+        { title: 'Automating Repetitive Reports', tagline: 'Write a script that reads new data and exports a formatted report automatically.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Working with APIs & Web Data', tagline: 'Fetch JSON from REST APIs and scrape tables from web pages.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Introduction to NumPy', tagline: 'Use NumPy for fast mathematical operations on arrays.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Capstone Workflow — End to End', tagline: 'Ingest, clean, analyze, visualize, and export a full data report.', duration: '8 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+    ]
+  },
+
+  'data-visualization': {
+    title: 'Data Visualization & Dashboards',
+    icon: '📈',
+    modules: [
+      { title: 'Module 1 — Visualization Principles', lessons: [
+        { title: 'Why Most Charts Fail (and How to Fix Them)', tagline: 'The principles behind clear, honest visual communication.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Choosing the Right Chart Type', tagline: 'Match chart types to data stories: comparison, distribution, relationship, composition.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Colour, Typography & Layout', tagline: 'Use color purposefully and arrange visual elements for clarity and impact.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Designing for Your Audience', tagline: 'Adapt dashboards for executives, analysts, and operations teams.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 2 — Power BI', lessons: [
+        { title: 'Power BI Setup & Interface Tour', tagline: 'Install Power BI Desktop and connect your first data source.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Loading & Transforming Data with Power Query', tagline: 'Import and clean data in the Power Query Editor.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Building a Data Model', tagline: 'Create relationships between tables and build a star schema.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'DAX Fundamentals', tagline: 'Write DAX measures that update dynamically with filter context.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Intermediate DAX — Time Intelligence', tagline: 'Calculate MTD, QTD, YTD, and year-over-year comparisons.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Building & Formatting Visuals', tagline: 'Add charts, cards, slicers, and tables to a report canvas.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Creating an Interactive Dashboard', tagline: 'Cross-filtering, drill-through, bookmarks, and page navigation.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Publishing & Sharing in Power BI Service', tagline: 'Publish to the cloud and configure scheduled data refresh.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 3 — Tableau', lessons: [
+        { title: 'Tableau Setup & Interface Overview', tagline: 'Understand the data source pane, shelves, and marks card.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Building Basic Views', tagline: 'Drag and drop to build bar charts, line charts, maps, and scatter plots.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Calculated Fields & LOD Expressions', tagline: 'Create custom calculations and control aggregation scope with LOD.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Filters, Parameters & Sets', tagline: 'Add context filters and create parameters that let users control the view.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Dashboards & Stories in Tableau', tagline: 'Combine multiple sheets into a dashboard with actions and filters.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Maps & Geospatial Visualizations', tagline: 'Plot geographic data and layer multiple data types on maps.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Publishing to Tableau Public & Server', tagline: 'Share dashboards publicly or within an organization.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+      { title: 'Module 4 — Dashboard Projects & Polish', lessons: [
+        { title: 'Performance & Optimization', tagline: 'Speed up slow dashboards by optimizing data models and using extracts.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Telling a Story with Data', tagline: 'Structure a data presentation with a narrative arc — context, conflict, resolution.', duration: '4 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+        { title: 'Final Dashboard Critique & Review', tagline: 'Reconstruct a poorly designed dashboard using everything learned.', duration: '5 min', level: 'Intermediate', youtubeId: '', keyPoints: [{ h: 'Coming soon', b: 'Lesson content will be added when videos are published.' }], tip: '' },
+      ]},
+    ]
+  },
+};
+
+/* ── Build flat lesson list ─────────────────────────────────────── */
+function buildFlatLessons(courseData) {
+  const flat = [];
+  courseData.modules.forEach((mod, mi) => {
+    mod.lessons.forEach((les, li) => {
+      flat.push({ ...les, modIdx: mi, modTitle: mod.title, lessonIdx: flat.length });
+    });
+  });
+  return flat;
+}
+
+/* ── URL params ─────────────────────────────────────────────────── */
+const params     = new URLSearchParams(location.search);
+const courseSlug = params.get('course') || 'excel-google-sheets';
+const lessonIdx  = parseInt(params.get('lesson') || '0', 10);
+
+const API    = 'https://skillpath-production-4f85.up.railway.app';
+const token  = localStorage.getItem('sp_token');
+const spUser = JSON.parse(localStorage.getItem('sp_user') || 'null');
+
+let courseId      = null;   // numeric ID from enrollment
+let completedSet  = new Set();
+let flatLessons   = [];
+let courseData    = null;
+
+/* ── Boot ───────────────────────────────────────────────────────── */
+async function boot() {
+  // Sidebar user info
+  const displayUser = spUser || (window.PREVIEW_MODE ? { name: 'Preview User' } : null);
+  if (displayUser) {
+    const name = displayUser.name || displayUser.email || 'Student';
+    document.getElementById('sb-name').textContent = name;
+    document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
+  }
+
+  courseData = CURRICULUM[courseSlug];
+  if (!courseData) { renderNotFound(); return; }
+
+  flatLessons = buildFlatLessons(courseData);
+  document.title = `${flatLessons[lessonIdx]?.title || 'Lesson'} · SkillPath`;
+
+  // Breadcrumb
+  document.getElementById('bc-course').textContent = courseData.title;
+  document.getElementById('bc-lesson').textContent = flatLessons[lessonIdx]?.title || 'Lesson';
+  document.getElementById('bc-course').href = `catalog.html`;
+
+  // Fetch enrollment + progress in parallel
+  const [enrollData, progressData] = await Promise.all([
+    fetchEnrollments(),
+    fetchProgress(),
+  ]);
+
+  // Check enrollment
+  if (!enrollData) { renderAccessDenied('not-logged-in'); return; }
+
+  const enrolled = enrollData.courses?.find(c => c.slug === courseSlug || c.slug === courseSlug.replace(/-/g, '_'));
+  if (!enrolled) { renderAccessDenied('not-enrolled'); return; }
+
+  courseId = enrolled.id;
+
+  // Sidebar progress
+  renderSidebarProgress(enrollData.courses);
+
+  // Completed lessons
+  if (progressData?.completed_lessons) {
+    progressData.completed_lessons.forEach(i => completedSet.add(i));
+  }
+
+  // Validate lesson index
+  const idx = Math.min(Math.max(lessonIdx, 0), flatLessons.length - 1);
+
+  renderLesson(idx);
+}
+
+/* ── API helpers ─────────────────────────────────────────────────── */
+async function fetchEnrollments() {
+  if (window.PREVIEW_MODE) {
+    return { courses: [{ id: 1, slug: courseSlug, title: courseData?.title || 'Preview Course', progress_pct: 30 }] };
+  }
+  try {
+    const r = await fetch(`${API}/api/enrollments`, { headers: { Authorization: `Bearer ${token}` } });
+    if (!r.ok) return null;
+    return r.json();
+  } catch { return null; }
+}
+
+async function fetchProgress() {
+  if (!courseId) {
+    // We don't have courseId yet — will refetch after enrollment check
+    return null;
+  }
+  try {
+    const r = await fetch(`${API}/api/progress/${courseId}`, { headers: { Authorization: `Bearer ${token}` } });
+    if (!r.ok) return null;
+    return r.json();
+  } catch { return null; }
+}
+
+async function fetchProgressById(id) {
+  if (window.PREVIEW_MODE) return { completed_lessons: [0, 2] };
+  try {
+    const r = await fetch(`${API}/api/progress/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+    if (!r.ok) return null;
+    return r.json();
+  } catch { return null; }
+}
+
+/* ── Sidebar progress ────────────────────────────────────────────── */
+function renderSidebarProgress(courses) {
+  const el = document.getElementById('sb-courses');
+  if (!courses?.length) { el.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,.25)">No courses yet</div>'; return; }
+  const fills = ['fill-accent', 'fill-gold', 'fill-blue'];
+  el.innerHTML = courses.slice(0, 3).map((c, i) => `
+    <div class="sb-progress-course">
+      <div class="sb-progress-course-name">${c.title.split(' ').slice(0, 3).join(' ')}</div>
+      <div class="sb-progress-bar"><div class="sb-progress-fill ${fills[i % 3]}" style="width:${c.progress_pct || 0}%"></div></div>
+    </div>`).join('');
+}
+
+/* ── Access denied ───────────────────────────────────────────────── */
+function renderAccessDenied(reason) {
+  const mc = document.getElementById('main-content');
+  const isLogin = reason === 'not-logged-in';
+  mc.innerHTML = `
+    <div class="access-denied anim-1">
+      <div class="access-denied-icon">${isLogin ? '🔐' : '🎓'}</div>
+      <h2>${isLogin ? 'Sign in to continue' : 'Course not unlocked'}</h2>
+      <p>${isLogin
+        ? 'You need to be signed in to access lesson content.'
+        : `You're not enrolled in <strong>${courseData?.title || 'this course'}</strong>.<br>Enroll to unlock all lessons, projects, and your certificate.`}
+      </p>
+      <a class="btn-enroll" href="${isLogin ? 'index.html' : 'catalog.html'}">
+        ${isLogin ? 'Sign in' : 'Go to course catalog'}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>`;
+}
+
+function renderNotFound() {
+  document.getElementById('main-content').innerHTML = `
+    <div class="access-denied anim-1">
+      <div class="access-denied-icon">🔍</div>
+      <h2>Course not found</h2>
+      <p>We couldn't find the course you're looking for.</p>
+      <a class="btn-enroll" href="catalog.html">Browse catalog</a>
+    </div>`;
+}
+
+/* ── Lesson render ───────────────────────────────────────────────── */
+function renderLesson(idx) {
+  const les      = flatLessons[idx];
+  const isDone   = completedSet.has(idx);
+  const isFirst  = idx === 0;
+  const isLast   = idx === flatLessons.length - 1;
+
+  document.getElementById('bc-lesson').textContent = les.title;
+  document.title = `${les.title} · SkillPath`;
+
+  const videoHtml = les.youtubeId
+    ? `<iframe src="https://www.youtube.com/embed/${les.youtubeId}?rel=0&modestbranding=1" allowfullscreen allow="autoplay; encrypted-media"></iframe>`
+    : `<div class="video-placeholder">
+        <div class="video-placeholder-ring">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5l11 6.5-11 6.5V5.5Z" fill="rgba(197,232,213,.6)" stroke="rgba(197,232,213,.6)" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <p>Video coming soon</p>
+       </div>`;
+
+  const keyPtsHtml = les.keyPoints.map((kp, i) => `
+    <div class="key-point">
+      <div class="kp-num">${i + 1}</div>
+      <div class="kp-body"><strong>${kp.h}</strong><span>${kp.b}</span></div>
+    </div>`).join('');
+
+  const lessonListHtml = courseData.modules.map((mod, mi) => {
+    const items = mod.lessons.map((l, li) => {
+      const flatI = flatLessons.findIndex(f => f.modIdx === mi && f.modTitle === mod.title && f.title === l.title);
+      const done  = completedSet.has(flatI);
+      const curr  = flatI === idx;
+      return `<a class="lesson-item${curr ? ' active' : ''}" href="lesson.html?course=${courseSlug}&lesson=${flatI}">
+        <div class="li-icon${done ? ' done' : curr ? ' active' : ''}">${done ? '✓' : flatI + 1}</div>
+        <div class="li-title">${l.title}</div>
+        <div class="li-dur">${l.duration}</div>
+      </a>`;
+    }).join('');
+    return `<div class="module-group"><div class="module-label">${mod.title}</div>${items}</div>`;
+  }).join('');
+
+  const doneCount = flatLessons.filter((_, i) => completedSet.has(i)).length;
+  const pct       = flatLessons.length ? Math.round((doneCount / flatLessons.length) * 100) : 0;
+
+  document.getElementById('main-content').innerHTML = `
+    <div class="lesson-header anim-1">
+      <div class="lesson-badges">
+        <span class="badge badge-module">${les.modTitle}</span>
+        <span class="badge ${les.level === 'Lanjutan' ? 'badge-level-advanced' : 'badge-level'}">${les.level}</span>
+        <span class="badge badge-dur">${les.duration}</span>
+        ${isDone ? '<span class="badge badge-done">✓ Completed</span>' : ''}
+      </div>
+      <h1 class="lesson-title">${les.title}</h1>
+      <p class="lesson-tagline">${les.tagline}</p>
+    </div>
+
+    <div class="lesson-grid">
+      <!-- Left: video + nav + tip -->
+      <div class="anim-2">
+        <div class="video-wrap">${videoHtml}</div>
+
+        <div class="lesson-nav">
+          <button class="btn-nav" ${isFirst ? 'disabled' : ''} onclick="navigate(${idx - 1})">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L5 7l4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Previous
+          </button>
+
+          <button class="btn-complete${isDone ? ' done' : ''}" id="btn-complete"
+            ${isDone ? 'disabled' : `onclick="markComplete(${idx})"`}>
+            ${isDone
+              ? '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Completed'
+              : '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Mark as complete'}
+          </button>
+
+          <button class="btn-nav" ${isLast ? 'disabled' : ''} onclick="navigate(${idx + 1})">
+            Next
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l4 5-4 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        ${les.tip ? `<div class="tip-wrap"><div class="tip-label">Tip</div><div class="tip-text">${les.tip}</div></div>` : ''}
+      </div>
+
+      <!-- Right: key points + lesson list -->
+      <div class="anim-3">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Key points</div>
+            <div class="card-meta">${les.keyPoints.length} insights</div>
+          </div>
+          <div class="card-body">${keyPtsHtml}</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Course lessons</div>
+            <div class="card-meta">${doneCount} / ${flatLessons.length}</div>
+          </div>
+          <div class="card-body">
+            <div class="progress-row">
+              <span>Overall progress</span>
+              <span>${pct}%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:${pct}%"></div>
+            </div>
+            ${lessonListHtml}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── Actions ─────────────────────────────────────────────────────── */
+async function markComplete(idx) {
+  if (!courseId) { toast('Enrollment error — please refresh', 'err'); return; }
+
+  const btn = document.getElementById('btn-complete');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  try {
+    const r = await fetch(`${API}/api/progress`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ course_id: courseId, lesson_index: idx }),
+    });
+    if (!r.ok) throw new Error();
+
+    completedSet.add(idx);
+    toast('Lesson complete!', 'ok');
+
+    // Re-render current lesson (updates button + progress)
+    renderLesson(idx);
+
+    // Auto-advance after 1.4 s if not last lesson
+    if (idx < flatLessons.length - 1) {
+      setTimeout(() => navigate(idx + 1), 1400);
+    }
+  } catch {
+    toast('Could not save progress — try again', 'err');
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Mark as complete';
+  }
+}
+
+function navigate(idx) {
+  if (idx < 0 || idx >= flatLessons.length) return;
+  const url = new URL(location.href);
+  url.searchParams.set('course', courseSlug);
+  url.searchParams.set('lesson', idx);
+  location.href = url.toString();
+}
+
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+boot();
+</script>
+</body>
+</html>
